@@ -1073,7 +1073,7 @@ La segunda etapa cruza \texttt{perplexity} $\in \{10,15,20,25,30\}$ con la tasa 
 
 La tabla \@ref(tab:tsnegrid) muestra que el efecto de \texttt{eta} depende de la perplejidad. Con perplejidades bajas (10 a 20) la divergencia decrece de forma monótona y el mínimo se alcanza en \texttt{eta = 150}, pues un paso pequeño no basta para desplegar el mapa dentro de las 500 iteraciones disponibles. Con perplejidades altas (25 y 30) la relación se invierte y el mínimo pasa a \texttt{eta = 50}, lo que sugiere un ligero sobrepaso de la optimización cuando el vecindario considerado ya es amplio. El valor más bajo de toda la rejilla corresponde a \texttt{perplexity = 30} con \texttt{eta = 50}, con una divergencia de 0.6080.
 
-```{r eval=FALSE}
+```{r}
 ### EXPLORACIÓN DE HIPERPARÁMETROS: REJILLA DE PERPLEJIDADES EN Rtsne() ----
 
 # 1. Definir la rejilla de parámetros a explorar
@@ -1106,7 +1106,7 @@ proc.time() - start.time
 ```
 
 
-```{r eval=FALSE}
+```{r}
 # UNIFICACIÓN DE RESULTADOS Y FACETADO GRÁFICO
 
 # 4. Construir la tabla unificada con data.table
@@ -1118,7 +1118,10 @@ d2 <- rbindlist(lapply(seq(nrow(Rtsne_params)), function(i) {
     Chance = df1$Chance.of.Admit
   )
 }))
+```
 
+
+```{r}
 # 5. Generar el gráfico multifacético
 p2 <- ggplot(d2) +
   geom_point(mapping = aes(x = x, y = y, color = Chance), 
@@ -1140,7 +1143,7 @@ p2
 ```
 
 
-```{r eval=FALSE}
+```{r}
 ### EXPLORACIÓN BIDIMENSIONAL: PERPLEJIDAD (perplexity) Y TASA DE APRENDIZAJE (eta) en Rtsne() ----
 
 ###tsne es muy lento. Para juzgar cómo funciona este algoritmo haciendo una exploracion con dos
@@ -1155,7 +1158,10 @@ matriz_rtsne_grid <- df1 %>%
   dplyr::select(where(is.numeric)) %>%
   dplyr::select(-Chance.of.Admit) %>%
   scale()
+```
 
+
+```{r}
 # 3. Ejecutar el bucle sobre la rejilla combinada
 set.seed(123)
 start.time <- proc.time()
@@ -1175,7 +1181,13 @@ Rtsne_res2 <- lapply(seq(nrow(Rtsne_params2)), function(i) {
 })
 
 proc.time() - start.time # Muestra el tiempo total de cómputo
+```
 
+
+Las salidas gráficas de ambas rejillas (Figuras~\ref{fig:tsnegrideta} y~\ref{fig:tsne-grid-ampliada}) aportan el elemento decisivo: la nube continua con gradiente de \texttt{Chance of Admit} está presente en las cuarenta configuraciones evaluadas, sin que ninguna combinación de hiperparámetros produzca agrupamientos discretos. Las diferencias entre paneles se limitan a la extensión y la orientación del mapa, ambas irrelevantes para la interpretación. El hallazgo descrito a partir de la Figura~\ref{fig:tsne-exacta} no depende, por tanto, de la configuración elegida. Cabe señalar que la rejilla ampliada corrió con \texttt{verbose = FALSE}, por lo que \texttt{eta = 200} carece de divergencia registrada y quedó fuera de la Tabla~\ref{tab:tsne-grid}.
+
+
+```{r tsnegrideta, include=TRUE, fig.cap="Salidas gráficas de las veinte combinaciones de \\texttt{perplexity} y \\texttt{eta}, con \\texttt{pca = FALSE}"}
 # UNIFICACIÓN DE RESULTADOS Y FACETADO DE DOS VARIABLES
 
 d3 <- rbindlist(lapply(seq(nrow(Rtsne_params2)), function(i) {
