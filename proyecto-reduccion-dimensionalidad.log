@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 01:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 17:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1149,101 +1149,95 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 223.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/distchance-1.pdf, id=49,
- 433.62pt x 252.945pt>
+<proyecto-reduccion-dimensionalidad_files/figure-latex/distchance-1.pdf, id=53,
+ 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/distchance-1.pdf Gr
 aphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/distchance-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-distchance-1.pdf  used on input line 249.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
-[3
-
-{C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}{C:/
-Users/Erick/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc} <./
-proyecto-reduccion-dimensionalidad_files/figure-latex/distchance-1.pdf>]
+distchance-1.pdf  used on input line 248.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
 <proyecto-reduccion-dimensionalidad_files/figure-latex/scattercontinuas-1.pdf, 
-id=69, 433.62pt x 252.945pt>
+id=55, 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/scattercontinuas-1.
 pdf Graphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/scattercontinuas-1.p
 df>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-scattercontinuas-1.pdf  used on input line 260.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
+scattercontinuas-1.pdf  used on input line 259.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[3
+
+{C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}{C:/
+Users/Erick/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc} <./
+proyecto-reduccion-dimensionalidad_files/figure-latex/distchance-1.pdf>]
 <proyecto-reduccion-dimensionalidad_files/figure-latex/boxplotscategoricas-1.pd
-f, id=71, 433.62pt x 325.215pt>
+f, id=75, 433.62pt x 361.35pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/boxplotscategoricas
 -1.pdf Graphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/boxplotscategoricas-
 1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-boxplotscategoricas-1.pdf  used on input line 271.
-(pdftex.def)             Requested size: 433.61894pt x 325.2142pt.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/matrizcorr-1.pdf, id=73,
+boxplotscategoricas-1.pdf  used on input line 270.
+(pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
+<proyecto-reduccion-dimensionalidad_files/figure-latex/matrizcorr-1.pdf, id=76,
  433.62pt x 289.08pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/matrizcorr-1.pdf Gr
 aphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/matrizcorr-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-matrizcorr-1.pdf  used on input line 282.
+matrizcorr-1.pdf  used on input line 279.
 (pdftex.def)             Requested size: 433.61894pt x 289.07928pt.
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
 [4 <./proyecto-reduccion-dimensionalidad_files/figure-latex/scattercontinuas-1.
-pdf>] [5 <./proyecto-reduccion-dimensionalidad_files/figure-latex/boxplotscateg
-oricas-1.pdf> <./proyecto-reduccion-dimensionalidad_files/figure-latex/matrizco
+pdf> <./proyecto-reduccion-dimensionalidad_files/figure-latex/boxplotscategoric
+as-1.pdf>] [5 <./proyecto-reduccion-dimensionalidad_files/figure-latex/matrizco
 rr-1.pdf>]
-<proyecto-reduccion-dimensionalidad_files/figure-latex/pcagrafica-1.pdf, id=115
-, 433.62pt x 252.945pt>
+<proyecto-reduccion-dimensionalidad_files/figure-latex/pcagrafica-1.pdf, id=117
+, 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/pcagrafica-1.pdf Gr
 aphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/pcagrafica-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-pcagrafica-1.pdf  used on input line 355.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
+pcagrafica-1.pdf  used on input line 360.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
 [6]
 <proyecto-reduccion-dimensionalidad_files/figure-latex/researchpca-1.pdf, id=12
-2, 433.62pt x 252.945pt>
+6, 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/researchpca-1.pdf G
 raphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/researchpca-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-researchpca-1.pdf  used on input line 368.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/tsneexacta-1.pdf, id=124
+researchpca-1.pdf  used on input line 373.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[7 <./proyecto-reduccion-dimensionalidad_files/figure-latex/pcagrafica-1.pdf> <
+./proyecto-reduccion-dimensionalidad_files/figure-latex/researchpca-1.pdf>]
+<proyecto-reduccion-dimensionalidad_files/figure-latex/tsneexacta-1.pdf, id=152
 , 433.62pt x 361.35pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/tsneexacta-1.pdf Gr
 aphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/tsneexacta-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-tsneexacta-1.pdf  used on input line 391.
+tsneexacta-1.pdf  used on input line 396.
 (pdftex.def)             Requested size: 433.61894pt x 361.34912pt.
-[7 <./proyecto-reduccion-dimensionalidad_files/figure-latex/pcagrafica-1.pdf>] 
-[8 <./proyecto-reduccion-dimensionalidad_files/figure-latex/researchpca-1.pdf> 
-<./proyecto-reduccion-dimensionalidad_files/figure-latex/tsneexacta-1.pdf>]
 <proyecto-reduccion-dimensionalidad_files/figure-latex/rtsnedefault-1.pdf, id=1
-65, 433.62pt x 252.945pt>
+54, 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/rtsnedefault-1.pdf 
 Graphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/rtsnedefault-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-rtsnedefault-1.pdf  used on input line 402.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
+rtsnedefault-1.pdf  used on input line 407.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[8 <./proyecto-reduccion-dimensionalidad_files/figure-latex/tsneexacta-1.pdf>]
 <proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridperp-1.pdf, id=1
-69, 433.62pt x 252.945pt>
+74, 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridperp-1.pdf 
 Graphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridperp-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-tsnegridperp-1.pdf  used on input line 436.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
+tsnegridperp-1.pdf  used on input line 443.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
 
-Underfull \hbox (badness 1163) in paragraph at lines 445--446
+Underfull \hbox (badness 1163) in paragraph at lines 452--453
 []\T1/lmr/m/n/10 (+20) La se-gun-da eta-pa cru-za \T1/lmtt/m/n/10 perplexity $\
 OMS/lmsy/m/n/10 2 f\OT1/lmr/m/n/10 (+20) 10\OML/lmm/m/it/10 ; \OT1/lmr/m/n/10 (
 +20) 15\OML/lmm/m/it/10 ; \OT1/lmr/m/n/10 (+20) 20\OML/lmm/m/it/10 ; \OT1/lmr/m
@@ -1254,94 +1248,100 @@ y/m/n/10 2
 
 [9{C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.en
 c} <./proyecto-reduccion-dimensionalidad_files/figure-latex/rtsnedefault-1.pdf>
-] [10 <./proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridperp-1.p
-df>]
-
-LaTeX Warning: Reference `fig:tsne-grid-ampliada' on page 11 undefined on input
- line 469.
-
-
-LaTeX Warning: Reference `fig:tsne-exacta' on page 11 undefined on input line 4
-69.
-
-
-LaTeX Warning: Reference `tab:tsne-grid' on page 11 undefined on input line 469
-.
-
+]
 <proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegrideta-1.pdf, id=20
-7, 433.62pt x 252.945pt>
+1, 433.62pt x 289.08pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegrideta-1.pdf G
 raphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegrideta-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-tsnegrideta-1.pdf  used on input line 473.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
+tsnegrideta-1.pdf  used on input line 480.
+(pdftex.def)             Requested size: 433.61894pt x 289.07928pt.
+<proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridampliada-1.pdf, 
+id=202, 433.62pt x 325.215pt>
+File: proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridampliada-1.
+pdf Graphic file (type pdf)
+<use proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridampliada-1.p
+df>
+Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
+tsnegridampliada-1.pdf  used on input line 489.
+(pdftex.def)             Requested size: 433.61894pt x 325.2142pt.
+[10 <./proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridperp-1.pdf
+>]
+
+LaTeX Warning: Text page 11 contains only floats.
+
 [11 <./proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegrideta-1.pdf>
-]
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf, id=22
-6, 433.62pt x 252.945pt>
+ <./proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridampliada-1.pd
+f>]
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf, id=24
+8, 433.62pt x 208.78pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf G
 raphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapdefault-1.pdf  used on input line 510.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf, id=228
-, 433.62pt x 252.945pt>
+umapdefault-1.pdf  used on input line 550.
+(pdftex.def)             Requested size: 433.61894pt x 208.77946pt.
+[12 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf>
+]
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf, id=264
+, 433.62pt x 201.75375pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf Gr
 aphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapchance-1.pdf  used on input line 521.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
+umapchance-1.pdf  used on input line 561.
+(pdftex.def)             Requested size: 433.61894pt x 201.75325pt.
 <proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1.pdf, id=2
-30, 433.62pt x 252.945pt>
+66, 433.62pt x 201.75375pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1.pdf 
 Graphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapresearch-1.pdf  used on input line 532.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf, id=232,
- 433.62pt x 252.945pt>
+umapresearch-1.pdf  used on input line 572.
+(pdftex.def)             Requested size: 433.61894pt x 201.75325pt.
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf, id=268,
+ 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf Gra
 phic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapmulti-1.pdf  used on input line 543.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
-[12 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf>
-] [13 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf
-> <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1.pdf>]
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf, id=274
-, 433.62pt x 252.945pt>
+umapmulti-1.pdf  used on input line 583.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf, id=270
+, 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf Gr
 aphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umaprecipe-1.pdf  used on input line 554.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf, id=276, 
-433.62pt x 433.62pt>
+umaprecipe-1.pdf  used on input line 594.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[13 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf> 
+<./proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1.pdf>]
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf, id=299, 
+433.62pt x 382.42876pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf Grap
 hic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapgrid-1.pdf  used on input line 565.
-(pdftex.def)             Requested size: 433.61894pt x 433.61894pt.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf, id=278,
- 433.62pt x 252.945pt>
+umapgrid-1.pdf  used on input line 605.
+(pdftex.def)             Requested size: 433.61894pt x 382.42781pt.
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf, id=301,
+ 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf Gra
 phic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapfinal-1.pdf  used on input line 576.
-(pdftex.def)             Requested size: 433.61894pt x 252.94438pt.
-[14 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf>] 
-[15 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf>]
-[16 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf>] [
-17 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf>]
-runsystem(latexminted cleantemp  --timestamp 20260720010235 BFCA8610422CC91C867
+umapfinal-1.pdf  used on input line 616.
+(pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
+[14 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf> <
+./proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf>]
+
+LaTeX Warning: Text page 15 contains only floats.
+
+[15 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf> <.
+/proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf>] [16]
+runsystem(latexminted cleantemp  --timestamp 20260720173105 BFCA8610422CC91C867
 0167F0415B4C7)...disabled (restricted).
 
 (proyecto-reduccion-dimensionalidad.aux
@@ -1352,16 +1352,13 @@ LaTeX Info: Redefining \% on input line 13.
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-05-26>
  ***********
-
-LaTeX Warning: There were undefined references.
-
  ) 
 Here is how much of TeX's memory you used:
- 26265 strings out of 467509
- 495105 string characters out of 5408780
- 1109115 words of memory out of 5000000
- 54874 multiletter control sequences out of 15000+600000
- 676055 words of font info for 140 fonts, out of 8000000 for 9000
+ 26294 strings out of 467509
+ 496112 string characters out of 5408780
+ 1109424 words of memory out of 5000000
+ 54890 multiletter control sequences out of 15000+600000
+ 682336 words of font info for 146 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  65i,12n,84p,1051b,553s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.pf
@@ -1375,10 +1372,10 @@ C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmri10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
-Output written on proyecto-reduccion-dimensionalidad.pdf (17 pages, 1831113 byt
+Output written on proyecto-reduccion-dimensionalidad.pdf (16 pages, 2331736 byt
 es).
 PDF statistics:
- 444 PDF objects out of 1000 (max. 8388607)
- 55 named destinations out of 1000 (max. 500000)
- 24771 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 468 PDF objects out of 1000 (max. 8388607)
+ 58 named destinations out of 1000 (max. 500000)
+ 28888 words of extra memory for PDF output out of 29859 (max. 10000000)
 
