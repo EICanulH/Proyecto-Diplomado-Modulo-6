@@ -239,9 +239,23 @@ En este sentido, analizamos el conjunto de datos de \textbf{Admission Predict}, 
 
 \section{Estadística Descriptiva}\label{estaduxedstica-descriptiva}
 
-En la figura \ref{fig:scattercontinuas} observamos una relación positiva entre la variable Chance of Admit y el resto de variables continuas (GRE Score, TOEFL Score y CGPA), por lo que los alumnos con mejores calificaciones en el examen GRE, TOEFL y mejor GPA tienen más probabilidad de ser admitidos en el programa de maestría de su elección.
+Primero se realiza un análisis de la variable respuesta \texttt{Chance\ of\ Admit}. Si bien en un análisis real no se conocería esta variable, para fines didácticos es útil para evaluar los métodos de aprendizaje no supervisado.
 
-\begin{figure}[ht]
+En la figura \ref{fig:distchance} se observa que la mayoría de los estudiantes tienen una probabilidad de admisión de entre 60\%
+y 80\%
+
+\begin{figure}[htbp]
+
+{\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/distchance-1} 
+
+}
+
+\caption{Distribución de la variable respuesta \texttt{Chance of Admit}}\label{fig:distchance}
+\end{figure}
+
+En la figura \ref{fig:scattercontinuas} observamos una relación positiva entre la variable \texttt{Chance\ of\ Admit} y el resto de variables continuas (\texttt{GRE\ Score}, \texttt{TOEFL\ Score} y \texttt{CGPA}), por lo que los alumnos con mejores calificaciones en el examen GRE, TOEFL y mejor GPA tienen más probabilidad de ser admitidos en el programa de maestría de su elección.
+
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/scattercontinuas-1} 
 
@@ -252,7 +266,7 @@ En la figura \ref{fig:scattercontinuas} observamos una relación positiva entre 
 
 En la figura \ref{fig:boxplotscategoricas} se tiene un boxplot de Chance of Admit por cada categoría de cada una de las variables categóricas (University Rating, SOP, LOR y Research).
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/boxplotscategoricas-1} 
 
@@ -263,7 +277,7 @@ En la figura \ref{fig:boxplotscategoricas} se tiene un boxplot de Chance of Admi
 
 En la figura \ref{fig:matrizcorr} observamos en la matriz de correlación de Pearson que todas las variables están correlacionadas entre sí de manera positiva. Todas las correlaciones son de al menos 0.4, por lo que hay una estructura de asociación lineal fuerte entre las variables.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/matrizcorr-1} 
 
@@ -285,8 +299,6 @@ La medida de adecuación muestral (MSA por sus siglas en inglés) de Kaiser, Mey
 El análisis de componentes principales se aplicó sobre el conjunto de variables predictoras estandarizadas mediante el procedimiento de normalización, integrando tanto las variables cuantitativas: \texttt{GRE Score}, \texttt{TOEFL Score}, \texttt{University Rating}, \texttt{SOP}, \texttt{LOR} y \texttt{CGPA}, como la variable categórica \texttt{Research}, la cual fue convertida a tipo factor con dos niveles (No y Sí). No obstante, \texttt{Chance of Admit} se excluyó del cálculo, asignándole el rol de \textit{outcome} y se conservó únicamente para facilitar la interpretación posterior de los resultados.
 
 Así pues, una vez extraídos los componentes principales, se obtuvo su matriz de cargas factoriales, que se muestra en la tabla \ref{tab:varianzapca}, las cuales indican la contribución de cada variable original a la construcción de cada componente, así como su matriz de varianza explicada asociada a cada uno y la acumulada en términos porcentuales, la cual se muestra en la tabla \ref{tab:porcentajevar}.
-
-\vspace{.4cm}
 
 \begin{table}[!h]
 \centering
@@ -338,7 +350,7 @@ En cuanto a las cargas factoriales, observamos que el PC1 presenta cargas de mag
 
 Ahora bien, al proyectar a los postulantes sobre el plano definido por PC1 y PC2 (figura \ref{fig:pcagrafica}), coloreando cada punto según su \texttt{Chance of Admit}, se observa un gradiente claro a lo largo del eje PC1: los estudiantes con mayor probabilidad de admisión se concentran en la región de valores negativos de PC1, mientras que aquellos con menor probabilidad se agrupan principalmente en la región de valores positivos.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/pcagrafica-1} 
 
@@ -351,7 +363,7 @@ Este patrón resulta consistente con la interpretación anterior de PC1 como un 
 
 De manera complementaria, al segmentar a los postulantes según su experiencia en investigación (figura \ref{fig:researchpca}) se observa una separación clara a lo largo del eje PC2: los estudiantes con experiencia en investigación (\texttt{Sí}) se concentran principalmente en la región de valores positivos de PC2, mientras que aquellos sin experiencia (\texttt{No}) se ubican mayoritariamente en la región de valores negativos, sin que se aprecie una separación equivalente a lo largo de PC1.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/researchpca-1} 
 
@@ -366,22 +378,11 @@ Así pues, es posible concluir que la variabilidad original contenida en las sie
 
 \subsection{t-SNE}\label{t-sne}
 
-A diferencia de PCA, que construye combinaciones lineales de las variables originales, t-SNE modela la similitud entre pares de observaciones mediante una distribución gaussiana en el espacio de alta dimensión y una distribución t -Student, minimizando la divergencia de Kullback-Leibler entre ambas por descenso de gradiente. La matriz sometida a t‑SNE se construyó seleccionando las variables cuantitativas, excluyendo \texttt{Chance of Admit} por su condición de variable respuesta. Se empleó el mismo conjunto de predictores estandarizados utilizado en el análisis de componentes principales.
+A diferencia de PCA, que construye combinaciones lineales de las variables originales, t-SNE modela la similitud entre pares de observaciones mediante una distribución gaussiana en el espacio de alta dimensión y una distribución t -Student, minimizando la divergencia de Kullback-Leibler entre ambas por descenso de gradiente. La matriz sometida a t‑SNE se construyó seleccionando las variables cuantitativas, excluyendo \texttt{Chance of Admit} por su condición de variable respuesta. Se empleó el mismo conjunto de predictore
 
 \subsubsection{Comparación de las dos implementaciones}\label{comparaciuxf3n-de-las-dos-implementaciones}
 
 Se emplearon dos implementaciones disponibles: \texttt{tsne()} (algoritmo exacto) y \texttt{Rtsne()} (aproximación de Barnes‑Hut con \texttt{theta = 0.5}), que reduce la complejidad y acelera el cálculo ---aproximadamente veinte veces---. Aunque ambas producen configuraciones cualitativamente equivalentes, la mayor rapidez de \texttt{Rtsne()} fue determinante para la exploración sistemática de hiperparámetros; \texttt{tsne()} se reservó únicamente para la verificación inicial del comportamiento del algoritmo.
-
-En la figura \ref{fig:tsne1} las observaciones se concentran en un núcleo denso alrededor del origen, mientras que unas cuantas están dispersas a gran distancia. El \textit{embedding} queda así dominado por unas pocas observaciones que la optimización expulsó a distancias lejanas, y el resto de la estructura se vuelve ilegible por compresión de escala.
-
-\begin{figure}[ht]
-
-{\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/tsne1-1} 
-
-}
-
-\caption{Salida de \texttt{tsne()} con parámetros por defecto, coloreada según \texttt{Chance of Admit}}\label{fig:tsne1}
-\end{figure}
 
 \subsection{UMAP}\label{umap}
 
@@ -411,7 +412,7 @@ Se ejecutó, en primer lugar, una configuración por defecto (\texttt{n\_neighbo
 
 En la configuración por defecto (Figura \ref{fig:umapdefault}, los 400 aspirantes no se agrupan en conglomerados discretos, sino que se distribuyen a lo largo de una trayectoria curva y continua, con pequeños grumos locales dispersos a lo largo del recorrido. Este patrón es consistente con la existencia de una única dimensión latente dominante: en lugar de proyectar dicha dimensión como una línea recta ---como ocurriría con una componente principal---, UMAP la despliega como una curva no lineal en el plano, producto de preservar relaciones de vecindad en vez de varianza global.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1} 
 
@@ -422,7 +423,7 @@ En la configuración por defecto (Figura \ref{fig:umapdefault}, los 400 aspirant
 
 Al colorear esta misma proyección según \texttt{Chance of Admit} (figura \ref{fig:umapchance}), se observa un gradiente perfectamente suave a lo largo de toda la trayectoria: un extremo concentra las probabilidades de admisión más bajas (en torno a 0.4) y el extremo opuesto las más altas (superiores a 0.9). Esto confirma que la primera dimensión de UMAP captura, de forma no lineal, prácticamente la misma información que PC1 en el análisis de componentes principales: un índice continuo de competitividad del aspirante.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1} 
 
@@ -433,7 +434,7 @@ Al colorear esta misma proyección según \texttt{Chance of Admit} (figura \ref{
 
 Cuando la proyección se colorea en cambio por la variable binaria \texttt{Research} (figura \ref{fig:umapresearch}), se aprecia que los aspirantes sin experiencia en investigación predominan en el extremo de menor probabilidad de admisión, mientras que quienes sí cuentan con experiencia se concentran hacia el extremo opuesto; sin embargo, ambos grupos se traslapan considerablemente en la zona intermedia de la trayectoria. Esto indica que \texttt{Research} está correlacionada con el resto del perfil académico, pero no constituye un factor independiente capaz de segmentar geométricamente el embedding: no genera clusters propios, solo modula la densidad de puntos sobre la misma trayectoria continua ya descrita.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1} 
 
@@ -444,7 +445,7 @@ Cuando la proyección se colorea en cambio por la variable binaria \texttt{Resea
 
 El gráfico multivariable que combina color (\texttt{Chance of Admit}) y forma (\texttt{Research}), mostrado en la figura \ref{fig:umapmulti}, permite verificar simultáneamente ambos hallazgos en una sola visualización.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1} 
 
@@ -455,7 +456,7 @@ El gráfico multivariable que combina color (\texttt{Chance of Admit}) y forma (
 
 Con el fin de descartar que la trayectoria observada fuera un artefacto de una corrida particular, se replicó el cálculo mediante una receta del ecosistema \texttt{tidymodels} (\texttt{step\_normalize} + \texttt{step\_umap}), obteniéndose la proyección de la figura \ref{fig:umaprecipe}. La estructura ---trayectoria continua con gradiente suave de \texttt{Chance of Admit}--- se reproduce de forma prácticamente idéntica, lo que confirma que el patrón encontrado es robusto al flujo de cómputo utilizado y no depende de una implementación específica del algoritmo.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1} 
 
@@ -466,7 +467,7 @@ Con el fin de descartar que la trayectoria observada fuera un artefacto de una c
 
 La robustez de esta estructura se puso a prueba de manera más sistemática mediante la rejilla de dieciséis combinaciones de \texttt{n\_neighbors} y \texttt{min\_dist} (figura \ref{fig:umapgrid}). En todos los paneles, la trayectoria continua y su gradiente asociado a \texttt{Chance of Admit} se mantienen presentes, lo que descarta que se trate de un artefacto de una configuración de hiperparámetros en particular. No obstante, sí se observan diferencias cualitativas relevantes: con valores bajos de \texttt{min\_dist} (0.01--0.10) combinados con \texttt{n\_neighbors} bajo (10--30), la trayectoria se muestra más fibrosa y con micro-agrupaciones visibles, favoreciendo la fidelidad a la estructura local; en cambio, con \texttt{min\_dist} alto (0.50) y \texttt{n\_neighbors} alto (50--100), la forma resultante es más ancha y suave, con los puntos mejor separados visualmente pero con menor detalle de estructura local.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1} 
 
@@ -477,7 +478,7 @@ La robustez de esta estructura se puso a prueba de manera más sistemática medi
 
 Con base en esta exploración, se seleccionó como configuración final \texttt{n\_neighbors = 10} y \texttt{min\_dist = 0.5} (figura \ref{fig:umapfinal}), por representar un punto intermedio que conserva la trayectoria continua sin sobreamontonar los puntos, favoreciendo así su lectura e interpretación. En conjunto, los resultados de UMAP muestran que no existe evidencia de subgrupos discretos de aspirantes, sino un continuo de competitividad académica que UMAP visualiza como una curva no lineal en dos dimensiones. La variable \texttt{Research} se encuentra correlacionada con dicho continuo, pero no actúa como un factor de segmentación independiente.
 
-\begin{figure}[ht]
+\begin{figure}[htbp]
 
 {\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1} 
 

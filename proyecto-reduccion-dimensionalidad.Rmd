@@ -61,7 +61,7 @@ knitr::opts_chunk$set(
 	echo = FALSE,
 	fig.align = "center",
 	fig.dim = c(6, 3),
-	fig.pos = "ht",
+	fig.pos = "htbp",
 	message = FALSE,
 	warning = FALSE,
 	error = FALSE,
@@ -238,6 +238,8 @@ table(df_eda$Research)
 df_eda %>% glimpse()
 ```
 
+
+
 ```{r}
 df_eda %>%
   group_by(Research) %>%
@@ -304,42 +306,29 @@ df_largo <- df_eda %>%
   pivot_longer(!Research, names_to = "Variable", values_to = "Score")
 ```
 
+Primero se realiza un análisis de la variable respuesta `Chance of Admit`. Si bien en un análisis real no se conocería esta variable, para fines didácticos es útil para evaluar los métodos de aprendizaje no supervisado.
 
-```{r}
-theme_set(theme_light())
+En la figura \@ref(fig:distchance) se observa que la mayoría de los estudiantes tienen una probabilidad de admisión de entre 60%
+y 80%
 
-df_largo |> ggplot(mapping = aes(x = Research, y = Score, fill = Variable)) +
-  geom_boxplot() + 
-  facet_wrap(~ Variable, scales = "free", ncol = 3) +
-  scale_color_viridis_d(option = "plasma", end = .7) +
-  theme(legend.position = "none") +
-  labs(title = "Comparación vía box-plot")
+```{r distchance, include=TRUE, fig.cap="Distribución de la variable respuesta \\texttt{Chance of Admit}"}
+df %>%
+  ggplot(aes(x = Chance.of.Admit)) +
+  geom_histogram(
+    bins = 30,                 # Number of bars (you can adjust this)
+    fill = "dodgerblue3",      # Color inside the bars
+    color = "white",           # Color of the border lines between bars
+    alpha = 0.8                # Transparency
+  ) +
+  labs(
+    title = "Distribución de Chance of Admit",
+    x = "Chance of Admit",
+    y = "Frecuencia"
+  ) +
+  theme_minimal()
 ```
 
-```{r}
-df_largo |> ggplot(mapping = aes(Score, fill = Research)) +
-  geom_histogram(color = "white", bins=20) +
-  facet_wrap(~Variable, scales = "free", ncol= 3) +
-  scale_color_viridis_d(option = "plasma", end = .7) +
-  theme_light()+
-  labs(title = "Comparación vía histograma")
-```
-
-```{r}
-df_largo |> ggplot(mapping = aes(Score, fill = Research)) +
-  geom_density(color = "white") +
-  facet_wrap(~Variable, scales = "free", ncol= 3) +
-  scale_color_viridis_d(option = "plasma", end = .7) +
-  theme_light()+
-  labs(title = "Comparación a través de densidad")
-```
-
-```{r eval=FALSE}
-###ggpairs
-ggpairs(df_eda, mapping = aes(color = Research), columns = seq(1, 8))
-```
-
-En la figura \@ref(fig:scattercontinuas) observamos una relación positiva entre la variable Chance of Admit y el resto de variables continuas (GRE Score, TOEFL Score y CGPA), por lo que los alumnos con mejores calificaciones en el examen GRE, TOEFL y mejor GPA tienen más probabilidad de ser admitidos en el programa de maestría de su elección.
+En la figura \@ref(fig:scattercontinuas) observamos una relación positiva entre la variable `Chance of Admit` y el resto de variables continuas (`GRE Score`, `TOEFL Score` y `CGPA`), por lo que los alumnos con mejores calificaciones en el examen GRE, TOEFL y mejor GPA tienen más probabilidad de ser admitidos en el programa de maestría de su elección.
 
 ```{r scattercontinuas, include=TRUE, fig.cap="Relación entre las variables continuas y Chance of Admit"}
 vars_continuas <- c(
@@ -529,8 +518,6 @@ my_palette <- col_numeric(
 )
 ```
 
-\vspace{.4cm}
-
 ```{r varianzapca, include=TRUE}
 pca_loading %>%  
   pivot_wider(names_from = component, values_from = value) %>%  
@@ -656,7 +643,7 @@ datos_pca <- bake(wdbc_pca, new_data = NULL)
 datos_pca
 ```
 
-```{r pcagrafica, include=TRUE, fig.dim=c(6, 4), fig.cap="Proyección de los postulantes sobre PC1 y PC2, coloreada según la probabilidad de admisión"}
+```{r pcagrafica, include=TRUE, fig.cap="Proyección de los postulantes sobre PC1 y PC2, coloreada según la probabilidad de admisión"}
 # Gráfico con etiqueta de color continua (Variable Objetivo: Chance.of.Admit)
 datos_pca %>%
   ggplot(aes(x = PC1, y = PC2, color = Chance.of.Admit)) +
@@ -737,35 +724,11 @@ wdbc_pca %>%
 
 ## t-SNE
 
-A diferencia de PCA, que construye combinaciones lineales de las variables originales, t-SNE modela la similitud entre pares de observaciones mediante una distribución gaussiana en el espacio de alta dimensión y una distribución t -Student, minimizando la divergencia de Kullback-Leibler entre ambas por descenso de gradiente. La matriz sometida a t‑SNE se construyó seleccionando las variables cuantitativas, excluyendo \texttt{Chance of Admit} por su condición de variable respuesta. Se empleó el mismo conjunto de predictores estandarizados utilizado en el análisis de componentes principales.
+A diferencia de PCA, que construye combinaciones lineales de las variables originales, t-SNE modela la similitud entre pares de observaciones mediante una distribución gaussiana en el espacio de alta dimensión y una distribución t -Student, minimizando la divergencia de Kullback-Leibler entre ambas por descenso de gradiente. La matriz sometida a t‑SNE se construyó seleccionando las variables cuantitativas, excluyendo \texttt{Chance of Admit} por su condición de variable respuesta. Se empleó el mismo conjunto de predictore
 
 ### Comparación de las dos implementaciones
 
 Se emplearon dos implementaciones disponibles: \texttt{tsne()} (algoritmo exacto) y \texttt{Rtsne()} (aproximación de Barnes‑Hut con \texttt{theta = 0.5}), que reduce la complejidad y acelera el cálculo —aproximadamente veinte veces—. Aunque ambas producen configuraciones cualitativamente equivalentes, la mayor rapidez de \texttt{Rtsne()} fue determinante para la exploración sistemática de hiperparámetros; \texttt{tsne()} se reservó únicamente para la verificación inicial del comportamiento del algoritmo.
-
-En la figura \@ref(fig:tsne1) las observaciones se concentran en un núcleo denso alrededor del origen, mientras que unas cuantas están dispersas a gran distancia. El \textit{embedding} queda así dominado por unas pocas observaciones que la optimización expulsó a distancias lejanas, y el resto de la estructura se vuelve ilegible por compresión de escala.
-
-```{r}
-set.seed(123)
-
-df_tsne <- df %>%
-  select(-Chance.of.Admit) %>%
-  scale() %>%
-  tsne()
-```
-
-```{r}
-datos <- data.frame(tSNE1 = df_tsne[, 1],
-                    tSNE2 = df_tsne[, 2],
-                    Chance.of.Admit = df$Chance.of.Admit)
-```
-
-```{r tsne1, include=TRUE, fig.cap="Salida de \\texttt{tsne()} con parámetros por defecto, coloreada según \\texttt{Chance of Admit}"}
-ggplot(datos, aes(x = tSNE1, y = tSNE2, color = Chance.of.Admit)) +
-  geom_point(size = 1.1) +
-  scale_color_gradient(low = "lightsalmon", high = "dodgerblue3") +
-  labs(title = "WDBC: t-sne")
-```
 
 ## UMAP
 
