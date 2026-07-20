@@ -60,7 +60,7 @@ classoption: a4paper
 knitr::opts_chunk$set(
 	echo = FALSE,
 	fig.align = "center",
-	fig.dim = c(6, 4),
+	fig.dim = c(6, 3),
 	fig.pos = "ht",
 	message = FALSE,
 	warning = FALSE,
@@ -422,8 +422,6 @@ cor_wdbc
 
 En la figura \@ref(fig:matrizcorr) observamos en la matriz de correlación de Pearson que todas las variables están correlacionadas entre sí de manera positiva. Todas las correlaciones son de al menos 0.4, por lo que hay una estructura de asociación lineal fuerte entre las variables.
 
-\FloatBarrier
-
 ```{r matrizcorr, include=TRUE, fig.dim=c(6, 4), fig.cap="Matriz de correlación"}
 # Gráfico estético de correlaciones
 ggcorrplot::ggcorrplot(
@@ -768,4 +766,302 @@ ggplot(datos, aes(x = tSNE1, y = tSNE2, color = Chance.of.Admit)) +
   scale_color_gradient(low = "lightsalmon", high = "dodgerblue3") +
   labs(title = "WDBC: t-sne")
 ```
+
+## UMAP
+
+El análisis mediante UMAP (\textit{Uniform Manifold Approximation and Projection}) se aplicó sobre el mismo conjunto de variables predictoras estandarizadas utilizado en el análisis de componentes principales, integrando tanto las variables cuantitativas \texttt{GRE Score}, \texttt{TOEFL Score}, \texttt{University Rating}, \texttt{SOP}, \texttt{LOR} y \texttt{CGPA}, como la variable categórica \texttt{Research}, convertida a tipo factor con dos niveles (No y Sí). Al igual que en PCA, \texttt{Chance of Admit} se excluyó del cálculo y se conservó únicamente para la interpretación posterior de los resultados.
+
+UMAP es una técnica de reducción de dimensión no lineal que no maximiza varianza explicada sobre ejes ortogonales, sino que construye un grafo de vecinos más cercanos en el espacio original y optimiza una proyección de baja dimensión que preserve, en la mayor medida posible, esa estructura de vecindad local. Por esta razón, el algoritmo no produce una tabla de varianza explicada.
+
+Se ejecutó, en primer lugar, una configuración por defecto (\texttt{n\_neighbors = 15}, \texttt{min\_dist = 0.1}, métrica euclidiana), la cual fue replicada posteriormente mediante una receta del ecosistema \texttt{tidymodels} (\texttt{step\_normalize} + \texttt{step\_umap}) con el fin de verificar la consistencia del resultado frente a distintas implementaciones del algoritmo. Dado que UMAP no cuenta con un criterio automático de selección de hiperparámetros —análogo al porcentaje de varianza explicada en PCA—, se realizó una búsqueda exploratoria sobre una rejilla de dieciséis combinaciones, cruzando \texttt{n\_neighbors} $\in \{10, 30, 50, 100\}$ y \texttt{min\_dist} $\in \{0.01, 0.10, 0.25, 0.50\}$, evaluando en cada caso la calidad visual de la proyección resultante. A partir de esta exploración se seleccionó como configuración final \texttt{n\_neighbors = 10} y \texttt{min\_dist = 0.5}, resumida en la Tabla \ref{tab:umap_hiperparametros}.
+
+\begin{table}[h]
+  \centering
+  \caption{Hiperparámetros explorados y configuración final seleccionada para UMAP}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Parámetro} & \textbf{Valores explorados} & \textbf{Valor final} \\
+    \midrule
+    \texttt{n\_neighbors} & 10, 30, 50, 100 & 10 \\
+    \texttt{min\_dist} & 0.01, 0.10, 0.25, 0.50 & 0.50 \\
+    \texttt{metric} & euclidiana (fija) & euclidiana \\
+    \texttt{n\_components} & 2 (adicionalmente 3 para visualización) & 2 \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:umap_hiperparametros}
+\end{table}
+
+### Interpretación de resultados: UMAP
+
+```{r}
+## 2.3 UMAP ----
+
+tidymodels_prefer()
+
+# Construir df1 convirtiendo la variable binaria a factor
+df1 <- df %>% 
+  mutate(Research = factor(Research, 
+                           levels = c(0, 1), 
+                           labels = c("No", "Sí")))
+
+df1
+```
+
+
+```{r}
+### UMAP: CONFIGURACIÓN POR DEFECTO (Hiperparámetros por default) ----
+
+# Fijamos semilla para que el proceso estocástico sea reproducible
+set.seed(123)
+
+# Preparar la matriz numérica escalada sin la variable objetivo
+# 'Research' al ser factor en df1 se omitirá automáticamente con select(where(is.numeric))
+matriz_umap <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# Ejecutar el algoritmo estándar de UMAP
+df_umap <- uwot::umap(matriz_umap)
+
+# INSPECCIÓN DE LOS RESULTADOS
+str(df_umap)
+names(df_umap)
+head(df_umap)
+```
+
+
+```{r}
+# CONSTRUCCIÓN DE LA BASE DE DATOS Y VISUALIZACIONES
+
+# Unificamos las coordenadas comprimidas con la variable respuesta continua
+datos <- data.frame(
+  UMAP1 = df_umap[, 1],
+  UMAP2 = df_umap[, 2],
+  Chance.of.Admit = df1$Chance.of.Admit,
+  Research = df1$Research
+)
+
+datos
+```
+
+En la configuración por defecto (Figura \@ref(fig:umapdefault), los 400 aspirantes no se agrupan en conglomerados discretos, sino que se distribuyen a lo largo de una trayectoria curva y continua, con pequeños grumos locales dispersos a lo largo del recorrido. Este patrón es consistente con la existencia de una única dimensión latente dominante: en lugar de proyectar dicha dimensión como una línea recta —como ocurriría con una componente principal—, UMAP la despliega como una curva no lineal en el plano, producto de preservar relaciones de vecindad en vez de varianza global.
+
+```{r umapdefault, include=TRUE, fig.cap="UMAP con configuración por defecto (\\texttt{n\\_neighbors} = 15)"}
+# 1. Gráfico de dispersión base UMAP 
+ggplot(datos, aes(x = UMAP1, y = UMAP2)) +
+  geom_point(size = 1.5, alpha = 0.7) +
+  labs(title = "Graduates Admission: UMAP (Default)",
+       x = "UMAP Dimensión 1",
+       y = "UMAP Dimensión 2") +
+  theme_minimal()
+```
+
+Al colorear esta misma proyección según \texttt{Chance of Admit} (figura \ref{fig:umapchance}), se observa un gradiente perfectamente suave a lo largo de toda la trayectoria: un extremo concentra las probabilidades de admisión más bajas (en torno a 0.4) y el extremo opuesto las más altas (superiores a 0.9). Esto confirma que la primera dimensión de UMAP captura, de forma no lineal, prácticamente la misma información que PC1 en el análisis de componentes principales: un índice continuo de competitividad del aspirante.
+
+```{r umapchance, include=TRUE, fig.cap="UMAP coloreado por la probabilidad de admisión, \\texttt{Chance of Admit}"}
+# 3. Gráfico UMAP con gradiente continuo
+ggplot(datos, aes(x = UMAP1, y = UMAP2, color = Chance.of.Admit)) +
+  geom_point(size = 1.5, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") + 
+  labs(
+    title = "Graduates Admission: UMAP por Probabilidad de Admisión",
+    x = "UMAP Dimensión 1",
+    y = "UMAP Dimensión 2",
+    color = "Chance of Admit"
+  ) +
+  theme_minimal()
+```
+
+Cuando la proyección se colorea en cambio por la variable binaria \texttt{Research} (figura \ref{fig:umapresearch}), se aprecia que los aspirantes sin experiencia en investigación predominan en el extremo de menor probabilidad de admisión, mientras que quienes sí cuentan con experiencia se concentran hacia el extremo opuesto; sin embargo, ambos grupos se traslapan considerablemente en la zona intermedia de la trayectoria. Esto indica que \texttt{Research} está correlacionada con el resto del perfil académico, pero no constituye un factor independiente capaz de segmentar geométricamente el embedding: no genera clusters propios, solo modula la densidad de puntos sobre la misma trayectoria continua ya descrita. 
+
+```{r umapresearch, include=TRUE, fig.cap="UMAP coloreado por experiencia en investigación, \\texttt{Research}"}
+# 2. Gráfico UMAP segmentado por la variable binaria (Research)
+ggplot(datos, aes(x = UMAP1, y = UMAP2, color = Research)) +
+  geom_point(size = 1.5, alpha = 0.8) +
+  scale_color_manual(values = c("#008080", "#FF6F61")) + # Tus colores Teal y Coral para los grupos No/Sí
+  labs(
+    title = "Graduates Admission: UMAP por Experiencia en Investigación",
+    x = "UMAP Dimensión 1",
+    y = "UMAP Dimensión 2",
+    color = "Research"
+  ) +
+  theme_minimal()
+```
+
+El gráfico multivariable que combina color (\texttt{Chance of Admit}) y forma (\texttt{Research}), mostrado en la figura \ref{fig:umapmulti}, permite verificar simultáneamente ambos hallazgos en una sola visualización.
+
+```{r umapmulti, include=TRUE, fig.cap="UMAP multivariable: color = \\texttt{Chance of Admit}, forma = \\texttt{Research}"}
+ggplot(datos, aes(x = UMAP1, y = UMAP2, color = Chance.of.Admit, shape = Research)) +
+  geom_point(size = 2.2, alpha = 0.8) + 
+  scale_color_gradient(low = "#008080", high = "#FF6F61") +
+  scale_shape_manual(values = c(16, 17)) + # 16 = Círculo (No), 17 = Triángulo (Sí)
+  labs(
+    title = "Graduates Admission: UMAP Multivariable",
+    subtitle = "Análisis simultáneo de Probabilidad (Color) e Investigación (Forma)",
+    x = "UMAP Dimensión 1",
+    y = "UMAP Dimensión 2",
+    color = "Chance of Admit",
+    shape = "¿Investigación?"
+  ) +
+  theme_minimal()
+```
+
+Con el fin de descartar que la trayectoria observada fuera un artefacto de una corrida particular, se replicó el cálculo mediante una receta del ecosistema \texttt{tidymodels} (\texttt{step\_normalize} + \texttt{step\_umap}), obteniéndose la proyección de la figura \ref{fig:umaprecipe}. La estructura —trayectoria continua con gradiente suave de \texttt{Chance of Admit}— se reproduce de forma prácticamente idéntica, lo que confirma que el patrón encontrado es robusto al flujo de cómputo utilizado y no depende de una implementación específica del algoritmo.
+
+```{r}
+### Otra forma: CONFIGURACIÓN DE LA RECETA PARA UMAP ----
+set.seed(123)
+
+umap_rec <- recipe(~ ., data = df1) %>%
+  # Declarar la variable respuesta para excluirla del cálculo
+  update_role(Chance.of.Admit, new_role = "outcome") %>%
+  # Normalizar únicamente los predictores numéricos
+  step_normalize(all_numeric_predictors()) %>%
+  # Calcular el UMAP sobre esos predictores numéricos normalizados
+  step_umap(all_numeric_predictors(), id = "umap_step")
+
+# Entrenar la receta
+umap_res <- prep(umap_rec)
+```
+
+```{r umaprecipe, include=TRUE, fig.cap="UMAP mediante receta \\texttt{tidymodels} (\\texttt{step\\_umap})"}
+# EXTRACCIÓN DE DATOS MEDIANTE JUICE Y VISUALIZACIÓN
+
+juice(umap_res) %>%
+  ggplot(aes(x = UMAP1, y = UMAP2)) +
+  geom_point(aes(color = Chance.of.Admit), size = 1.5, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") +
+  labs(
+    title = "UMAP: Modelo mediante Receta (Tidymodels)",
+    subtitle = "Estructura global preservada en el perfil de admisiones",
+    x = "UMAP Dimensión 1",
+    y = "UMAP Dimensión 2",
+    color = "Chance of Admit"
+  ) +
+  theme_minimal()
+```
+
+La robustez de esta estructura se puso a prueba de manera más sistemática mediante la rejilla de dieciséis combinaciones de \texttt{n\_neighbors} y \texttt{min\_dist} (figura \ref{fig:umapgrid}). En todos los paneles, la trayectoria continua y su gradiente asociado a \texttt{Chance of Admit} se mantienen presentes, lo que descarta que se trate de un artefacto de una configuración de hiperparámetros en particular. No obstante, sí se observan diferencias cualitativas relevantes: con valores bajos de \texttt{min\_dist} (0.01--0.10) combinados con \texttt{n\_neighbors} bajo (10--30), la trayectoria se muestra más fibrosa y con micro-agrupaciones visibles, favoreciendo la fidelidad a la estructura local; en cambio, con \texttt{min\_dist} alto (0.50) y \texttt{n\_neighbors} alto (50--100), la forma resultante es más ancha y suave, con los puntos mejor separados visualmente pero con menor detalle de estructura local.
+
+```{r}
+### Argumentos de esta funcion ----
+
+### n_neighbors: The size of local neighborhood (in terms of number of neighboring sample points)
+###             In general values should be in the range 2 to 100
+
+### n_components: The dimension of the space to embed into
+
+### metric: Type of distance metric to use to find nearest neighbors ("euclidean" (the default))
+
+### n_epochs: Number of epochs to use during the optimization of the embedded coordinates (default: 500)
+
+### learning_rate: Initial learning rate used in optimization of the coordinates, entre otros
+
+###No hay una menera automatizada de seleccionar los "mejores parametros". Asi que procederemos
+###de forma semejante al modelo de tSNE
+
+### UMAP: Exploracion de hiper-parametros ----
+
+# 1. Definir la rejilla combinada de parámetros a explorar
+umap_params <- expand.grid(n_neighbors = c(10, 30, 50, 100), 
+                           min_dist = c(0.01, 0.1, 0.25, 0.5))
+
+# 2. Preparar la matriz numérica limpia y escalada sin la variable objetivo
+matriz_umap_grid <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# 3. Ejecutar el bucle sobre la rejilla combinada
+set.seed(123)
+start.time <- proc.time()
+
+umaps <- lapply(seq(nrow(umap_params)), function(i) {
+  print(paste("Iteración:", i, "| n_neighbors:", umap_params$n_neighbors[i], "| min_dist:", umap_params$min_dist[i]))
+  emb <- uwot::umap(
+    X = matriz_umap_grid,
+    n_neighbors = umap_params$n_neighbors[i],
+    min_dist  = umap_params$min_dist[i]
+  )
+  return(emb)
+})
+
+proc.time() - start.time # Muestra el tiempo total de cómputo
+```
+
+```{r umapgrid, include=TRUE, fig.dim=c(6, 6), fig.cap="Exploración de hiperparámetros de UMAP: rejilla de \\texttt{n\\_neighbors} $\\times$ \\texttt{min\\_dist}, 16 combinaciones"}
+# UNIFICACIÓN DE RESULTADOS Y FACETADO DE DOS VARIABLES
+
+# 4. Construir la tabla unificada con data.table mapeando la variable continua
+d <- rbindlist(lapply(seq(nrow(umap_params)), function(i) {
+  data.table(
+    x = umaps[[i]][, 1],
+    y = umaps[[i]][, 2],
+    n_neighbors = umap_params$n_neighbors[i],
+    min_dist = umap_params$min_dist[i],
+    Chance = df1$Chance.of.Admit # Variable respuesta continua para el color
+  )
+}))
+
+# 5. Generar la matriz gráfica facetada (Grid de mapas visuales)
+p <- ggplot(d) +
+  geom_point(mapping = aes(x = x, y = y, color = Chance), 
+             size = 1.0, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") +
+  facet_wrap(min_dist ~ n_neighbors, 
+             labeller = label_both,
+             scales = "free",
+             ncol = 4) +
+  theme_bw() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "right",
+    strip.text = element_text(face = "bold", size = 8)
+  ) +
+  labs(title = "Graduates Admission: Exploración UMAP")
+
+# Desplegar el mapa completo
+p
+```
+
+Con base en esta exploración, se seleccionó como configuración final \texttt{n\_neighbors = 10} y \texttt{min\_dist = 0.5} (figura \ref{fig:umapfinal}), por representar un punto intermedio que conserva la trayectoria continua sin sobreamontonar los puntos, favoreciendo así su lectura e interpretación. En conjunto, los resultados de UMAP muestran que no existe evidencia de subgrupos discretos de aspirantes, sino un continuo de competitividad académica que UMAP visualiza como una curva no lineal en dos dimensiones. La variable \texttt{Research} se encuentra correlacionada con dicho continuo, pero no actúa como un factor de segmentación independiente.
+
+```{r umapfinal, include=TRUE, fig.cap="Modelo final de UMAP (\\texttt{n\\_neighbors = 10}, \\texttt{min\\_dist = 0.5})"}
+###Aqui decidimos cual es nuestra mejor seleccion y ajustamos el modelo final
+###Por ejemplo min_dist=0.5 y n_neighbors=10
+
+### FILTRADO Y GRAFICACIÓN DEL MODELO FINAL DE UMAP DESDE LA MATRIZ DE EXPLORACIÓN ----
+
+# Nota: Filtramos min_dist == 0.5 y n_neighbors == 10, que es la combinación óptima
+# que seleccionaste para preservar la estructura global continua del set de datos.
+
+Final_plot <- d %>% 
+  filter(min_dist == 0.5, n_neighbors == 10) %>% 
+  mutate(parametros = factor(paste('n_neighbors:', n_neighbors, 'min_dist:', min_dist))) %>% 
+  ggplot() +
+  geom_point(mapping = aes(x = x, y = y, col = Chance), size = 1.5, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") +
+  theme_bw() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    #axis.title = element_blank(),
+    panel.grid = element_blank()
+  ) +
+  labs(title = 'UMAP: Modelo final',
+       subtitle = 'Configuración Óptima: n_neighbors = 10, min_dist = 0.5',
+       x = "UMAP Dimensión 1",
+       y = "UMAP Dimensión 2",
+       color = "Chance of Admit")
+
+# Desplegar el gráfico final
+Final_plot
+
+###################################################################
+```
+
 
