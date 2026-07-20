@@ -1,0 +1,732 @@
+---
+header-includes:
+  - \usepackage[utf8]{inputenc} 
+  - \usepackage[spanish, es-tabla, es-nodecimaldot]{babel}
+  - \usepackage{actuarialsymbol}
+#  - \usepackage[table,xcdraw]{xcolor}
+  - \usepackage{multicol} 
+  - \usepackage{multirow}  
+  - \usepackage{setspace}
+  - \usepackage{graphicx}
+  - \usepackage{float}     
+  - \usepackage{subfigure}
+  - \usepackage{url}
+  - \usepackage{enumitem}
+  - \usepackage{mathrsfs}
+  - \usepackage{amsmath}
+  - \usepackage{amsfonts}
+  - \usepackage{amssymb}
+  - \usepackage{makeidx}
+  - \usepackage{listings}
+  - \usepackage{flushend}
+  - \usepackage{caption}
+  - \usepackage{minted}
+  - \usepackage{booktabs} 
+  - \usepackage[none]{hyphenat} 
+  - \usepackage{latexsym}
+  - \usepackage{dsfont}
+  - \newcommand{\R}{\mathbb{R}}
+  - \newcommand{\N}{\mathbb{N}}
+  - \usepackage{ragged2e}
+  - \usepackage{array}
+  - \renewcommand{\contentsname}{Índice}
+  - \usepackage{schemata}
+  - \usepackage{graphicx}
+  - \newcommand\diagram[2]{\schema{\schemabox{#1}}{\schemabox{#2}}}
+  - \usepackage{hyperref} 
+  - \usepackage{color}  
+#  - \usepackage{xcolor}
+  - \definecolor{gris}{RGB}{70,70,70}	
+  - \definecolor{negro}{RGB}{40,40,40}	
+  - \definecolor{brinkpink}{rgb}{0.98, 0.38, 0.5}
+  - \definecolor{richlavender}{rgb}{0.67, 0.38, 0.8}
+  - \newcommand{\colorhrule}[3]{\begingroup\color{#1}\rule{#2}{#3}\endgroup}
+  - \setlength{\intextsep}{1mm} 
+  - \setlength{\columnsep}{5mm}
+  - \usepackage{hyperref}
+output:
+  bookdown::pdf_document2: 
+    keep_tex: yes
+    toc: no
+    number_sections: true
+urlcolor: blue
+linkcolor: blue
+fontsize: 10pt
+classoption: a4paper
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	fig.align = "center",
+	fig.dim = c(6, 4),
+	fig.pos = "ht",
+	message = FALSE,
+	warning = FALSE,
+	error = FALSE,
+	include = FALSE,
+	cache = TRUE
+)
+```
+
+\sloppy
+\begin{center}
+\begin{tabular}{cc}
+\multirow{2}{3.5cm}{\includegraphics[width=2.5cm]{logofc.png}}	& \large{\textsc{Universidad Nacional Autónoma de México}}\\\vspace{5mm}
+ & \normalsize{Facultad de Ciencias}\\\vspace{5mm}
+ 
+ & \normalsize{\textbf{Diplomado Introducción Analítica a la Ciencia de Datos}}\\ 
+ \vspace{.3cm}
+ & \vspace{.3cm}\normalsize{Módulo VI: Aprendizaje no supervisado}\\ \vspace{0.1cm}
+ & \small{Profesor: Salvador Zamora Muñoz} 
+ %\\ %\vspace{.1cm}
+ %& \small{ Jorge Ignacio González Cázares}
+\end{tabular}
+\end{center}
+
+\vspace{.1cm}
+
+\begin{center}
+\colorhrule{negro}{16cm}{1.2pt}
+
+\vspace{.4cm}
+
+\textbf{Proyecto 1}
+
+\vspace{0.2cm}
+
+Técnicas de reducción de dimensión: PC, t-SNE y UMAP.
+
+%\textbf{Proyecto 2}
+
+%\vspace{0.2cm}
+
+%Técnicas de agrupamiento o clustering: Clusters por métodos aglomerativos y por método de K-MEANS.
+
+\vspace{.4cm}
+
+\colorhrule{negro}{16cm}{1.2pt}
+\end{center}
+
+\vspace{0.2cm}
+
+\begin{center}
+\textbf{Equipo 6}
+\end{center}
+
+\vspace{0.2cm}
+
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1.5} % Aumenta el espacio entre filas
+    \begin{tabular}{lc}
+        \textbf{Integrantes} & \textbf{Opción de titulación}\\
+        Betancourt Peralta Diego & Sí\\
+        Canul Hernández Erick Iván & Sí\\
+        Gutiérrez Gutiérrez José Omar & Sí\\
+        Hernández Pérez Maximiliano & \\
+        Torres Vargas Brenda Poulette & Sí \\
+    \end{tabular}
+\end{table}
+
+\thispagestyle{empty}
+
+\clearpage
+
+\tableofcontents
+
+\clearpage
+
+\title{Reducción de Dimensionalidad}
+
+# Planteamiento del Problema
+
+Si bien durante los procesos de admisión a posgrado diversos factores académicos y personales, como el desempeño en exámenes, el promedio general de la licenciatura, la calidad de la institución de procedencia, las cartas de recomendación, la declaración de propósitos y la experiencia en investigación, impactan en la probabilidad de que un aspirante sea admitido, dichos factores pueden presentar distintos niveles de correlación y redundancia, de modo que resulta pertinente analizar su estructura mediante técnicas de reducción de dimensión para identificar las variables que aportan mayor información, simplificar el espacio de características y facilitar la interpretación de los datos sin perder una cantidad significativa de información.
+
+En este sentido, analizamos el conjunto de datos de \textbf{Admission Predict},  integrado por 400 observaciones correspondientes a solicitudes de admisión y 8 variables, de las cuales 7 corresponden a variables predictoras y una a la variable respuesta. A continuación, se presenta una breve descripción de las mismas:
+
+- **`GRE Score`**: puntuación obtenida en el examen GRE (0–340).
+- **`TOEFL Score`**: puntuación obtenida en el examen TOEFL (0–120).
+- **`University Rating`**: calificación de la universidad de procedencia (escala de 1 a 5).
+- **`SOP`**: evaluación de la declaración de propósito (Statement of Purpose), en una escala de 1 a 5.
+- **`LOR`**: evaluación de las cartas de recomendación (Letter of Recommendation), en una escala de 1 a 5.
+- **`CGPA`**: promedio general de licenciatura, expresado en una escala de 0 a 10.
+- **`Research`**: variable binaria que representa si el aspirante cuenta (1) o no (0) con experiencia en investigación.
+- **`Chance of Admit`**: Variable continua acotada en el intervalo $\lbrack 0,1\rbrack$, que representa la probabilidad estimada de
+
+```{r warning=FALSE}
+# library(learnr)
+library(tidyverse)
+library(tidymodels)
+library(embed)
+library(corrr)
+library(tidytext)
+library(gradethis)
+library(sortable)
+library(learntidymodels)
+library(rstatix)
+library(broom)
+library(rgl)
+library(plotly)
+library(GGally)
+library(tidyr)
+library(FactoMineR)  
+library(factoextra)
+library(ggord)
+library(corrplot) # para grafico de correlaciones
+library(psych) # Para un resumen estadístico más profundo
+library(modeldata) ###libreria nueva
+library(tsne)  ###libreria nueva
+library(uwot)  ###libreria nueva
+library(scattermore)  ###libreria nueva
+library(readr)  ###libreria nueva
+library(Rtsne)  ###libreria nueva
+library(gganimate)  ###libreria nueva
+library(data.table)  ###libreria nueva
+library(patchwork)   ###librería nueva
+library(knitr)
+library(kableExtra)
+theme_set(theme_bw(16))
+```
+
+```{r}
+# Cargar los datos
+df <- read.csv("../Admission_Predict.csv")
+
+df
+```
+
+```{r}
+# Exploración de los datos
+df %>% dim()
+```
+
+```{r}
+df %>% glimpse()
+```
+
+# Estadística Descriptiva
+
+
+```{r}
+# 1. Estadística Descriptiva ----
+
+### Análisis Numérico Profundo ----
+
+# 'describe' de la librería psych nos da sesgo (skew) y curtosis para ver normalidad
+resumen_profundo <- psych::describe(df)
+print(resumen_profundo)
+```
+
+```{r}
+## Variable Binaria: Research
+df_eda <- df %>% 
+  mutate(Research = factor(Research, levels = c(0, 1), labels = c("No", "Sí")))
+```
+
+```{r}
+df_eda %>% count(Research)
+```
+
+```{r}
+table(df_eda$Research)
+```
+
+
+```{r}
+df_eda %>% glimpse()
+```
+
+```{r}
+df_eda %>%
+  group_by(Research) %>%
+  summarise(n = n()) %>%
+  mutate(prop = n / sum(n)) %>%
+  ggplot(aes(x = Research, y = n)) +
+  geom_col(fill = c("lightsalmon", "dodgerblue3")) +
+  geom_text(aes(label = paste0(n, " | ", signif(prop * 100, digits = 4), '%')), nudge_y = 10) +
+  ggtitle("Distribución de Experiencia en Investigación") +
+  theme_minimal()
+```
+
+
+```{r}
+### Visualización de Distribuciones y Escalas (Gráfico de Densidad) ----
+
+# Pasamos los datos a formato largo para poder graficar todas las variables juntas
+df_largo <- df_eda %>%
+  select(-Research, -Chance.of.Admit) %>% # Excluimos la binaria y la objetivo de las densidades
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Score")
+
+# Gráfico de Densidad
+df_largo |> ggplot(aes(x = Score, fill = Variable)) +
+  geom_density(alpha = 0.6, color = "black") +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        strip.text = element_text(face = "bold", size = 11)) +
+  labs(title = "Distribución y Diferencia de Escalas de las Variables",
+       x = "Valor", y = "Densidad")
+```
+
+
+```{r}
+# Histograma
+df_largo |> ggplot(aes(x = Score, fill = Variable)) +
+  geom_histogram(aes(y = after_stat(density)), bins=20,colour = "black") +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        strip.text = element_text(face = "bold", size = 11)) +
+  labs(title = "Distribución y Diferencia de Escalas de las Variables",
+       x = "Valor", y = "Densidad")
+```
+
+```{r}
+# box-plot
+df_largo |> ggplot(aes(x = Score, fill = Variable)) +
+  geom_boxplot(show.legend = FALSE) +
+  facet_wrap(~Variable, scales = "free") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        strip.text = element_text(face = "bold", size = 11)) +
+  labs(title = "Distribución y Diferencia de Escalas de las Variables",
+       x = "Valor", y = "Densidad")
+```
+
+```{r}
+## Comparacion por la variable de clasificacion o respuesta
+
+# Pasamos los datos a formato largo para poder graficar todas las variables juntas
+df_largo <- df_eda %>%
+  select(-Chance.of.Admit) %>%
+  pivot_longer(!Research, names_to = "Variable", values_to = "Score")
+```
+
+
+```{r}
+theme_set(theme_light())
+
+df_largo |> ggplot(mapping = aes(x = Research, y = Score, fill = Variable)) +
+  geom_boxplot() + 
+  facet_wrap(~ Variable, scales = "free", ncol = 3) +
+  scale_color_viridis_d(option = "plasma", end = .7) +
+  theme(legend.position = "none") +
+  labs(title = "Comparación vía box-plot")
+```
+
+```{r}
+df_largo |> ggplot(mapping = aes(Score, fill = Research)) +
+  geom_histogram(color = "white", bins=20) +
+  facet_wrap(~Variable, scales = "free", ncol= 3) +
+  scale_color_viridis_d(option = "plasma", end = .7) +
+  theme_light()+
+  labs(title = "Comparación vía histograma")
+```
+
+```{r}
+df_largo |> ggplot(mapping = aes(Score, fill = Research)) +
+  geom_density(color = "white") +
+  facet_wrap(~Variable, scales = "free", ncol= 3) +
+  scale_color_viridis_d(option = "plasma", end = .7) +
+  theme_light()+
+  labs(title = "Comparación a través de densidad")
+```
+
+```{r eval=FALSE}
+###ggpairs
+ggpairs(df_eda, mapping = aes(color = Research), columns = seq(1, 8))
+```
+
+En la figura \@ref(fig:scattercontinuas) observamos una relación positiva entre la variable Chance of Admit y el resto de variables continuas (GRE Score, TOEFL Score y CGPA), por lo que los alumnos con mejores calificaciones en el examen GRE, TOEFL y mejor GPA tienen más probabilidad de ser admitidos en el programa de maestría de su elección.
+
+```{r scattercontinuas, include=TRUE, fig.cap="Relación entre las variables continuas y Chance of Admit"}
+vars_continuas <- c(
+  "GRE.Score",
+  "TOEFL.Score",
+  "CGPA"
+)
+
+plots <- lapply(vars_continuas, function(v){
+  
+  g <- ggplot(df, aes_string(x = v, y = "Chance.of.Admit")) +
+    geom_point(color = "lightskyblue",
+               alpha = 0.7,
+               size = 2) +
+    geom_smooth(method = "lm",
+                se = FALSE,
+                color = "dodgerblue3",
+                linewidth = 1) +
+    theme_minimal(base_size = 13) +
+    ylim(0.34, 1) +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0, hjust = 1)) +
+    labs(
+      x = gsub("\\.", " ", v),
+      y = "Chance of Admit"
+    )
+  
+})
+
+wrap_plots(plots, nrow = 1)
+```
+
+En la figura \@ref(fig:boxplotscategoricas) se tiene un boxplot de Chance of Admit por cada categoría de cada una de las variables categóricas (University Rating, SOP, LOR y Research).
+
+```{r boxplotscategoricas, fig.dim=c(6, 4.5), include=TRUE, fig.cap="Boxplots de Chance of Admit por cada categoría de las variables categóricas"}
+vars_discretas <- c("University.Rating", "SOP", "LOR", "Research")
+
+plots <- lapply(vars_discretas, function(v){
+  
+  ggplot(df,
+         aes_string(x = paste0("factor(", v, ")"),
+                    y = "Chance.of.Admit")) +
+    geom_boxplot(fill = "lightskyblue",
+                 alpha = .6,
+                 outlier.shape = NA) +
+    geom_jitter(width = .15,
+                alpha = .5,
+                size = 1.5,
+                color = "dodgerblue3") +
+    labs(
+      x = gsub("\\.", " ", v),
+      y = "Chance of Admit"
+    ) +
+    theme_minimal(base_size = 13) + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0, hjust = 1))
+})
+
+wrap_plots(plots, nrow = 2)
+```
+
+```{r}
+### Matriz de Correlación Cruzada (La justificación de la reducción) ----
+
+# (Librería corrr)
+wdbc_corr <- df %>%
+  select(-Chance.of.Admit) %>%
+  correlate(method = "pearson")
+
+wdbc_corr
+```
+
+```{r}
+# (Base R)
+cor_wdbc <- df %>%
+  select(-Chance.of.Admit) %>% 
+  rename(`GRE Score` = GRE.Score, `TOEFL Score` = TOEFL.Score, `University Rating` = University.Rating) %>% 
+  cor(method="pearson")
+
+cor_wdbc
+```
+
+En la figura \@ref(fig:matrizcorr) observamos en la matriz de correlación de Pearson que todas las variables están correlacionadas entre sí de manera positiva. Todas las correlaciones son de al menos 0.4, por lo que hay una estructura de asociación lineal fuerte entre las variables.
+
+```{r matrizcorr, include=TRUE, fig.dim=c(6, 4), fig.cap="Matriz de correlación"}
+# Gráfico estético de correlaciones
+ggcorrplot::ggcorrplot(
+  corr = cor_wdbc,
+  type = "lower",
+  show.diag = FALSE,
+  # colors = c("#00010DFF", "#032CA6FF", "#034AA6FF", "#035AA6FF", "#93ABBFFF"),
+  # colors = c("#FF8C69", "white", "royalblue2"),
+  # colors = c("red", "white", "blue"),
+  colors = c("lightsalmon", "white", "dodgerblue3"),
+  lab = TRUE,
+  lab_size = 3,
+  show.legend = TRUE
+) +
+  labs(title = "Matriz de Correlación (Pearson)")
+```
+
+```{r}
+#Determinante
+determinante <- round(det(cor_wdbc), 4)
+```
+
+Así mismo, la matriz de correlación tiene un determinante de `r determinante`, lo cual confirma todavía más la fuerte correlación entre las variables. 
+
+```{r}
+KMO <- psych::KMO(cor_wdbc)
+
+MSAKMO <- round(KMO$MSA, 4)
+
+MSAKMO
+```
+
+La medida de adecuación muestral (MSA por sus siglas en inglés) de Kaiser, Meyer, Olkin (KMO) es un valor que va de 0 a 1 y que es útil para medir qué tan adecuado es realizar un análisis de componentes principales con los datos de interés. Valores mayores indican que es conveniente realizar un análisis de este tipo con los datos. El valor obtenido con estos datos fue de `r MSAKMO`, por lo que realizar un análisis de componentes principales es apropiado.
+
+```{r}
+###Prueba de Bartlett
+psych::cortest.bartlett(cor_wdbc, n = dim(df)[1])
+```
+
+```{r}
+###Todas estas medidas indican que hay una estructura de asociación fuerte
+
+cor.df1 <- df %>% select(-Chance.of.Admit) %>% cor_mat()
+cor.df1
+```
+
+
+```{r}
+options(scipen=999)
+
+cor.df1 %>% cor_get_pval()
+```
+
+
+
+
+```{r}
+cor.df1 %>% cor_gather() %>% print(n = Inf)
+
+###Confirmando que la estructura de correlación es simplemente BRUTAL
+```
+
+# Aplicación de las Técnicas de Reducción de Dimensión
+
+## PCA
+
+El análisis de componentes principales se aplicó sobre el conjunto de variables predictoras estandarizadas mediante el procedimiento de normalización, integrando tanto las variables cuantitativas: \texttt{GRE Score}, \texttt{TOEFL Score}, \texttt{University Rating}, \texttt{SOP}, \texttt{LOR} y \texttt{CGPA}, como la variable categórica \texttt{Research}, la cual fue convertida a tipo factor con dos niveles (No y Sí). No obstante, \texttt{Chance of Admit} se excluyó del cálculo, asignándole el rol de \textit{outcome} y se conservó únicamente para facilitar la interpretación posterior de los resultados.
+
+Así pues, una vez extraídos los componentes principales, se obtuvo su matriz de cargas factoriales, que se muestra en la tabla \@ref(tab:varianzapca), las cuales indican la contribución de cada variable original a la construcción de cada componente, así como su matriz de varianza explicada asociada a cada uno y la acumulada en términos porcentuales, la cual se muestra en la tabla \@ref(tab:porcentajevar).
+
+```{r}
+## 2.1 PCA ----
+
+# Convertir Research a factor
+df1 <- df %>%
+  mutate(Research = factor(
+    Research,
+    levels = c(0, 1),
+    labels = c("No", "Sí")
+  ))
+
+#Recipe/receta
+wdbc_recipe <-
+  recipe( ~ ., data = df1) %>%
+  update_role(Chance.of.Admit, new_role = "outcome") %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_normalize(all_predictors()) %>%
+  step_pca(all_predictors(), id = "pca")
+
+#Ejecuta la receta
+wdbc_pca <- prep(wdbc_recipe)
+
+pca_loading <- tidy(wdbc_pca, id = "pca")
+```
+
+```{r}
+library(RColorBrewer)
+library(scales)
+
+my_palette <- col_numeric(
+  palette = rev(brewer.pal(11, "RdYlGn")), 
+  domain = c(-1, 1)
+)
+```
+
+\vspace{.4cm}
+
+```{r varianzapca, include=TRUE}
+pca_loading %>%  
+  pivot_wider(names_from = component, values_from = value) %>%  
+  select(-id) %>%  
+  mutate(
+    terms = case_when(
+      terms == "GRE.Score" ~ "GRE Score",
+      terms == "TOEFL.Score" ~ "TOEFL Score",
+      terms == "Research_Sí" ~ "Research Yes",
+      terms == "University.Rating" ~ "University Rating",
+      TRUE ~ terms
+    ),
+    # 1. Round to 4 decimal places using sprintf
+    # 2. Apply formatting to the rounded numbers
+    across(where(is.numeric), ~ {
+      rounded_val <- -round(., 4)
+      cell_spec(rounded_val, background = my_palette(.), color = "black")
+    })
+  ) %>%  
+  rename(Variable = terms) %>% 
+  arrange(Variable) %>% 
+  kable(
+    format = "latex", escape = FALSE, align = "c", booktabs = TRUE, 
+    linesep = "", 
+    caption = "Matriz de cargas factoriales absolutas de los componentes principales"
+  ) %>% 
+  # 3. Bold the header row (row 0)
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down", "hold_position"))
+```
+
+```{r}
+# Eigenvalores (Varianzas de cada componente)
+pca_variances <- tidy(wdbc_pca, id = "pca", type = "variance")
+pca_var_percent <- tidy(wdbc_pca, id = "pca", type = "variance") %>%
+  filter(str_detect(terms, "percent variance"))
+pca_var_percent
+```
+
+```{r porcentajevar, include=TRUE}
+pca_var_percent %>% 
+  pivot_wider(names_from = terms, values_from = value) %>% 
+  mutate(
+    `percent variance` = round(`percent variance`, 2),
+    `cumulative percent variance` = round(`cumulative percent variance`, 2)
+  ) %>% 
+  select(-id) %>%
+  kable(
+    format = "latex", 
+    escape = FALSE,
+    align = "c", 
+    booktabs = TRUE, 
+    linesep = "", 
+    caption = "Varianza explicada y acumulada por los componentes principales",
+    col.names = c("PC", "Varianza explicada (\\%)", "Acumulada (\\%)")
+  ) %>% 
+  kable_styling(latex_options = c("scale_down", "hold_position"))
+  
+```
+
+Notemos que el primer componente principal \textbf{(PC1) concentra 69.61\%} de la variabilidad total del conjunto de datos, lo que indica que una gran parte de la información contenida en las siete variables predictoras puede resumirse en una única dimensión latente. Por otra parte, al incorporar el segundo componente principal \textbf{(PC2), la varianza acumulada asciende a 79.97\%}, lo que representa aproximadamente el 80\% de la variabilidad total. Asimismo, con la inclusión del tercer componente principal \textbf{(PC3) se alcanza una varianza acumulada de 87.78\%}, mientras que los componentes restantes aportan incrementos relativamente pequeños, inferiores al 5\% de manera individual.
+
+De modo que los resultados muestran que la mayor parte de la información del conjunto de datos se encuentra concentrada en los primeros componentes principales, lo que confirma la existencia de correlación entre las variables originales. Ahora bien, considerando el criterio de conservar alrededor del 80\% de la varianza explicada, se concluye que \textbf{dos componentes principales son suficientes para representar adecuadamente la estructura de los datos}, permitiendo reducir el número de dimensiones de siete a dos con una pérdida mínima de información.
+
+En cuanto a las cargas factoriales, observamos que el PC1 presenta cargas de magnitud similar para todas las variables predictoras, siendo ligeramente mayor para \texttt{CGPA} (0.417), seguida de \texttt{TOEFL Score} (0.399), \texttt{GRE Score} (0.398) y \texttt{University Rating} (0.388), lo que sugiere que el primer componente resume un factor asociado al desempeño académico general de los postulantes, mientras que en el PC2 domina la variable \texttt{Research} con una carga absoluta de 0.724, superando ampliamente a la del resto de las variables, indicando que el segundo componente captura principalmente la variabilidad asociada a la experiencia en investigación, mientras que variables como \texttt{LOR} (0.449), \texttt{GRE Score} (0.287) y \texttt{University Rating} (0.230) presentan una contribución moderada. 
+
+Ahora bien, al proyectar a los postulantes sobre el plano definido por PC1 y PC2 (figura \@ref(fig:pcagrafica)), coloreando cada punto según su \texttt{Chance of Admit}, se observa un gradiente claro a lo largo del eje PC1: los estudiantes con mayor probabilidad de admisión se concentran en la región de valores negativos de PC1, mientras que aquellos con menor probabilidad se agrupan principalmente en la región de valores positivos. 
+
+```{r eval=FALSE}
+# Gráfica de codo (Porcentaje de Varianza Individual por Componente)
+wdbc_pca %>%
+  tidy(id = "pca", type = "variance") %>%
+  dplyr::filter(terms == "percent variance") %>%
+  ggplot(aes(x = component, y = value)) +
+  geom_col(fill = "#B53389", alpha = 0.8) +
+  geom_line(color = "darkblue", linewidth = 1.1) +
+  geom_point(size = 3, color = "darkblue") +
+  scale_x_continuous(breaks = 1:7) +
+  labs(x = "Componentes Principales (PC)", y = "% de Varianza Explicada", title = "Scree Plot - Varianza Individual") +
+  theme_minimal()
+```
+
+```{r eval=FALSE}
+# Gráfica de codo acumulado (Porcentaje de Varianza Acumulada)
+wdbc_pca %>%
+  tidy(id = "pca", type = "variance") %>%
+  dplyr::filter(terms == "cumulative percent variance") %>%
+  ggplot(aes(x = component, y = value)) +
+  geom_col(fill = "#F25E52", alpha = 0.8) +
+  geom_line(color = "darkblue", linewidth = 1.1) +
+  geom_point(size = 3, color = "darkblue") +
+  scale_x_continuous(breaks = 1:7) +
+  geom_hline(yintercept = 80,
+             linetype = "dashed",
+             color = "gray40") + # Línea de referencia del 80%
+  labs(x = "Componentes Principales (PC)", y = "% Acumulado de Varianza", title = "Scree Plot - Varianza Acumulada") +
+  theme_minimal()
+```
+
+```{r}
+# Resumen de varianza explicada
+variance_exp <- tidy(wdbc_pca, id = "pca", type = "variance") %>%
+  filter(str_detect(terms, "percent variance"))
+variance_exp
+```
+
+
+```{r}
+### Grafica de los primeros dos componentes ----
+
+# Calcular la varianza explicada acumulada por PC1 y PC2
+VE <- paste(
+  "Varianza explicada por dos componentes:",
+  round(variance_exp$value[[1]] + variance_exp$value[[2]], digits = 2),
+  "%"
+)
+```
+
+```{r}
+# Extraer las nuevas coordenadas de los datos entrenados (PC1, PC2, etc.)
+# 'new_data = NULL' en versiones actuales equivale a usar juice() sobre los datos de entrenamiento
+datos_pca <- bake(wdbc_pca, new_data = NULL)
+datos_pca
+```
+
+```{r pcagrafica, include=TRUE, fig.dim=c(6, 4), fig.cap="Proyección de los postulantes sobre PC1 y PC2, coloreada según la probabilidad de admisión"}
+# Gráfico con etiqueta de color continua (Variable Objetivo: Chance.of.Admit)
+datos_pca %>%
+  ggplot(aes(x = PC1, y = PC2, color = Chance.of.Admit)) +
+  geom_point(size = 2, alpha = 0.8) +
+  scale_color_gradient(low = "lightsalmon", high = "dodgerblue3") + # Tus colores Teal y Coral
+  labs(
+    x = paste0("PC1: ", round(variance_exp$value[[1]], 2), "%"),
+    y = paste0("PC2: ", round(variance_exp$value[[2]], 2), "%"),
+    color = "Chance of Admit"
+  ) +
+  ggtitle(paste0(
+    "Graduates Admission: Gradiente de Probabilidad de Admisión",
+    "\n",
+    VE
+  )) +
+  theme_minimal()
+```
+
+Este patrón resulta consistente con la interpretación anterior de PC1 como un factor asociado al desempeño académico general, y resulta particularmente relevante dado que \texttt{Chance of Admit} no participó en el cálculo de los componentes, lo cual sugiere que la estructura de correlación capturada de forma no supervisada por el PCA coincide, en buena medida, con el resultado que en la práctica resulta más relevante para el proceso de admisión. 
+
+De manera complementaria, al segmentar a los postulantes según su experiencia en investigación (figura \@ref(fig:researchpca)) se observa una separación clara a lo largo del eje PC2: los estudiantes con experiencia en investigación (\texttt{Sí}) se concentran principalmente en la región de valores positivos de PC2, mientras que aquellos sin experiencia (\texttt{No}) se ubican mayoritariamente en la región de valores negativos, sin que se aprecie una separación equivalente a lo largo de PC1. 
+
+```{r researchpca, include=TRUE, fig.cap="Proyección de los postulantes sobre PC1 y PC2, segmentada según experiencia en investigación"}
+# Gráfico Alternativo: Con etiqueta de color categórica (Research)
+# Para evaluar visualmente si la investigación separa a los estudiantes
+datos_pca %>%
+  ggplot(aes(
+    x = PC1,
+    y = PC2,
+    color = df1$Research
+  )) +
+  geom_point(size = 2, alpha = 0.8) +
+  scale_color_manual(values = c("lightsalmon", "dodgerblue3")) + # Tus colores Teal y Coral
+  labs(
+    x = paste0("PC1: ", round(variance_exp$value[[1]], 2), "%"),
+    y = paste0("PC2: ", round(variance_exp$value[[2]], 2), "%"),
+    color = "Research"
+  ) +
+  ggtitle(paste0(
+    "Graduates Admission: Separación por Experiencia en Investigación",
+    "\n",
+    VE
+  )) +
+  theme_minimal()
+```
+
+Así pues, es posible concluir que la variabilidad original contenida en las siete variables predictoras puede resumirse de manera adecuada en dos dimensiones interpretables: \textbf{una asociada al desempeño académico} y \textbf{otra a la experiencia en investigación}, las cuales en conjunto \textbf{retienen el 79.97\% de la información total}.
+
+```{r eval=FALSE}
+### ANÁLISIS DE CARGAS FACTORIALES (PESOS EN CADA COMPONENTE) ----
+
+# GRÁFICA DE CARGAS (PESOS) PARA CADA COMPONENTE
+wdbc_pca %>%
+  tidy(id = "pca") %>%
+  #filter(component %in% paste0("PC", 1:4)) %>%
+  mutate(terms = tidytext::reorder_within(terms, abs(value), component)) %>%
+  ggplot(aes(
+    x = abs(value),
+    y = terms,
+    fill = value > 0
+  )) +
+  geom_col(alpha = 0.9) +
+  facet_wrap( ~ component, scales = "free_y") +
+  tidytext::scale_y_reordered() +
+  scale_fill_manual(
+    values = c("#008080", "#FF6F61"),
+    labels = c("Negativo (-)", "Positivo (+)")
+  ) +
+  labs(title = "Contribución Absoluta de las Variables a los Componentes",
+       x = "Valor Absoluto de la Contribución (Peso)",
+       y = NULL,
+       fill = "¿Signo del Peso?") +
+  theme_minimal() +
+  theme(strip.text = element_text(face = "bold", size = 11))
+```
+
