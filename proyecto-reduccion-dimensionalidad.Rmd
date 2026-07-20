@@ -60,7 +60,7 @@ classoption: a4paper
 knitr::opts_chunk$set(
 	echo = FALSE,
 	fig.align = "center",
-	fig.dim = c(6, 3),
+	fig.dim = c(6, 3.5),
 	fig.pos = "htbp",
 	message = FALSE,
 	warning = FALSE,
@@ -728,7 +728,655 @@ A diferencia de PCA, que construye combinaciones lineales de las variables origi
 
 ### Comparación de las dos implementaciones
 
+```{r}
+## 2.2 t-SNE ----
+
+### t-SNE: CONFIGURACIÓN POR DEFECTO (Hiperparámetros de default) ----
+
+# Construir df1 convirtiendo la variable binaria a factor
+df1 <- df %>% 
+  mutate(Research = factor(Research, 
+                           levels = c(0, 1), 
+                           labels = c("No", "Sí")))
+
+glimpse(df1)
+class(df1$Research) 
+levels(df1$Research)
+```
+
+```{r}
+# Fijamos semilla para que el proceso estocástico sea reproducible
+set.seed(123)
+
+# Iniciamos el contador de tiempo de ejecución
+start.time <- proc.time() 
+
+df_tsne <- df1 %>%
+  # Conservamos solo los predictores numéricos puros (excluyendo la objetivo)
+  # Nota: 'Research' ya es factor en df1, por lo que select(where(is.numeric)) la omitirá automáticamente
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale() %>%
+  tsne() # Ejecución del algoritmo estándar
+
+# Calculamos el tiempo total que tardó en procesar
+tiempo_ejecucion <- proc.time() - start.time
+print(tiempo_ejecucion)
+
+# Ver la estructura y las primeras coordenadas reducidas (Dimensión 1 y 2)
+str(df_tsne)
+head(df_tsne)
+```
+
+
+```{r}
+# UNIFICACIÓN DE DATOS t-SNE Y VISUALIZACIONES
+
+# Adicionando los resultados de t-SNE a la base
+datos <- data.frame(tSNE1 = df_tsne[,1], tSNE2 = df_tsne[,2], Chance.of.Admit = df1$Chance.of.Admit)
+datos
+```
+
 Se emplearon dos implementaciones disponibles: \texttt{tsne()} (algoritmo exacto) y \texttt{Rtsne()} (aproximación de Barnes‑Hut con \texttt{theta = 0.5}), que reduce la complejidad y acelera el cálculo —aproximadamente veinte veces—. Aunque ambas producen configuraciones cualitativamente equivalentes, la mayor rapidez de \texttt{Rtsne()} fue determinante para la exploración sistemática de hiperparámetros; \texttt{tsne()} se reservó únicamente para la verificación inicial del comportamiento del algoritmo.
+
+En la figura \ref{fig:tsneexacta} el conjunto de las observaciones queda comprimido en dos bandas horizontales estrechas en torno al origen, mientras que cuatro puntos aislados se sitúan muy alejados en el eje vertical. El \textit{embedding} queda dominado por esas pocas observaciones que la optimización expulsó a distancias extremas, y la estructura del resto se vuelve ilegible por compresión de escala.
+
+```{r tsneexacta, include=TRUE, fig.dim=c(6, 5), fig.cap="Salida de \\texttt{tsne()} con parámetros por defecto, coloreada según \\texttt{Chance of Admit}"}
+# Gráfico con gradiente continuo (Chance of Admit) aplicando tus dos colores bonitos
+ggplot(datos, aes(x = tSNE1, y = tSNE2, color = Chance.of.Admit)) +
+  geom_point(size = 1.1, alpha = 0.6) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") +
+  labs(title = "Graduates Admission: t-SNE por Probabilidad de Admisión", color = "Probabilidad") +
+  theme_minimal()
+```
+
+Usando la misma configuración procesada con \texttt{Rtsne()}, se produce un mapa utilizable, con coordenadas acotadas y observaciones organizadas en una nube continua y alargada (figura \@ref(fig:rtsnedefault)). Al incluir \texttt{Chance of Admit} dentro del gráfico, se observa un gradiente a lo largo del eje mayor, las probabilidades altas se concentran en el extremo izquierdo, las intermedias ocupan la zona central y las bajas quedan en el extremo derecho, sin saltos ni fronteras nítidas. Esto es consistente con lo obtenido en el análisis de componentes principales, donde PC1 concentró el 69.61% de la variabilidad y mostró un gradiente equivalente de la probabilidad de admisión. 
+
+```{r}
+###Los argumentos de esta funcion son:
+
+### k: the dimension of the resulting embedding
+
+### initial_dims: The number of dimensions to use in reduction method.
+
+### perplexity: Perplexity parameter. (optimal number of neighbors)
+
+### max_iter: Maximum number of iterations to perform.
+
+### min_cost: The minimum cost value (error) to halt iteration.
+
+### epoch_callback: A callback function used after each epoch (an epoch here means a set number of iterations)
+###                (Una función de devolución de llamada utilizada después de cada época (una época aquí significa un número determinado de iteraciones))
+
+### epoch: The number of iterations in between update messages.
+
+###Se puede correr con una selección arbitraria de los parámetros más importantes que son: perplexity, max_iter y min_cost, en ese orden
+
+### t-SNE MEDIANTE LA FUNCIÓN OPTIMIZADA Rtsne() ----
+
+# Preparar la matriz numérica escalada sin la variable objetivo
+matriz_rtsne <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# Rtsne requiere eliminar duplicados exactos de filas para no fallar
+matriz_rtsne <- unique(matriz_rtsne)
+
+# Ejecutar el algoritmo midiendo el tiempo de ejecución
+set.seed(123)
+start.time <- proc.time()
+
+df_Rtsne <- Rtsne(matriz_rtsne, dims = 2, perplexity = 30, max_iter = 1000)
+
+proc.time() - start.time
+
+# INSPECCIÓN DE LA ESTRUCTURA 
+str(df_Rtsne)
+# Nota: Rtsne guarda las coordenadas dentro de una sub-matriz llamada '$Y'
+head(df_Rtsne$Y)
+names(df_Rtsne)
+```
+
+```{r}
+# Adicionando los resultados usando Chance.of.Admit como gradiente continuo
+datos1 <- data.frame(Rtsne1 = df_Rtsne$Y[,1], 
+                     Rtsne2 = df_Rtsne$Y[,2], 
+                     Chance.of.Admit = df1$Chance.of.Admit)
+datos1
+```
+
+```{r rtsnedefault, include=TRUE, fig.cap="Salida de \\texttt{Rtsne()} con parámetros por defecto, coloreada según \\texttt{Chance of Admit}"}
+# Scatter-plot por Gradiente Continuo 
+ggplot(datos1, aes(x = Rtsne1, y = Rtsne2, color = Chance.of.Admit)) +
+  geom_point(size = 1.1) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") + 
+  labs(title = "Graduates Admission: Rtsne por Probabilidad de Admisión", 
+       color = "Probabilidad") +
+  theme_minimal()
+```
+
+```{r eval=FALSE}
+# Boxplots de Validación con la variable categórica 'Research'
+datos1_box <- data.frame(Rtsne1 = df_Rtsne$Y[,1], 
+                         Rtsne2 = df_Rtsne$Y[,2], 
+                         Research = df1$Research)
+
+ggplot(datos1_box, aes(x = Research, y = Rtsne1)) + 
+  geom_boxplot(fill = "#008080", colour = "black", show.legend = FALSE) + 
+  labs(x = "Experiencia en Investigación", 
+       title = "Distribución de Rtsne1 según Investigación") +
+  theme_minimal()
+
+ggplot(datos1_box, aes(x = Research, y = Rtsne2)) + 
+  geom_boxplot(fill = "#FF6F61", colour = "black", show.legend = FALSE) + 
+  labs(x = "Experiencia en Investigación", 
+       title = "Distribución de Rtsne2 según Investigación") +
+  theme_minimal()
+
+# Gráfico Final Segmentado por Grupos 
+Rtsne_df <- data.frame(
+  Rtsne1 = df_Rtsne$Y[, 1],
+  Rtsne2 = df_Rtsne$Y[, 2],
+  Research = df1$Research
+)
+
+colors <- c("#008080", "#FF6F61")
+
+ggplot(Rtsne_df, aes(x = Rtsne1, y = Rtsne2, color = factor(Research))) +
+  geom_point(size = 1.5) +
+  scale_color_manual(values = colors) +
+  labs(
+    title = "Rtsne: Perfiles Académicos",
+    x = "t-SNE Dimension 1",
+    y = "t-SNE Dimension 2",
+    color = "Research"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 20, face = "bold")
+  )
+
+
+### t-SNE EN 3 DIMENSIONES (k=3) CON GRADIENTE CONTINUO (Chance of Admit) ----
+
+# Fijamos semilla debido a la naturaleza estocástica del algoritmo
+set.seed(123)
+
+# Ejecutar t-SNE reduciendo a exactamente 3 dimensiones
+df_tsne3 <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale() %>%
+  tsne(k = 3) # Fijamos k=3 componentes espaciales
+
+# Inspeccionar estructura inicial
+str(df_tsne3)
+head(df_tsne3)
+
+# Construir el DataFrame unificado usando la variable respuesta continua
+tsne_df3 <- data.frame(
+  tSNE1 = df_tsne3[, 1],
+  tSNE2 = df_tsne3[, 2],
+  tSNE3 = df_tsne3[, 3],
+  Chance = df1$Chance.of.Admit # Variable respuesta continua
+)
+
+head(tsne_df3)
+
+# Configurar el texto interactivo del cursor (Hover Text)
+hover_text_cont <- paste(
+  "Chance of Admit:", tsne_df3$Chance, "<br>",
+  "Investigación:", df1$Research, "<br>",
+  "Dimensión 1:", round(tsne_df3$tSNE1, 3), "<br>",
+  "Dimensión 2:", round(tsne_df3$tSNE2, 3), "<br>",
+  "Dimensión 3:", round(tsne_df3$tSNE3, 3)
+)
+
+# Graficar el espacio tridimensional con gradiente continuo en Plotly
+plot_ly(
+  data = tsne_df3,
+  x = ~tSNE1,
+  y = ~tSNE2,
+  z = ~tSNE3,
+  type = "scatter3d",
+  mode = "markers",
+  marker = list(size = 4), 
+  text = hover_text_cont,
+  hoverinfo = "text",
+  color = ~Chance,                        # Mapeo de la variable continua
+  colors = c("#008080", "#FF6F61")        # Gradiente fluido de Teal a Coral
+) %>%
+  layout(
+    title = "t-SNE 3D: Gradiente de Probabilidad de Admisión",
+    scene = list(
+      xaxis = list(title = "t-SNE Dimension 1"),
+      yaxis = list(title = "t-SNE Dimension 2"),
+      zaxis = list(title = "t-SNE Dimension 3")
+    )
+  )
+
+### Rtsne EN 3 DIMENSIONES (dims=3) CON GRADIENTE CONTINUO (Chance of Admit) ----
+
+# 1. Preparar la matriz numérica escalada sin la variable objetivo
+matriz_rtsne3 <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# Eliminar duplicados exactos para evitar que Rtsne() falle
+matriz_rtsne3 <- unique(matriz_rtsne3)
+
+# 2. Ejecutar el algoritmo Rtsne reduciendo a exactamente 3 dimensiones
+set.seed(123)
+
+df_Rtsne3 <- Rtsne(matriz_rtsne3, dims = 3, perplexity = 30, max_iter = 1000)
+
+# Inspeccionar estructura inicial
+str(df_Rtsne3)
+head(df_Rtsne3$Y)
+
+# 3. Construir el DataFrame unificado usando la variable respuesta continua
+tsne_Rdf3 <- data.frame(
+  tSNE1 = df_Rtsne3$Y[, 1],
+  tSNE2 = df_Rtsne3$Y[, 2],
+  tSNE3 = df_Rtsne3$Y[, 3],
+  Chance = df1$Chance.of.Admit # Variable respuesta continua
+)
+
+head(tsne_Rdf3)
+
+# 4. Configurar el texto interactivo del cursor (Hover Text)
+hover_text_rcont <- paste(
+  "Chance Admit:", tsne_Rdf3$Chance, "<br>",
+  "Investigación:", df1$Research, "<br>",
+  "Dimensión 1:", round(tsne_Rdf3$tSNE1, 3), "<br>",
+  "Dimensión 2:", round(tsne_Rdf3$tSNE2, 3), "<br>",
+  "Dimensión 3:", round(tsne_Rdf3$tSNE3, 3)
+)
+
+# 5. Graficar el espacio tridimensional optimizado con Plotly
+plot_ly(
+  data = tsne_Rdf3,
+  x = ~tSNE1,
+  y = ~tSNE2,
+  z = ~tSNE3,
+  type = "scatter3d",
+  mode = "markers",
+  marker = list(size = 4), 
+  text = hover_text_rcont,
+  hoverinfo = "text",
+  color = ~Chance,                        # Variable respuesta continua para el gradiente
+  colors = c("#008080", "#FF6F61")        # Gradiente fluido de Teal a Coral
+) %>%
+  layout(
+    title = "Rtsne 3D: Gradiente de Probabilidad de Admisión",
+    scene = list(
+      xaxis = list(title = "t-SNE Dimension 1"),
+      yaxis = list(title = "t-SNE Dimension 2"),
+      zaxis = list(title = "t-SNE Dimension 3")
+    )
+  )
+
+
+### EXPLORACIÓN DE HIPERPARÁMETROS: REJILLA DE PERPLEJIDADES EN tsne() ----
+
+# 1. Definir la rejilla de parámetros a explorar
+tsne_params <- expand.grid(perplexity = c(10, 15, 20, 25, 30, 50)) ###Explorando parametro de perplejidad: perplexity. max_iter fijo 
+
+# 2. Preparar los datos numéricos limpios y escalados para el bucle
+# Excluimos la variable objetivo por nombre para evitar data leakage
+matriz_exploracion <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# 3. Ejecutar el bucle sobre la rejilla midiendo el tiempo de ejecución
+set.seed(123)
+start.time <- proc.time()
+
+tsne_res <- lapply(seq(nrow(tsne_params)), function(i) {
+  print(paste("Procesando Perplejidad:", tsne_params$perplexity[i]))
+  res <- tsne::tsne(
+    X = matriz_exploracion,
+    max_iter = 500, # Ajustado a 500 iteraciones
+    perplexity = tsne_params$perplexity[i]
+  )
+  return(res)
+})
+
+proc.time() - start.time
+
+# UNIFICACIÓN DE RESULTADOS Y FACETADO GRÁFICO
+
+# 4. Construir la tabla unificada con data.table
+d1 <- rbindlist(lapply(seq(nrow(tsne_params)), function(i) {
+  data.table(
+    x = tsne_res[[i]][, 1],
+    y = tsne_res[[i]][, 2],
+    perplexity = tsne_params$perplexity[i],
+    Chance = df1$Chance.of.Admit # Guardamos variable continua para el color
+  )
+}))
+
+# 5. Generar el gráfico multifacético
+p1 <- ggplot(d1) +
+  geom_point(mapping = aes(x = x, y = y, color = Chance), size = 1.2, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") +
+  facet_wrap(~perplexity, 
+             labeller = label_both,
+             scales = "free") +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    strip.text = element_text(face = "bold", size = 10)
+  )
+
+p1
+
+
+### EXPLORACIÓN DE HIPERPARÁMETROS: REJILLA DE PERPLEJIDADES EN Rtsne() ----
+
+# 1. Definir la rejilla de parámetros a explorar
+Rtsne_params <- expand.grid(perplexity = c(10, 15, 20, 25, 30, 50))
+
+# 2. Preparar los datos numéricos limpios y escalados para el bucle
+# Excluimos la variable objetivo por nombre para evitar sesgos
+matriz_rtsne_exp <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# 3. Ejecutar el bucle sobre la rejilla midiendo el tiempo de ejecución 
+set.seed(123)
+start.time <- proc.time()
+
+Rtsne_res <- lapply(seq(nrow(Rtsne_params)), function(i) {
+  print(paste("Procesando Rtsne Perplejidad:", Rtsne_params$perplexity[i]))
+  Rres <- Rtsne::Rtsne(
+    X = matriz_rtsne_exp,
+    max_iter = 500, # Ajustado a 500 iteraciones
+    verbose = TRUE,
+    perplexity = Rtsne_params$perplexity[i],
+    check_duplicates = FALSE
+  )
+  return(Rres)
+})
+
+proc.time() - start.time
+
+# UNIFICACIÓN DE RESULTADOS Y FACETADO GRÁFICO
+
+# 4. Construir la tabla unificada con data.table
+d2 <- rbindlist(lapply(seq(nrow(Rtsne_params)), function(i) {
+  data.table(
+    x = Rtsne_res[[i]]$Y[, 1],
+    y = Rtsne_res[[i]]$Y[, 2],
+    perplexity = Rtsne_params$perplexity[i],
+    Chance = df1$Chance.of.Admit
+  )
+}))
+
+# 5. Generar el gráfico multifacético
+p2 <- ggplot(d2) +
+  geom_point(mapping = aes(x = x, y = y, color = Chance), 
+             size = 1.2, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") + 
+  facet_wrap(~perplexity, 
+             labeller = label_both,
+             scales = "free") +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    strip.text = element_text(face = "bold", size = 10)
+  )
+
+p2
+
+### EXPLORACIÓN BIDIMENSIONAL: PERPLEJIDAD (perplexity) Y TASA DE APRENDIZAJE (eta) en Rtsne() ----
+
+###tsne es muy lento. Para juzgar cómo funciona este algoritmo haciendo una exploracion con dos
+###parametros, usaremos Rtsne
+
+# 1. Definir la rejilla combinada de parámetros a explorar
+Rtsne_params2 <- expand.grid(perplexity = c(10, 15, 20, 25, 30), 
+                             eta = c(10, 50, 100, 150))
+
+# 2. Preparar los datos numéricos limpios, escalados y únicos
+matriz_rtsne_grid <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# 3. Ejecutar el bucle sobre la rejilla combinada
+set.seed(123)
+start.time <- proc.time()
+
+Rtsne_res2 <- lapply(seq(nrow(Rtsne_params2)), function(i) {
+  print(paste("Iteración:", i, "| Perplejidad:", Rtsne_params2$perplexity[i], "| Eta:", Rtsne_params2$eta[i]))
+  Rres <- Rtsne::Rtsne(
+    X = matriz_rtsne_grid,
+    max_iter = 500,
+    verbose = TRUE,
+    perplexity = Rtsne_params2$perplexity[i],
+    check_duplicates = FALSE,
+    eta = Rtsne_params2$eta[i],
+    pca = FALSE # Se desactiva el PCA previo
+  )
+  return(Rres)
+})
+
+proc.time() - start.time # Muestra el tiempo total de cómputo
+
+# UNIFICACIÓN DE RESULTADOS Y FACETADO DE DOS VARIABLES
+
+d3 <- rbindlist(lapply(seq(nrow(Rtsne_params2)), function(i) {
+  data.table(
+    x = Rtsne_res2[[i]]$Y[, 1],
+    y = Rtsne_res2[[i]]$Y[, 2],
+    perplexity = Rtsne_params2$perplexity[i],
+    eta = Rtsne_params2$eta[i],
+    Chance = df1$Chance.of.Admit # Mapeo continuo del gradiente
+  )
+}))
+
+# 5. Generar la matriz gráfica facetada (Grid de mapas visuales)
+p3 <- ggplot(d3) +
+  geom_point(mapping = aes(x = x, y = y, color = Chance), size = 1.0, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") +
+  facet_wrap(eta ~ perplexity, 
+             labeller = label_both,
+             scales = "free",
+             ncol = 5) + 
+  theme_bw() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "right",
+    strip.text = element_text(face = "bold", size = 8)
+  )
+
+p3
+
+### EXPLORACIÓN EXPANSIÓN DE GRID (Incluye Eta = 200) ----
+
+set.seed(123)
+
+Rtsne_params3 <- expand.grid(perplexity = c(10, 15, 20, 30), 
+                             eta = c(10, 50, 100, 150, 200))
+
+# Preparar la matriz limpia y única
+matriz_rtsne_grid3 <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# Correr el bucle de exploración
+Rtsne_res3 <- lapply(seq(nrow(Rtsne_params3)), function(i) {
+  Rres <- Rtsne(
+    X = matriz_rtsne_grid3,
+    max_iter = 500,
+    verbose = FALSE, 
+    perplexity = Rtsne_params3$perplexity[i],
+    check_duplicates = FALSE,
+    eta = Rtsne_params3$eta[i],
+    pca = FALSE
+  )
+  return(Rres)
+})
+
+# 2. CONSTRUCCIÓN DEL DATAFRAME UNIFICADO
+
+d4 <- rbindlist(lapply(seq(nrow(Rtsne_params3)), function(i) {
+  data.table(
+    x = Rtsne_res3[[i]]$Y[, 1],
+    y = Rtsne_res3[[i]]$Y[, 2],
+    perplexity = Rtsne_params3$perplexity[i],
+    eta = Rtsne_params3$eta[i],
+    Chance = df1$Chance.of.Admit # variable respuesta continua
+  )
+}))
+
+# Gráfico estático de control (Facet-wrap) usando geom_point
+p4 <- ggplot(d4) +
+  geom_point(mapping = aes(x = x, y = y, color = Chance), 
+             size = 1.0, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") + 
+  facet_wrap(eta ~ perplexity, 
+             labeller = label_both,
+             scales = "free",
+             ncol = 4) + # Organizado en 4 columnas por las perplejidades
+  theme_bw() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank()
+  )
+
+print(p4)
+
+# 3. CREACIÓN Y COMPILACIÓN DE LA ANIMACIÓN (gganimate)
+
+# Configuramos el gráfico animado usando transiciones dinámicas
+anim_plot1 <- d4 %>% 
+  mutate(parametros = factor(paste('Perplejidad:', perplexity, '| Eta:', eta),
+                             levels = unique(paste('Perplejidad:', perplexity, '| Eta:', eta)))) %>% 
+  ggplot() +
+  geom_point(mapping = aes(x = x, y = y, col = Chance), 
+             size = 1.8, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") +
+  theme_bw() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    plot.title = element_text(face = "bold", size = 14)
+  ) +
+  # gganimate: Transiciona secuencialmente entre cada combinación de parámetros
+  transition_states(parametros, transition_length = 2, state_length = 3) +
+  labs(title = 't-SNE Dinámico: {closest_state}')
+
+# Compilar la animación (Tomará unos segundos en renderizar el GIF en tu panel de Viewer)
+#animate(anim_plot1, nframes = 250, fps = 10, width = 600, height = 500)
+
+
+
+###Despues, se tendria que decidir que seleccion de estos parametros es la que mejor representa
+###nuestros datos y correr un modelo con ellos
+
+###Por ejemplo perplexity=30 y eta=150
+
+
+### MODELO FINAL OPTIMIZADO DE t-SNE (Perplexity = 30, Eta = 300) ----
+
+# 1. Preparar la matriz numérica libre de duplicados y sin la variable objetivo
+matriz_rtsne_final <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# 2. Entrenar el modelo final con la semilla fija para reproducibilidad
+set.seed(123)
+
+df_RtsneF <- Rtsne(matriz_rtsne_final, perplexity = 30, eta = 300, max_iter = 1000) 
+
+# 3. Construir el DataFrame alineando la variable respuesta continua
+datos2 <- data.frame(
+  Rtsne1 = df_RtsneF$Y[, 1],
+  Rtsne2 = df_RtsneF$Y[, 2],
+  diagnostico = df1$Chance.of.Admit # Variable respuesta continua
+)
+
+# 4. Graficar el mapa final optimizado (Se eliminó win.graph() por seguridad de plataforma)
+ggplot(datos2, aes(x = Rtsne1, y = Rtsne2, color = diagnostico)) +
+  geom_point(size = 1.5, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") + # Tus colores Teal y Coral
+  labs(
+    title = "Graduates Admission: t-SNE (Modelo Final Optimizado)",
+    subtitle = "Configuración: Perplejidad = 30, Eta = 300",
+    x = "t-SNE Dimensión 1",
+    y = "t-SNE Dimensión 2",
+    color = "Chance of Admit"
+  ) +
+  theme_minimal()
+
+
+### FILTRADO Y GRAFICACIÓN DEL MODELO FINAL DESDE LA MATRIZ DE EXPLORACIÓN ----
+
+# Nota: Usamos d3, que es el DataFrame donde guardamos el Grid Search previo de Perplejidad y Eta.
+
+# 1. PRIMER ENFOQUE ALTERNATIVO (Formato limpio sin ejes)
+final_plot <- d3 %>% 
+  filter(perplexity == 30, eta == 150) %>% 
+  mutate(parametros = factor(paste('perplexity:', perplexity, 'eta:', eta))) %>% 
+  ggplot() +
+  geom_point(mapping = aes(x = x, y = y, col = Chance), size = 1.2, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") + # Tus colores Teal y Coral
+  theme_bw() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    legend.position = "none",
+    panel.grid = element_blank()
+  ) +
+  labs(title = 'tSNE: Modelo final (Enfoque Alternativo)')
+
+final_plot
+
+
+# --- 2. SEGUNDO ENFOQUE ALTERNATIVO (Formato estándar con ejes y subtítulo) ---
+final_plot1 <- d3 %>% 
+  filter(perplexity == 30, eta == 150) %>% 
+  ggplot(aes(x = x, y = y, col = Chance)) +
+  geom_point(size = 1.5, alpha = 0.8) +
+  scale_color_gradient(low = "#008080", high = "#FF6F61") + # Gradiente continuo fluido
+  theme_bw() +
+  labs(
+    title = 'tSNE: Modelo final',
+    subtitle = 'perplexity: 30 and eta: 200',
+    x = "t-SNE Dimensión 1",
+    y = "t-SNE Dimensión 2",
+    color = "Chance of Admit"
+  )
+
+# Desplegar segundo gráfico
+final_plot1
+
+###################################################################
+
+```
+
 
 ## UMAP
 

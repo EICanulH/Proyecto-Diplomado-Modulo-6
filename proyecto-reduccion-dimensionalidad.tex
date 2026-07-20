@@ -384,6 +384,28 @@ A diferencia de PCA, que construye combinaciones lineales de las variables origi
 
 Se emplearon dos implementaciones disponibles: \texttt{tsne()} (algoritmo exacto) y \texttt{Rtsne()} (aproximación de Barnes‑Hut con \texttt{theta = 0.5}), que reduce la complejidad y acelera el cálculo ---aproximadamente veinte veces---. Aunque ambas producen configuraciones cualitativamente equivalentes, la mayor rapidez de \texttt{Rtsne()} fue determinante para la exploración sistemática de hiperparámetros; \texttt{tsne()} se reservó únicamente para la verificación inicial del comportamiento del algoritmo.
 
+En la figura \ref{fig:tsneexacta} el conjunto de las observaciones queda comprimido en dos bandas horizontales estrechas en torno al origen, mientras que cuatro puntos aislados se sitúan muy alejados en el eje vertical. El \textit{embedding} queda dominado por esas pocas observaciones que la optimización expulsó a distancias extremas, y la estructura del resto se vuelve ilegible por compresión de escala.
+
+\begin{figure}[htbp]
+
+{\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/tsneexacta-1} 
+
+}
+
+\caption{Salida de \texttt{tsne()} con parámetros por defecto, coloreada según \texttt{Chance of Admit}}\label{fig:tsneexacta}
+\end{figure}
+
+Usando la misma configuración procesada con \texttt{Rtsne()}, se produce un mapa utilizable, con coordenadas acotadas y observaciones organizadas en una nube continua y alargada (figura \ref{fig:rtsnedefault}). Al incluir \texttt{Chance of Admit} dentro del gráfico, se observa un gradiente a lo largo del eje mayor, las probabilidades altas se concentran en el extremo izquierdo, las intermedias ocupan la zona central y las bajas quedan en el extremo derecho, sin saltos ni fronteras nítidas. Esto es consistente con lo obtenido en el análisis de componentes principales, donde PC1 concentró el 69.61\% de la variabilidad y mostró un gradiente equivalente de la probabilidad de admisión.
+
+\begin{figure}[htbp]
+
+{\centering \includegraphics{proyecto-reduccion-dimensionalidad_files/figure-latex/rtsnedefault-1} 
+
+}
+
+\caption{Salida de \texttt{Rtsne()} con parámetros por defecto, coloreada según \texttt{Chance of Admit}}\label{fig:rtsnedefault}
+\end{figure}
+
 \subsection{UMAP}\label{umap}
 
 El análisis mediante UMAP (\textit{Uniform Manifold Approximation and Projection}) se aplicó sobre el mismo conjunto de variables predictoras estandarizadas utilizado en el análisis de componentes principales, integrando tanto las variables cuantitativas \texttt{GRE Score}, \texttt{TOEFL Score}, \texttt{University Rating}, \texttt{SOP}, \texttt{LOR} y \texttt{CGPA}, como la variable categórica \texttt{Research}, convertida a tipo factor con dos niveles (No y Sí). Al igual que en PCA, \texttt{Chance of Admit} se excluyó del cálculo y se conservó únicamente para la interpretación posterior de los resultados.
