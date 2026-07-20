@@ -878,24 +878,17 @@ La perplejidad fija determina el ancho de banda $\sigma_i$ del núcleo gaussiano
   \label{tab:tsne-perplexity}
 \end{table}
 
-```{r eval=FALSE}
+
+
+```{r}
 # Boxplots de Validación con la variable categórica 'Research'
 datos1_box <- data.frame(Rtsne1 = df_Rtsne$Y[,1], 
                          Rtsne2 = df_Rtsne$Y[,2], 
                          Research = df1$Research)
+```
 
-ggplot(datos1_box, aes(x = Research, y = Rtsne1)) + 
-  geom_boxplot(fill = "#008080", colour = "black", show.legend = FALSE) + 
-  labs(x = "Experiencia en Investigación", 
-       title = "Distribución de Rtsne1 según Investigación") +
-  theme_minimal()
 
-ggplot(datos1_box, aes(x = Research, y = Rtsne2)) + 
-  geom_boxplot(fill = "#FF6F61", colour = "black", show.legend = FALSE) + 
-  labs(x = "Experiencia en Investigación", 
-       title = "Distribución de Rtsne2 según Investigación") +
-  theme_minimal()
-
+```{r}
 # Gráfico Final Segmentado por Grupos 
 Rtsne_df <- data.frame(
   Rtsne1 = df_Rtsne$Y[, 1],
@@ -918,8 +911,10 @@ ggplot(Rtsne_df, aes(x = Rtsne1, y = Rtsne2, color = factor(Research))) +
   theme(
     plot.title = element_text(size = 20, face = "bold")
   )
+```
 
 
+```{r}
 ### t-SNE EN 3 DIMENSIONES (k=3) CON GRADIENTE CONTINUO (Chance of Admit) ----
 
 # Fijamos semilla debido a la naturaleza estocástica del algoritmo
@@ -935,7 +930,10 @@ df_tsne3 <- df1 %>%
 # Inspeccionar estructura inicial
 str(df_tsne3)
 head(df_tsne3)
+```
 
+
+```{r}
 # Construir el DataFrame unificado usando la variable respuesta continua
 tsne_df3 <- data.frame(
   tSNE1 = df_tsne3[, 1],
@@ -944,40 +942,12 @@ tsne_df3 <- data.frame(
   Chance = df1$Chance.of.Admit # Variable respuesta continua
 )
 
-head(tsne_df3)
+tsne_df3
+```
 
-# Configurar el texto interactivo del cursor (Hover Text)
-hover_text_cont <- paste(
-  "Chance of Admit:", tsne_df3$Chance, "<br>",
-  "Investigación:", df1$Research, "<br>",
-  "Dimensión 1:", round(tsne_df3$tSNE1, 3), "<br>",
-  "Dimensión 2:", round(tsne_df3$tSNE2, 3), "<br>",
-  "Dimensión 3:", round(tsne_df3$tSNE3, 3)
-)
 
-# Graficar el espacio tridimensional con gradiente continuo en Plotly
-plot_ly(
-  data = tsne_df3,
-  x = ~tSNE1,
-  y = ~tSNE2,
-  z = ~tSNE3,
-  type = "scatter3d",
-  mode = "markers",
-  marker = list(size = 4), 
-  text = hover_text_cont,
-  hoverinfo = "text",
-  color = ~Chance,                        # Mapeo de la variable continua
-  colors = c("#008080", "#FF6F61")        # Gradiente fluido de Teal a Coral
-) %>%
-  layout(
-    title = "t-SNE 3D: Gradiente de Probabilidad de Admisión",
-    scene = list(
-      xaxis = list(title = "t-SNE Dimension 1"),
-      yaxis = list(title = "t-SNE Dimension 2"),
-      zaxis = list(title = "t-SNE Dimension 3")
-    )
-  )
 
+```{r}
 ### Rtsne EN 3 DIMENSIONES (dims=3) CON GRADIENTE CONTINUO (Chance of Admit) ----
 
 # 1. Preparar la matriz numérica escalada sin la variable objetivo
@@ -997,7 +967,10 @@ df_Rtsne3 <- Rtsne(matriz_rtsne3, dims = 3, perplexity = 30, max_iter = 1000)
 # Inspeccionar estructura inicial
 str(df_Rtsne3)
 head(df_Rtsne3$Y)
+```
 
+
+```{r}
 # 3. Construir el DataFrame unificado usando la variable respuesta continua
 tsne_Rdf3 <- data.frame(
   tSNE1 = df_Rtsne3$Y[, 1],
@@ -1006,41 +979,11 @@ tsne_Rdf3 <- data.frame(
   Chance = df1$Chance.of.Admit # Variable respuesta continua
 )
 
-head(tsne_Rdf3)
-
-# 4. Configurar el texto interactivo del cursor (Hover Text)
-hover_text_rcont <- paste(
-  "Chance Admit:", tsne_Rdf3$Chance, "<br>",
-  "Investigación:", df1$Research, "<br>",
-  "Dimensión 1:", round(tsne_Rdf3$tSNE1, 3), "<br>",
-  "Dimensión 2:", round(tsne_Rdf3$tSNE2, 3), "<br>",
-  "Dimensión 3:", round(tsne_Rdf3$tSNE3, 3)
-)
-
-# 5. Graficar el espacio tridimensional optimizado con Plotly
-plot_ly(
-  data = tsne_Rdf3,
-  x = ~tSNE1,
-  y = ~tSNE2,
-  z = ~tSNE3,
-  type = "scatter3d",
-  mode = "markers",
-  marker = list(size = 4), 
-  text = hover_text_rcont,
-  hoverinfo = "text",
-  color = ~Chance,                        # Variable respuesta continua para el gradiente
-  colors = c("#008080", "#FF6F61")        # Gradiente fluido de Teal a Coral
-) %>%
-  layout(
-    title = "Rtsne 3D: Gradiente de Probabilidad de Admisión",
-    scene = list(
-      xaxis = list(title = "t-SNE Dimension 1"),
-      yaxis = list(title = "t-SNE Dimension 2"),
-      zaxis = list(title = "t-SNE Dimension 3")
-    )
-  )
+tsne_Rdf3
+```
 
 
+```{r}
 ### EXPLORACIÓN DE HIPERPARÁMETROS: REJILLA DE PERPLEJIDADES EN tsne() ----
 
 # 1. Definir la rejilla de parámetros a explorar
@@ -1068,7 +1011,11 @@ tsne_res <- lapply(seq(nrow(tsne_params)), function(i) {
 })
 
 proc.time() - start.time
+```
 
+Las salidas gráficas correspondientes al algoritmo exacto (figura \@ref(fig:tsnegridperp)) reproducen el problema ya observado en la figura \@ref(fig:tsneexacta): los seis paneles muestran un núcleo denso rodeado de puntos aislados, y solo con \texttt{perplexity = 50} el mapa alcanza a desplegarse.
+
+```{r}
 # UNIFICACIÓN DE RESULTADOS Y FACETADO GRÁFICO
 
 # 4. Construir la tabla unificada con data.table
@@ -1080,9 +1027,11 @@ d1 <- rbindlist(lapply(seq(nrow(tsne_params)), function(i) {
     Chance = df1$Chance.of.Admit # Guardamos variable continua para el color
   )
 }))
+```
 
+```{r tsnegridperp, include=TRUE, fig.cap="Rejilla de perplejidad ejecutada con \\texttt{tsne()} y \\texttt{max\\_iter = 500}"}
 # 5. Generar el gráfico multifacético
-p1 <- ggplot(d1) +
+ggplot(d1) +
   geom_point(mapping = aes(x = x, y = y, color = Chance), size = 1.2, alpha = 0.8) +
   scale_color_gradient(low = "#008080", high = "#FF6F61") +
   facet_wrap(~perplexity, 
@@ -1096,10 +1045,35 @@ p1 <- ggplot(d1) +
     panel.grid = element_blank(),
     strip.text = element_text(face = "bold", size = 10)
   )
+```
 
-p1
+### Exploración conjunta de perplejidad y tasa de aprendizaje
 
+La segunda etapa cruza \texttt{perplexity} $\in \{10,15,20,25,30\}$ con la tasa de aprendizaje \texttt{eta} $\in \{10,50,100,150\}$, que gobierna la magnitud del paso en el descenso por gradiente. Se fijó \texttt{pca = FALSE}, para operar sobre las seis variables estandarizadas, y \texttt{verbose = TRUE}, lo que permite recuperar la divergencia de las veinte configuraciones y sustituir así la inspección visual por un criterio numérico.
 
+\begin{table}[htbp]
+  \centering
+  \caption{Divergencia de Kullback-Leibler en la iteración 500 para las veinte combinaciones evaluadas. En negritas, el mínimo de cada fila.}
+  \begin{tabular}{rrrrr}
+    \toprule
+    & \multicolumn{4}{c}{\textbf{\texttt{eta}}} \\
+    \cmidrule(l){2-5}
+    \textbf{\texttt{perplexity}} & \textbf{10} & \textbf{50} & \textbf{100} & \textbf{150} \\
+    \midrule
+    10 & 0.9090 & 0.8183 & 0.8098 & \textbf{0.8009} \\
+    15 & 0.8328 & 0.7500 & 0.7603 & \textbf{0.7204} \\
+    20 & 0.7463 & 0.7177 & 0.6901 & \textbf{0.6735} \\
+    25 & 0.6863 & \textbf{0.6586} & 0.6700 & 0.6691 \\
+    30 & 0.6298 & \textbf{0.6080} & 0.6315 & 0.6538 \\
+    \bottomrule
+  \end{tabular}
+
+  \label{tab:tsnegrid}
+\end{table}
+
+La tabla \@ref(tab:tsnegrid) muestra que el efecto de \texttt{eta} depende de la perplejidad. Con perplejidades bajas (10 a 20) la divergencia decrece de forma monótona y el mínimo se alcanza en \texttt{eta = 150}, pues un paso pequeño no basta para desplegar el mapa dentro de las 500 iteraciones disponibles. Con perplejidades altas (25 y 30) la relación se invierte y el mínimo pasa a \texttt{eta = 50}, lo que sugiere un ligero sobrepaso de la optimización cuando el vecindario considerado ya es amplio. El valor más bajo de toda la rejilla corresponde a \texttt{perplexity = 30} con \texttt{eta = 50}, con una divergencia de 0.6080.
+
+```{r eval=FALSE}
 ### EXPLORACIÓN DE HIPERPARÁMETROS: REJILLA DE PERPLEJIDADES EN Rtsne() ----
 
 # 1. Definir la rejilla de parámetros a explorar
@@ -1129,7 +1103,10 @@ Rtsne_res <- lapply(seq(nrow(Rtsne_params)), function(i) {
 })
 
 proc.time() - start.time
+```
 
+
+```{r eval=FALSE}
 # UNIFICACIÓN DE RESULTADOS Y FACETADO GRÁFICO
 
 # 4. Construir la tabla unificada con data.table
@@ -1160,7 +1137,10 @@ p2 <- ggplot(d2) +
   )
 
 p2
+```
 
+
+```{r eval=FALSE}
 ### EXPLORACIÓN BIDIMENSIONAL: PERPLEJIDAD (perplexity) Y TASA DE APRENDIZAJE (eta) en Rtsne() ----
 
 ###tsne es muy lento. Para juzgar cómo funciona este algoritmo haciendo una exploracion con dos
@@ -1227,7 +1207,10 @@ p3 <- ggplot(d3) +
   )
 
 p3
+```
 
+
+```{r eval=FALSE}
 ### EXPLORACIÓN EXPANSIÓN DE GRID (Incluye Eta = 200) ----
 
 set.seed(123)
