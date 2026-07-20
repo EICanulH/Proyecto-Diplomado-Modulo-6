@@ -768,7 +768,6 @@ str(df_tsne)
 head(df_tsne)
 ```
 
-
 ```{r}
 # UNIFICACIÓN DE DATOS t-SNE Y VISUALIZACIONES
 
@@ -849,12 +848,35 @@ datos1
 ```{r rtsnedefault, include=TRUE, fig.cap="Salida de \\texttt{Rtsne()} con parámetros por defecto, coloreada según \\texttt{Chance of Admit}"}
 # Scatter-plot por Gradiente Continuo 
 ggplot(datos1, aes(x = Rtsne1, y = Rtsne2, color = Chance.of.Admit)) +
-  geom_point(size = 1.1) +
+  geom_point(size = 1.1, alpha = 0.6) +
   scale_color_gradient(low = "#008080", high = "#FF6F61") + 
   labs(title = "Graduates Admission: Rtsne por Probabilidad de Admisión", 
        color = "Probabilidad") +
   theme_minimal()
 ```
+
+### Exploración de la perplejidad
+
+La perplejidad fija determina el ancho de banda $\sigma_i$ del núcleo gaussiano asignado a cada observación y, con ello, el número efectivo de vecinos que esta considera. El código recorre la rejilla \texttt{perplexity} $\in \{10, 15, 20, 25, 30, 50\}$ con ambas implementaciones y una iteración máximo de 500. Los diagnósticos que una y otra imprimen permiten verificar ese mecanismo de manera directa, y se reúnen en la tabla \ref{tab:tsne-perplexity}.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Diagnósticos de la rejilla de perplejidad con \texttt{max\_iter = 500}. $\bar{\sigma}$ es el ancho de banda medio que reporta \texttt{tsne()}; \texttt{sparsity} es la densidad del árbol de vecinos que imprime \texttt{Rtsne()}; los errores corresponden a la divergencia en la iteración 500.}
+  \begin{tabular}{ccccc}
+    \toprule
+    \textbf{\texttt{perplexity}} & \textbf{$\bar{\sigma}$} & \textbf{Error \texttt{tsne()}} & \textbf{\texttt{sparsity}} & \textbf{Error \texttt{Rtsne()}} \\
+    \midrule
+    10 & 0.167 & 2.910 & 0.098 & 0.8003 \\
+    15 & 0.181 & 2.615 & 0.145 & 0.7307 \\
+    20 & 0.192 & 2.117 & 0.192 & 0.6732 \\
+    25 & 0.201 & 2.220 & 0.238 & 0.6631 \\
+    30 & 0.209 & 1.956 & 0.282 & 0.6155 \\
+    50 & 0.235 & 1.851 & 0.460 & 0.4642 \\
+    \bottomrule
+  \end{tabular}
+
+  \label{tab:tsne-perplexity}
+\end{table}
 
 ```{r eval=FALSE}
 # Boxplots de Validación con la variable categórica 'Research'
@@ -1376,7 +1398,6 @@ final_plot1
 ###################################################################
 
 ```
-
 
 ## UMAP
 
