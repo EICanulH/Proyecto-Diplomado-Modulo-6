@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 19:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 19:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1345,7 +1345,7 @@ LaTeX Warning: Text page 16 contains only floats.
 
 [16 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf> <.
 /proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf>] [17]
-runsystem(latexminted cleantemp  --timestamp 20260720190421 BFCA8610422CC91C867
+runsystem(latexminted cleantemp  --timestamp 20260720192001 BFCA8610422CC91C867
 0167F0415B4C7)...disabled (restricted).
 
 (proyecto-reduccion-dimensionalidad.aux
@@ -1376,7 +1376,7 @@ C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmri10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
-Output written on proyecto-reduccion-dimensionalidad.pdf (17 pages, 2337319 byt
+Output written on proyecto-reduccion-dimensionalidad.pdf (17 pages, 2337317 byt
 es).
 PDF statistics:
  472 PDF objects out of 1000 (max. 8388607)

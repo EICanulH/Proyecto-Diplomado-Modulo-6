@@ -1254,7 +1254,7 @@ Cuando la proyección se colorea en cambio por la variable binaria \texttt{Resea
 # 2. Gráfico UMAP segmentado por la variable binaria (Research)
 ggplot(datos, aes(x = UMAP1, y = UMAP2, color = Research)) +
   geom_point(size = 1.5, alpha = 0.8) +
-  scale_color_manual(values = c("dodgerblue3", "lightsalmon")) + # Tus colores Teal y Coral para los grupos No/Sí
+  scale_color_manual(values = c("lightsalmon", "dodgerblue3")) + # Tus colores Teal y Coral para los grupos No/Sí
   labs(
     title = "Graduates Admission: UMAP por Experiencia en Investigación",
     x = "UMAP Dimensión 1",
