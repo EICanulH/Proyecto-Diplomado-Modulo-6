@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 17:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 19:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1250,98 +1250,102 @@ y/m/n/10 2
 c} <./proyecto-reduccion-dimensionalidad_files/figure-latex/rtsnedefault-1.pdf>
 ]
 <proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegrideta-1.pdf, id=20
-1, 433.62pt x 289.08pt>
+1, 433.62pt x 650.43pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegrideta-1.pdf G
 raphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegrideta-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-tsnegrideta-1.pdf  used on input line 480.
-(pdftex.def)             Requested size: 433.61894pt x 289.07928pt.
+tsnegrideta-1.pdf  used on input line 479.
+(pdftex.def)             Requested size: 433.61894pt x 650.4284pt.
 <proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridampliada-1.pdf, 
-id=202, 433.62pt x 325.215pt>
+id=202, 433.62pt x 650.43pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridampliada-1.
 pdf Graphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridampliada-1.p
 df>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-tsnegridampliada-1.pdf  used on input line 489.
-(pdftex.def)             Requested size: 433.61894pt x 325.2142pt.
+tsnegridampliada-1.pdf  used on input line 488.
+(pdftex.def)             Requested size: 433.61894pt x 650.4284pt.
 [10 <./proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridperp-1.pdf
 >]
 
 LaTeX Warning: Text page 11 contains only floats.
 
 [11 <./proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegrideta-1.pdf>
- <./proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridampliada-1.pd
-f>]
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf, id=24
-8, 433.62pt x 208.78pt>
+]
+
+LaTeX Warning: Text page 12 contains only floats.
+
+[12 <./proyecto-reduccion-dimensionalidad_files/figure-latex/tsnegridampliada-1
+.pdf>]
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf, id=25
+2, 433.62pt x 208.78pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf G
 raphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapdefault-1.pdf  used on input line 550.
+umapdefault-1.pdf  used on input line 549.
 (pdftex.def)             Requested size: 433.61894pt x 208.77946pt.
-[12 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf>
+[13 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapdefault-1.pdf>
 ]
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf, id=264
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf, id=269
 , 433.62pt x 201.75375pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf Gr
 aphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapchance-1.pdf  used on input line 561.
+umapchance-1.pdf  used on input line 560.
 (pdftex.def)             Requested size: 433.61894pt x 201.75325pt.
 <proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1.pdf, id=2
-66, 433.62pt x 201.75375pt>
+71, 433.62pt x 201.75375pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1.pdf 
 Graphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapresearch-1.pdf  used on input line 572.
+umapresearch-1.pdf  used on input line 571.
 (pdftex.def)             Requested size: 433.61894pt x 201.75325pt.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf, id=268,
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf, id=273,
  433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf Gra
 phic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapmulti-1.pdf  used on input line 583.
+umapmulti-1.pdf  used on input line 582.
 (pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf, id=270
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf, id=275
 , 433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf Gr
 aphic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umaprecipe-1.pdf  used on input line 594.
+umaprecipe-1.pdf  used on input line 593.
 (pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
-[13 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf> 
+[14 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapchance-1.pdf> 
 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapresearch-1.pdf>]
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf, id=299, 
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf, id=303, 
 433.62pt x 382.42876pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf Grap
 hic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapgrid-1.pdf  used on input line 605.
+umapgrid-1.pdf  used on input line 604.
 (pdftex.def)             Requested size: 433.61894pt x 382.42781pt.
-<proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf, id=301,
+<proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf, id=305,
  433.62pt x 216.81pt>
 File: proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf Gra
 phic file (type pdf)
 <use proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf>
 Package pdftex.def Info: proyecto-reduccion-dimensionalidad_files/figure-latex/
-umapfinal-1.pdf  used on input line 616.
+umapfinal-1.pdf  used on input line 615.
 (pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
-[14 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf> <
+[15 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapmulti-1.pdf> <
 ./proyecto-reduccion-dimensionalidad_files/figure-latex/umaprecipe-1.pdf>]
 
-LaTeX Warning: Text page 15 contains only floats.
+LaTeX Warning: Text page 16 contains only floats.
 
-[15 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf> <.
-/proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf>] [16]
-runsystem(latexminted cleantemp  --timestamp 20260720173105 BFCA8610422CC91C867
+[16 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf> <.
+/proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf>] [17]
+runsystem(latexminted cleantemp  --timestamp 20260720190421 BFCA8610422CC91C867
 0167F0415B4C7)...disabled (restricted).
 
 (proyecto-reduccion-dimensionalidad.aux
@@ -1354,9 +1358,9 @@ L3 programming layer <2026-05-26>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 26294 strings out of 467509
- 496112 string characters out of 5408780
- 1109424 words of memory out of 5000000
+ 26295 strings out of 467509
+ 496119 string characters out of 5408780
+ 1109414 words of memory out of 5000000
  54890 multiletter control sequences out of 15000+600000
  682336 words of font info for 146 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1372,10 +1376,10 @@ C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmri10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
-Output written on proyecto-reduccion-dimensionalidad.pdf (16 pages, 2331736 byt
+Output written on proyecto-reduccion-dimensionalidad.pdf (17 pages, 2337319 byt
 es).
 PDF statistics:
- 468 PDF objects out of 1000 (max. 8388607)
- 58 named destinations out of 1000 (max. 500000)
+ 472 PDF objects out of 1000 (max. 8388607)
+ 59 named destinations out of 1000 (max. 500000)
  28888 words of extra memory for PDF output out of 29859 (max. 10000000)
 

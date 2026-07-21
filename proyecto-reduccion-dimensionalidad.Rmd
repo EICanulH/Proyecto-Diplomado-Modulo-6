@@ -270,7 +270,7 @@ df %>%
   theme_minimal()
 ```
 
-En la figura \@ref(fig:scattercontinuas) observamos una relación positiva entre la variable `Chance of Admit` y el resto de variables continuas (`GRE Score`, `TOEFL Score` y `CGPA`), por lo que los alumnos con mejores calificaciones en el examen GRE, TOEFL y mejor GPA tienen más probabilidad de ser admitidos en el programa de maestría de su elección.
+En la figura \@ref(fig:scattercontinuas) observamos una relación positiva entre la variable `Chance of Admit` y el resto de variables continuas (`GRE Score`, `TOEFL Score` y `CGPA`), por lo que los alumnos con mejores calificaciones en los exámenes GRE, TOEFL y mejor GPA tienen más probabilidad de ser admitidos en el programa de maestría de su elección.
 
 ```{r scattercontinuas, include=TRUE, fig.cap="Relación entre las variables continuas y Chance of Admit"}
 vars_continuas <- c(
@@ -302,7 +302,7 @@ plots <- lapply(vars_continuas, function(v){
 wrap_plots(plots, nrow = 1)
 ```
 
-En la figura \@ref(fig:boxplotscategoricas) se tiene un boxplot de `Chance of Admit` por cada categoría de cada una de las variables categóricas (`University Rating`, `SOP`, `LOR` y `Research`). De nuevo se observa una relación poisitiva entre la variable respuesta y estas variables, indicando que los alumnos con mejores evaluaciones en estos rubros tienen probabilidades de admisión más alta.
+En la figura \@ref(fig:boxplotscategoricas) se tiene un boxplot de `Chance of Admit` por cada categoría de cada una de las variables categóricas (`University Rating`, `SOP`, `LOR` y `Research`). De nuevo se observa una relación positiva entre la variable respuesta y estas variables, indicando que los alumnos con mejores evaluaciones en estos rubros tienen probabilidades de admisión más alta.
 
 ```{r boxplotscategoricas, fig.dim=c(6, 5), include=TRUE, fig.cap="Boxplots de Chance of Admit por cada categoría de las variables categóricas"}
 vars_discretas <- c("University.Rating", "SOP", "LOR", "Research")
@@ -400,7 +400,7 @@ valorEstadistica
 pvaluebartlett
 ```
 
-Así mismo, s realizó un prueba de hipótesis de Bartlett, cuya hipótesis nula es que la matriz de correlaciones es la idéntica, lo que significaría que no hay relación entre las variables. La prueba arrojó un estadístico Chi cuadrado de $valorEstadistica$ y un $p\text{-value}$ de prácticamente `r pvaluebartlett`, con lo que rechazamos la hipótesis nula. Aunque la validez de esta prueba depende de que los datos tenga una distribución normal multivariada, aun así sirve para reforzar el hecho de que vale la pena hacer un análisis de componentes principales con estos datos.
+Así mismo, se realizó un prueba de hipótesis de Bartlett, cuya hipótesis nula es que la matriz de correlaciones es la idéntica, lo que significaría que no hay relación entre las variables. La prueba arrojó un estadístico, de distribución chi cuadrada, con un valor de `r valorEstadistica` y un $p\text{-value}$ de prácticamente `r pvaluebartlett`, con lo que rechazamos la hipótesis nula. Aunque la validez de esta prueba depende de que los datos tenga una distribución normal multivariada, aun así sirve para reforzar la conclusión de que estos son adecuados para realizar un análisis de componentes principales.
 
 # Aplicación de las Técnicas de Reducción de Dimensión
 
@@ -450,6 +450,7 @@ my_palette <- col_numeric(
 \vspace{0.3cm}
 
 ```{r varianzapca, include=TRUE}
+# tabla en formato LaTeX
 pca_loading %>%  
   pivot_wider(names_from = component, values_from = value) %>%  
   select(-id) %>%  
@@ -461,10 +462,8 @@ pca_loading %>%
       terms == "University.Rating" ~ "University Rating",
       TRUE ~ terms
     ),
-    # 1. Round to 4 decimal places using sprintf
-    # 2. Apply formatting to the rounded numbers
     across(where(is.numeric), ~ {
-      rounded_val <- -round(., 4)
+      rounded_val <- round(., 3)
       cell_spec(rounded_val, background = my_palette(.), color = "black")
     })
   ) %>%  
@@ -473,9 +472,8 @@ pca_loading %>%
   kable(
     format = "latex", escape = FALSE, align = "c", booktabs = TRUE, 
     linesep = "", 
-    caption = "Matriz de cargas factoriales absolutas de los componentes principales"
+    caption = "Matriz de cargas factoriales de los componentes principales"
   ) %>% 
-  # 3. Bold the header row (row 0)
   row_spec(0, bold = TRUE) %>%
   kable_styling(latex_options = c("scale_down", "hold_position"))
 ```
@@ -491,6 +489,7 @@ pca_var_percent
 \vspace{0.3cm}
 
 ```{r porcentajevar, include=TRUE}
+# tabla en formato LaTeX
 pca_var_percent %>% 
   pivot_wider(names_from = terms, values_from = value) %>% 
   mutate(
@@ -516,7 +515,7 @@ Notemos que el primer componente principal \textbf{(PC1) concentra 69.61\%} de l
 
 De modo que los resultados muestran que la mayor parte de la información del conjunto de datos se encuentra concentrada en los primeros componentes principales, lo que confirma la existencia de correlación entre las variables originales. Ahora bien, considerando el criterio de conservar alrededor del 80\% de la varianza explicada, se concluye que \textbf{dos componentes principales son suficientes para representar adecuadamente la estructura de los datos}, permitiendo reducir el número de dimensiones de siete a dos con una pérdida mínima de información.
 
-En cuanto a las cargas factoriales, observamos que el PC1 presenta cargas de magnitud similar para todas las variables predictoras, siendo ligeramente mayor para \texttt{CGPA} (0.417), seguida de \texttt{TOEFL Score} (0.399), \texttt{GRE Score} (0.398) y \texttt{University Rating} (0.388), lo que sugiere que el primer componente resume un factor asociado al desempeño académico general de los postulantes, mientras que en el PC2 domina la variable \texttt{Research} con una carga absoluta de 0.724, superando ampliamente a la del resto de las variables, indicando que el segundo componente captura principalmente la variabilidad asociada a la experiencia en investigación, mientras que variables como \texttt{LOR} (0.449), \texttt{GRE Score} (0.287) y \texttt{University Rating} (0.230) presentan una contribución moderada. 
+En cuanto a las cargas factoriales, observamos que el PC1 presenta cargas, en valores absolutos, de magnitud similar para todas las variables predictoras, siendo ligeramente mayor para \texttt{CGPA} (0.417), seguida de \texttt{TOEFL Score} (0.399), \texttt{GRE Score} (0.398) y \texttt{University Rating} (0.388), lo que sugiere que el primer componente resume un factor asociado al desempeño académico general de los postulantes, mientras que en el PC2 domina la variable \texttt{Research} con una carga absoluta de 0.724, superando ampliamente a la del resto de las variables, indicando que el segundo componente captura principalmente la variabilidad asociada a la experiencia en investigación, mientras que variables como \texttt{LOR} (0.449), \texttt{GRE Score} (0.287) y \texttt{University Rating} (0.230) presentan una contribución moderada. 
 
 Ahora bien, al proyectar a los postulantes sobre el plano definido por PC1 y PC2 (figura \@ref(fig:pcagrafica)), coloreando cada punto según su \texttt{Chance of Admit}, se observa un gradiente claro a lo largo del eje PC1: los estudiantes con mayor probabilidad de admisión se concentran en la región de valores negativos de PC1, mientras que aquellos con menor probabilidad se agrupan principalmente en la región de valores positivos. 
 
@@ -657,7 +656,7 @@ wdbc_pca %>%
 
 ## t-SNE
 
-A diferencia de PCA, que construye combinaciones lineales de las variables originales, t-SNE modela la similitud entre pares de observaciones mediante una distribución gaussiana en el espacio de alta dimensión y una distribución t -Student, minimizando la divergencia de Kullback-Leibler entre ambas por descenso de gradiente. La matriz sometida a t‑SNE se construyó seleccionando las variables cuantitativas, excluyendo \texttt{Chance of Admit} por su condición de variable respuesta. Se empleó el mismo conjunto de predictore
+A diferencia de PCA, que construye combinaciones lineales de las variables originales, t-SNE modela la similitud entre pares de observaciones mediante una distribución gaussiana en el espacio de alta dimensión y una distribución t-Student, minimizando la divergencia de Kullback-Leibler entre ambas por descenso de gradiente. La matriz sometida a t‑SNE se construyó seleccionando las variables cuantitativas, excluyendo \texttt{Chance of Admit} por su condición de variable respuesta. Se empleó el mismo conjunto de predictores estandarizados utilizado en el análisis de componentes principales.
 
 ### Comparación de las dos implementaciones
 
@@ -917,8 +916,6 @@ tsne_res <- lapply(seq(nrow(tsne_params)), function(i) {
 proc.time() - start.time
 ```
 
-
-
 ```{r}
 # UNIFICACIÓN DE RESULTADOS Y FACETADO GRÁFICO
 
@@ -936,18 +933,21 @@ d1 <- rbindlist(lapply(seq(nrow(tsne_params)), function(i) {
 ```{r tsnegridperp, include=TRUE, fig.cap="Rejilla de perplejidad ejecutada con \\texttt{tsne()} y \\texttt{max\\_iter = 500}"}
 # 5. Generar el gráfico multifacético
 ggplot(d1) +
-  geom_point(mapping = aes(x = x, y = y, color = Chance), size = 1.2, alpha = 0.8) +
+  geom_point(
+    mapping = aes(x = x, y = y, color = Chance),
+    size = 1.2,
+    alpha = 0.8
+  ) +
   scale_color_gradient(low = "lightsalmon", high = "dodgerblue3") +
-  facet_wrap(~perplexity, 
-             labeller = label_both,
-             scales = "free") +
-  theme_minimal() +
+  facet_wrap( ~ perplexity, labeller = label_both, scales = "free") +
+  theme_bw() +
   theme(
     axis.text = element_blank(),
     axis.ticks = element_blank(),
     axis.title = element_blank(),
     panel.grid = element_blank(),
-    strip.text = element_text(face = "bold", size = 10)
+    legend.position = "right",
+    strip.text = element_text(face = "bold", size = 8)
   )
 ```
 
@@ -971,78 +971,10 @@ La segunda etapa cruza \texttt{perplexity} $\in \{10,15,20,25,30\}$ con la tasa 
     30 & 0.6298 & \textbf{0.6080} & 0.6315 & 0.6538 \\
     \bottomrule
   \end{tabular}
-
   \label{tab:tsnegrid}
 \end{table}
 
 La tabla \@ref(tab:tsnegrid) muestra que el efecto de \texttt{eta} depende de la perplejidad. Con perplejidades bajas (10 a 20) la divergencia decrece de forma monótona y el mínimo se alcanza en \texttt{eta = 150}, pues un paso pequeño no basta para desplegar el mapa dentro de las 500 iteraciones disponibles. Con perplejidades altas (25 y 30) la relación se invierte y el mínimo pasa a \texttt{eta = 50}, lo que sugiere un ligero sobrepaso de la optimización cuando el vecindario considerado ya es amplio. El valor más bajo de toda la rejilla corresponde a \texttt{perplexity = 30} con \texttt{eta = 50}, con una divergencia de 0.6080.
-
-```{r eval=FALSE}
-### EXPLORACIÓN DE HIPERPARÁMETROS: REJILLA DE PERPLEJIDADES EN Rtsne() ----
-
-# 1. Definir la rejilla de parámetros a explorar
-Rtsne_params <- expand.grid(perplexity = c(10, 15, 20, 25, 30, 50))
-
-# 2. Preparar los datos numéricos limpios y escalados para el bucle
-# Excluimos la variable objetivo por nombre para evitar sesgos
-matriz_rtsne_exp <- df1 %>%
-  dplyr::select(where(is.numeric)) %>%
-  dplyr::select(-Chance.of.Admit) %>%
-  scale()
-
-# 3. Ejecutar el bucle sobre la rejilla midiendo el tiempo de ejecución 
-set.seed(123)
-start.time <- proc.time()
-
-Rtsne_res <- lapply(seq(nrow(Rtsne_params)), function(i) {
-  print(paste("Procesando Rtsne Perplejidad:", Rtsne_params$perplexity[i]))
-  Rres <- Rtsne::Rtsne(
-    X = matriz_rtsne_exp,
-    max_iter = 500, # Ajustado a 500 iteraciones
-    verbose = TRUE,
-    perplexity = Rtsne_params$perplexity[i],
-    check_duplicates = FALSE
-  )
-  return(Rres)
-})
-
-proc.time() - start.time
-```
-
-```{r eval=FALSE}
-# UNIFICACIÓN DE RESULTADOS Y FACETADO GRÁFICO
-
-# 4. Construir la tabla unificada con data.table
-d2 <- rbindlist(lapply(seq(nrow(Rtsne_params)), function(i) {
-  data.table(
-    x = Rtsne_res[[i]]$Y[, 1],
-    y = Rtsne_res[[i]]$Y[, 2],
-    perplexity = Rtsne_params$perplexity[i],
-    Chance = df1$Chance.of.Admit
-  )
-}))
-```
-
-```{r eval=FALSE}
-# 5. Generar el gráfico multifacético
-p2 <- ggplot(d2) +
-  geom_point(mapping = aes(x = x, y = y, color = Chance), 
-             size = 1.2, alpha = 0.8) +
-  scale_color_gradient(low = "#008080", high = "#FF6F61") + 
-  facet_wrap(~perplexity, 
-             labeller = label_both,
-             scales = "free") +
-  theme_minimal() +
-  theme(
-    axis.text = element_blank(),
-    axis.ticks = element_blank(),
-    axis.title = element_blank(),
-    panel.grid = element_blank(),
-    strip.text = element_text(face = "bold", size = 10)
-  )
-
-p2
-```
 
 Las salidas gráficas de ambas rejillas (figuras \@ref(fig:tsnegrideta) y \@ref(fig:tsnegridampliada)) aportan el elemento decisivo: la nube continua con gradiente de \texttt{Chance of Admit} está presente en las cuarenta configuraciones evaluadas, sin que ninguna combinación de hiperparámetros produzca agrupamientos discretos. Las diferencias entre paneles se limitan a la extensión y la orientación del mapa, ambas irrelevantes para la interpretación. El hallazgo descrito a partir de la figura \@ref(fig:tsneexacta) no depende, por tanto, de la configuración elegida. Cabe señalar que la rejilla ampliada corrió con \texttt{verbose = FALSE}, por lo que \texttt{eta = 200} carece de divergencia registrada y quedó fuera de la tabla \@ref(tab:tsnegrid).
 
@@ -1085,7 +1017,7 @@ Rtsne_res2 <- lapply(seq(nrow(Rtsne_params2)), function(i) {
 proc.time() - start.time # Muestra el tiempo total de cómputo
 ```
 
-```{r tsnegrideta, include=TRUE, fig.dim=c(6, 4), fig.cap="Salidas gráficas de las veinte combinaciones de \\texttt{perplexity} y \\texttt{eta}, con \\texttt{pca = FALSE}"}
+```{r tsnegrideta, include=TRUE, fig.dim=c(6, 9), fig.cap="Salidas gráficas de las veinte combinaciones de \\texttt{perplexity} y \\texttt{eta}, con \\texttt{pca = FALSE}"}
 # UNIFICACIÓN DE RESULTADOS Y FACETADO DE DOS VARIABLES
 
 d3 <- rbindlist(lapply(seq(nrow(Rtsne_params2)), function(i) {
@@ -1162,7 +1094,7 @@ d4 <- rbindlist(lapply(seq(nrow(Rtsne_params3)), function(i) {
 }))
 ```
 
-```{r tsnegridampliada, include=TRUE, fig.dim=c(6, 4.5), fig.cap="Rejilla ampliada que incorpora \\texttt{eta = 200}, ejecutada con \\texttt{verbose = FALSE}"}
+```{r tsnegridampliada, include=TRUE, fig.dim=c(6, 9), fig.cap="Rejilla ampliada que incorpora \\texttt{eta = 200}, ejecutada con \\texttt{verbose = FALSE}"}
 # Gráfico estático de control (Facet-wrap) usando geom_point
 p4 <- ggplot(d4) +
   geom_point(mapping = aes(x = x, y = y, color = Chance), 
@@ -1207,87 +1139,6 @@ p4
 \end{table}
 
 Se seleccionó \texttt{perplexity = 30} junto con \texttt{eta = 150}, combinación que registra la divergencia más baja de la rejilla (tabla \@ref(tab:tsnegrid)). Conviene precisar que la elección descansa en una diferencia modesta ---0.6080 frente a 0.6538--- y que las salidas gráficas correspondientes son visualmente indistinguibles; por tanto, la configuración final no altera las conclusiones sustantivas. El modelo reproduce la estructura observada durante la exploración: una nube continua y elongada, sin conglomerados discernibles, sobre la cual la probabilidad de admisión se ordena de forma monótona a lo largo de la dimensión dominante.
-
-```{r eval=FALSE}
-### MODELO FINAL OPTIMIZADO DE t-SNE (Perplexity = 30, Eta = 300) ----
-
-# 1. Preparar la matriz numérica libre de duplicados y sin la variable objetivo
-matriz_rtsne_final <- df1 %>%
-  dplyr::select(where(is.numeric)) %>%
-  dplyr::select(-Chance.of.Admit) %>%
-  scale()
-
-# 2. Entrenar el modelo final con la semilla fija para reproducibilidad
-set.seed(123)
-
-df_RtsneF <- Rtsne(matriz_rtsne_final, perplexity = 30, eta = 300, max_iter = 1000) 
-
-# 3. Construir el DataFrame alineando la variable respuesta continua
-datos2 <- data.frame(
-  Rtsne1 = df_RtsneF$Y[, 1],
-  Rtsne2 = df_RtsneF$Y[, 2],
-  diagnostico = df1$Chance.of.Admit # Variable respuesta continua
-)
-
-# 4. Graficar el mapa final optimizado (Se eliminó win.graph() por seguridad de plataforma)
-ggplot(datos2, aes(x = Rtsne1, y = Rtsne2, color = diagnostico)) +
-  geom_point(size = 1.5, alpha = 0.8) +
-  scale_color_gradient(low = "#008080", high = "#FF6F61") + # Tus colores Teal y Coral
-  labs(
-    title = "Graduates Admission: t-SNE (Modelo Final Optimizado)",
-    subtitle = "Configuración: Perplejidad = 30, Eta = 300",
-    x = "t-SNE Dimensión 1",
-    y = "t-SNE Dimensión 2",
-    color = "Chance of Admit"
-  ) +
-  theme_minimal()
-
-
-### FILTRADO Y GRAFICACIÓN DEL MODELO FINAL DESDE LA MATRIZ DE EXPLORACIÓN ----
-
-# Nota: Usamos d3, que es el DataFrame donde guardamos el Grid Search previo de Perplejidad y Eta.
-
-# 1. PRIMER ENFOQUE ALTERNATIVO (Formato limpio sin ejes)
-final_plot <- d3 %>% 
-  filter(perplexity == 30, eta == 150) %>% 
-  mutate(parametros = factor(paste('perplexity:', perplexity, 'eta:', eta))) %>% 
-  ggplot() +
-  geom_point(mapping = aes(x = x, y = y, col = Chance), size = 1.2, alpha = 0.8) +
-  scale_color_gradient(low = "#008080", high = "#FF6F61") + # Tus colores Teal y Coral
-  theme_bw() +
-  theme(
-    axis.text = element_blank(),
-    axis.ticks = element_blank(),
-    axis.title = element_blank(),
-    legend.position = "none",
-    panel.grid = element_blank()
-  ) +
-  labs(title = 'tSNE: Modelo final (Enfoque Alternativo)')
-
-final_plot
-
-
-# --- 2. SEGUNDO ENFOQUE ALTERNATIVO (Formato estándar con ejes y subtítulo) ---
-final_plot1 <- d3 %>% 
-  filter(perplexity == 30, eta == 150) %>% 
-  ggplot(aes(x = x, y = y, col = Chance)) +
-  geom_point(size = 1.5, alpha = 0.8) +
-  scale_color_gradient(low = "#008080", high = "#FF6F61") + # Gradiente continuo fluido
-  theme_bw() +
-  labs(
-    title = 'tSNE: Modelo final',
-    subtitle = 'perplexity: 30 and eta: 200',
-    x = "t-SNE Dimensión 1",
-    y = "t-SNE Dimensión 2",
-    color = "Chance of Admit"
-  )
-
-# Desplegar segundo gráfico
-final_plot1
-
-###################################################################
-
-```
 
 ## UMAP
 
@@ -1428,7 +1279,17 @@ ggplot(datos, aes(x = UMAP1, y = UMAP2, color = Chance.of.Admit, shape = Researc
     color = "Chance of Admit",
     shape = "¿Investigación?"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(
+    # Reduce font size of the legend title
+    legend.title = element_text(size = 8), 
+    
+    # Reduce font size of the legend labels
+    legend.text = element_text(size = 7),  
+    
+    # Reduce the physical size of the legend keys (boxes)
+    legend.key.size = unit(0.3, "cm")      
+  )
 ```
 
 Con el fin de descartar que la trayectoria observada fuera un artefacto de una corrida particular, se replicó el cálculo mediante una receta del ecosistema \texttt{tidymodels} (\texttt{step\_normalize} + \texttt{step\_umap}), obteniéndose la proyección de la figura \ref{fig:umaprecipe}. La estructura —trayectoria continua con gradiente suave de \texttt{Chance of Admit}— se reproduce de forma prácticamente idéntica, lo que confirma que el patrón encontrado es robusto al flujo de cómputo utilizado y no depende de una implementación específica del algoritmo.
@@ -1584,8 +1445,6 @@ Final_plot <- d %>%
 
 # Desplegar el gráfico final
 Final_plot
-
-###################################################################
 ```
 
 # Conclusiones
