@@ -3,7 +3,6 @@ header-includes:
   - \usepackage[utf8]{inputenc} 
   - \usepackage[spanish, es-tabla, es-nodecimaldot]{babel}
   - \usepackage{actuarialsymbol}
-#  - \usepackage[table,xcdraw]{xcolor}
   - \usepackage{multicol} 
   - \usepackage{multirow}  
   - \usepackage{setspace}
@@ -35,7 +34,6 @@ header-includes:
   - \newcommand\diagram[2]{\schema{\schemabox{#1}}{\schemabox{#2}}}
   - \usepackage{hyperref} 
   - \usepackage{color}  
-#  - \usepackage{xcolor}
   - \definecolor{gris}{RGB}{70,70,70}	
   - \definecolor{negro}{RGB}{40,40,40}	
   - \definecolor{brinkpink}{rgb}{0.98, 0.38, 0.5}
@@ -138,9 +136,9 @@ Técnicas de agrupamiento o clustering: Clusters por métodos aglomerativos y po
 
 El proceso de postulación y admisión a programas de posgrado en instituciones internacionales representa un escenario de alta competencia, caracterizado por la evaluación simultánea de múltiples credenciales académicas y perfiles cuantitativos. Para un aspirante, enfrentarse a la toma de decisiones sobre a qué universidades aplicar suele ser un desafío complejo y subjetivo, debido a la falta de herramientas que consoliden el comportamiento histórico de los criterios de selección. En este contexto, la ciencia de datos y el aprendizaje automatizado ofrecen un enfoque analítico robusto para transformar registros históricos en conocimiento estratégico.
 
-El presente proyecto se enfoca en el desarrollo y aplicación de técnicas de aprendizaje no supervisado utilizando el lenguaje de programación \texttt{R}. A través del análisis del conjunto de datos \texttt{Admission\_Predict.csv}, el cual recopila los méritos de postulantes reales, incluyendo variables continuas duras, tales como la puntuación del examen de aptitud académica (\texttt{GRE.Score}), el examen de certificación de idioma (\texttt{TOEFL.Score}) y el promedio general acumulado de pregrado (\texttt{CGPA}), en combinación con evaluaciones discretas de mérito cualitativo como el prestigio de la institución de origen (\texttt{University.Rating}), la solidez de la declaración de propósitos (\texttt{SOP}) y la robustez de las cartas de recomendación (\texttt{LOR}). 
+El presente proyecto se enfoca en el desarrollo y aplicación de técnicas de aprendizaje no supervisado utilizando el lenguaje de programación `R`. A través del análisis del conjunto de datos **Admission Predict**, el cual recopila los méritos de postulantes reales, incluyendo variables continuas duras, tales como la puntuación del examen de aptitud académica (`GRE Score`), el examen de certificación de idioma (`TOEFL Score`) y el promedio general acumulado de pregrado (`CGPA`), en combinación con evaluaciones discretas de mérito cualitativo como el prestigio de la institución de origen (`University Rating`), la solidez de la declaración de propósitos (`SOP`) y la robustez de las cartas de recomendación (`LOR`). 
 
-Este reporte implementa de forma comparativa técnicas de \textbf{Clustering Jerárquico Aglomerativo} y métodos particionales de \textbf{K-Means}. El objetivo fundamental es descubrir de manera autónoma las estructuras y agrupaciones latentes dentro de las calificaciones de los estudiantes, construyendo un sistema de segmentación que sirva como una brújula científica para orientar a futuros candidatos en la preselección de sus opciones universitarias.
+Este reporte implementa de forma comparativa técnicas de **Clustering Jerárquico Aglomerativo** y métodos particionales de **K-Means**. El objetivo fundamental es descubrir de manera autónoma las estructuras y agrupaciones latentes dentro de las calificaciones de los estudiantes, construyendo un sistema de segmentación que sirva como una brújula científica para orientar a futuros candidatos en la preselección de sus opciones universitarias.
 
 ```{r warning=FALSE}
 # Cargar librerías
@@ -175,7 +173,7 @@ library(kableExtra)
 
 ```{r}
 # Cargar los datos
-df <- read.csv("../Admission_Predict.csv")
+df <- read.csv("Admission_Predict.csv")
 ```
 
 ```{r}
@@ -200,9 +198,9 @@ colSums(is.na(df))
 
 ## Metodología
 
-Para la estructuración del análisis de agrupamiento jerárquico aglomerativo, se implementó un flujo metodológico basado en el aprendizaje no supervisado. En primera instancia, se realizó un preprocesamiento estrictamente analítico sobre el conjunto de datos \texttt{Admission\_Predict.csv}. Para garantizar la validez del aprendizaje no supervisado y evitar la contaminación de datos o \textit{data leakage}, el preprocesamiento excluyó explícitamente la variable respuesta continua \texttt{Chance.of.Admit}. Asimismo, la variable dicotómica \texttt{Research} se transformó en un factor cualitativo de dos niveles (\textit{"No"} y \textit{"Sí"}), extrayéndose del entrenamiento matemático para preservarla únicamente como una etiqueta de control visual posterior.
+Para la estructuración del análisis de agrupamiento jerárquico aglomerativo, se implementó un flujo metodológico basado en el aprendizaje no supervisado. En primera instancia, se realizó un preprocesamiento estrictamente analítico sobre el conjunto de datos **Admission Predict**. Para garantizar la validez del aprendizaje no supervisado y evitar la contaminación de datos o *data leakage*, el preprocesamiento excluyó explícitamente la variable respuesta continua `Chance of Admit`. Asimismo, la variable dicotómica `Research` se transformó en un factor cualitativo de dos niveles (`No` y `Sí`), extrayéndose del entrenamiento matemático para preservarla únicamente como una etiqueta de control visual posterior.
 
-Posteriormente, se extrajo la matriz de los seis predictores numéricos continuos (\texttt{GRE.Score}, \texttt{TOEFL.Score}, \texttt{University.Rating}, \texttt{SOP}, \texttt{LOR} y \texttt{CGPA}), la cual fue normalizada mediante un escalamiento estandarizado (media $\mu = 0$ y desviación estándar $\sigma = 1$). Este paso metodológico es crucial, ya que iguala las magnitudes absolutas de las variables, previniendo que atributos con rangos mayores (como el examen GRE sobre 340 puntos) distorsionen el cálculo del espacio geométrico de las observaciones.
+Posteriormente, se extrajo la matriz de los seis predictores numéricos continuos (`GRE Score`, `TOEFL Score`, `University Rating`, `SOP`, `LOR` y `CGPA`), la cual fue normalizada mediante un escalamiento estandarizado (media $\mu = 0$ y desviación estándar $\sigma = 1$). Este paso metodológico es crucial, ya que iguala las magnitudes absolutas de las variables, previniendo que atributos con rangos mayores (como el examen GRE sobre 340 puntos) distorsionen el cálculo del espacio geométrico de las observaciones.
 
 ```{r}
 # Preprocesamiento estrictamente analítico
@@ -222,13 +220,13 @@ A partir de la matriz estandarizada, el flujo metodológico se dividió en cuatr
 
 ### Cálculo de Distancias y Exploración de Enlaces (Ligas)
 
-La disimilitud entre los perfiles académicos de los estudiantes $x_i$ y $x_j$ se cuantificó a través de la métrica de \textbf{distancia Euclidiana} en un espacio de $p=6$ dimensiones, expresada formalmente como:
+La disimilitud entre los perfiles académicos de los estudiantes $x_i$ y $x_j$ se cuantificó a través de la métrica de **distancia Euclidiana** en un espacio de $p=6$ dimensiones, expresada formalmente como:
 \begin{equation}
     d(x_i, x_j) = \sqrt{\sum_{k=1}^{p} (x_{ik} - x_{jk})^2}
 \end{equation}
-Donde $x_{ik}$ es el valor escalado del predictor $k$ para el individuo $x_i$. Con base en la matriz de distancias resultante, se ajustaron comparativamente cinco modelos jerárquicos explorando diferentes metodologías de enlace (\textit{Linkage}): Promedio (\texttt{average}), Simple (\texttt{single}), Completo (\texttt{complete}), y los métodos de minimización de varianza de Ward (\texttt{Ward.D} y \texttt{Ward.D2}). 
+Donde $x_{ik}$ es el valor escalado del predictor $k$ para el individuo $x_i$. Con base en la matriz de distancias resultante, se ajustaron comparativamente cinco modelos jerárquicos explorando diferentes metodologías de enlace (*Linkage*): Promedio (`average`), Simple (`single`), Completo (`complete`), y los métodos de minimización de varianza de Ward (`Ward.D` y `Ward.D2`). 
 
-Para evaluar la fidelidad geométrica de cada árbol, se calculó la \textbf{distancia cofenética} (\texttt{cophenetic}) de cada modelo, la cual mide las distancias de fusión intra-árbol. Posteriormente, se estructuró una matriz de correlación de Pearson (\texttt{matriz\_cofenetic}) para contrastar de forma directa las distancias cofenéticas contra las distancias Euclidianas reales, sirviendo como el primer filtro de selección metodológica.
+Para evaluar la fidelidad geométrica de cada árbol, se calculó la **distancia cofenética** (`cophenetic`) de cada modelo, la cual mide las distancias de fusión intra-árbol. Posteriormente, se estructuró una matriz de correlación de Pearson (\texttt{matriz\_cofenetic}) para contrastar de forma directa las distancias cofenéticas contra las distancias Euclidianas reales, sirviendo como el primer filtro de selección metodológica.
 
 ```{r}
 # Calculando distancias (distancia euclideana)
@@ -332,13 +330,18 @@ print("Correlaciones Cofenéticas por Método de Enlace:")
 print(matriz_cofenetic)
 ```
 
-El análisis exploratorio de las metodologías de enlace (\textit{Linkage}) aportó la primera evidencia cuantitativa sobre la fidelidad estructural de los árboles generados. Al inspeccionar los resultados de la correlación cofenética calculada en el Cuadro \ref{tab:correlacioncofenetica}, se evalúa numéricamente qué tan bien preserva cada algoritmo las distancias Euclidianas originales tras realizar las fusiones jerárquicas.
+El análisis exploratorio de las metodologías de enlace (*Linkage*) aportó la primera evidencia cuantitativa sobre la fidelidad estructural de los árboles generados. Al inspeccionar los resultados de la correlación cofenética calculada en la tabla \ref{tab:correlacioncofenetica}, se evalúa numéricamente qué tan bien preserva cada algoritmo las distancias Euclidianas originales tras realizar las fusiones jerárquicas.
+
+\vspace{0.3cm}
 
 ```{r correlacioncofenetica, include=TRUE}
-matriz_cofenetic %>% kable(
-  caption = "Coeficientes de Correlación Cofenética por Método de Enlace.",
-  digits = 4,         
-  align = "c") %>%
+matriz_cofenetic %>%
+  kable(caption = "Coeficientes de Correlación Cofenética por Método de Enlace.",
+        digits = 4,
+        align = "c",
+        booktabs = TRUE,
+        col.names = c("Average", "Single", "Complete", "Ward D", "Ward D2")) %>%
+  row_spec(0, bold = TRUE) %>%
   kable_styling(latex_options = "hold_position")
 ```
 
@@ -442,7 +445,6 @@ ggplot(metrics_df, aes(x = num_clusters, y = mean)) +
   theme_minimal()
 ```
 
-
 ### Análisis Estructural del Árbol Definitivo y Validación Externa
 
 ```{r}
@@ -492,20 +494,19 @@ tabla_resumen_silueta %>%
 
 Al contrastar estos indicadores con el comportamiento visual del gráfico de la Figura \ref{fig:plotsilueta}, se observa una consistencia interna sobresaliente: el Clúster 1 registra una silueta promedio de $0.37$, el Clúster 2 de $0.24$ y el Clúster 3 de $0.27$. La gran mayoría de las barras verticales se proyectan de forma limpia hacia arriba, confirmando coeficientes individuales positivos y un nivel mínimo de observaciones dudosas o mal asignadas en las fronteras de las ramas del árbol de Ward.
 
-```{r plotsilueta, include=TRUE, fig.cap="Coeficiente de Silueta Individual por Estudiante."}
+Para explorar la estructura del árbol de forma más visual, se desplegaron dendrogramas estructurales avanzados de tipo circular (Figura \ref{fig:dendrogramacircular}) y filogénico (Figura \ref{fig:dendrogramafilogenico}) lo que nos permite identificar la existencia de tres ramas principales bien equilibradas en tamaño que definen la segmentación de los aspirantes.
 
+```{r plotsilueta, include=TRUE, fig.dim=c(6, 3.5), fig.cap="Coeficiente de Silueta Individual por Estudiante."}
 grafica_silueta
 ```
 
-Para explorar la estructura del árbol de forma más visual,
-se desplegaron dendrogramas estructurales avanzados de tipo circular (Figura \ref{fig:dendrogramacircular}) y filogénico (Figura \ref{fig:dendrogramafilogenico}) lo que nos permite identificar la existencia de tres ramas principales bien equilibradas en tamaño que definen la segmentación de los aspirantes.
-
-```{r dendrogramacircular, include=TRUE, fig.cap="Visualización Estructural del Dendrograma Circular (k = 3)."}
+```{r dendrogramacircular, include=TRUE, fig.dim=c(6, 4), fig.cap="Visualización Estructural del Dendrograma Circular (k = 3)."}
 # Dendrograma Circular (k = 3)
 fviz_dend(hc_ward2, cex = 0.5, k = 3, 
           k_colors = mis_colores, 
-          type = "circular")
+          type = "circular", lwd = 0.5)
 ```
+
 ```{r dendrogramafilogenico, include=TRUE, fig.cap="Visualización Estructural del Dendrograma Filogénico Optimizado (k = 3)."}
 # Dendrograma Filogénico con repel=TRUE para evitar el solapamiento de textos en las hojas
 fviz_dend(hc_ward2, cex = 0.5, k = 3, 
@@ -514,7 +515,9 @@ fviz_dend(hc_ward2, cex = 0.5, k = 3,
           repel = TRUE)
 ```
 
-Finalmente, aunque la probabilidad de admisión (\texttt{Chance.of.Admit}) se ocultó por completo durante el entrenamiento matemático de los modelos para evitar sesgos o contaminación de datos, procedimos a reinyectarla en la fase de validación externa para decodificar la identidad de estas tres ramas de forma externa y auditar el desempeño del algoritmo no supervisado.
+Finalmente, aunque la probabilidad de admisión (`Chance of Admit`) se ocultó por completo durante el entrenamiento matemático de los modelos para evitar sesgos o contaminación de datos, procedimos a reinyectarla en la fase de validación externa para decodificar la identidad de estas tres ramas de forma externa y auditar el desempeño del algoritmo no supervisado.
+
+\vspace{0.3cm}
 
 ```{r}
 # Extraer las etiquetas de corte del árbol de Ward 
@@ -527,14 +530,6 @@ table(grupos_hc_definitivo)
 df_grafico_hc <- df1 %>%
   mutate(Cluster_HC = factor(grupos_hc_definitivo))
 ```
-El gráfico de diagramas de caja (\textit{Boxplots}) resultante, desplegado en la Figura \ref{fig:boxplotsclusteraglomerativo}, demostró que las particiones calculadas a ciegas por el árbol de Ward separan de forma perfecta el éxito real de los postulantes, permitiéndonos caracterizar los clústeres de la siguiente manera:
-\begin{enumerate}
-    \item \textbf{Cluster 1 (Perfil de Alta Competitividad):} Consolida a un grupo de 113 estudiantes cuyas notas académicas y méritos los posicionan de forma unívoca en la zona de éxito absoluto, registrando la probabilidad media de aceptación más alta con un valor aproximado de $0.90$.
-    \item \textbf{Cluster 2 (Perfil Intermedio / Promedio):} Reúne a un volumen de 156 estudiantes con credenciales académicas sólidas y competitivas en rangos estándar, representando el grupo mayoritario de la muestra y estabilizándose alrededor de una probabilidad media de aceptación de $0.75$.
-    \item \textbf{Cluster 3 (Perfil Regular / Zona de Oportunidad):} Agrupa a los 131 aspirantes cuyas credenciales cuantitativas se ubican en los rangos más bajos de la muestra, confinándolos en el espectro de riesgo académico con una probabilidad media de aceptación de $0.60$.
-\end{enumerate}
-
-Al no existir solapamiento destructivo entre los cuerpos de las tres cajas en el gráfico, se comprueba visualmente que la estructura jerárquica no supervisada guarda una relación directa y perfecta con el nivel competitivo real del proceso de admisión, validando el éxito de la segmentación.
 
 ```{r boxplotsclusteraglomerativo, include=TRUE, fig.cap="Distribución de la Probabilidad de Admisión por Clúster Aglomerativo (Ward.D2)."}
 
@@ -551,12 +546,541 @@ ggplot(df_grafico_hc, aes(x = Cluster_HC, y = Chance.of.Admit, fill = Cluster_HC
   theme_minimal()
 ```
 
+\vspace{0.3cm}
 
-## Conclusiones
+El gráfico de diagramas de caja (*Boxplots*) resultante, desplegado en la Figura \ref{fig:boxplotsclusteraglomerativo}, demostró que las particiones calculadas a ciegas por el árbol de Ward separan de forma perfecta el éxito real de los postulantes, permitiéndonos caracterizar los clústeres de la siguiente manera:
 
-\begin{enumerate}
-     \item El modelado concluye de forma contundente que el método \texttt{Ward.D2} es la estrategia idónea y ganadora para estructurar el espacio geométrico de las admisiones. Al fusionar las observaciones bajo el criterio de mínima varianza interna, este algoritmo logró un balance perfecto entre la fidelidad de las distancias Euclidianas ($r = 0.6130$) y una estructura clara y balanceada en los dendrogramas estructurales avanzados, generando clústeres sumamente compactos y equilibrados en volumen muestral (113, 156 y 131 alumnos) que garantizan la estabilidad de la segmentación.
-    \item La convergencia analítica entre el Estadístico de Hopkins ($H > 0.80$ en ambas implementaciones), la inspección visual de las alturas de fusión crítica ($h = 20$) y las curvas del Coeficiente de Silueta por Validación Cruzada aportan la evidencia cuantitativa definitiva para asegurar que la estructura del perfil estudiantil no es un producto del azar sino que los estudiantes tienen características muy parecidas entre sí que los hacen agruparse de manera natural. Aunque la métrica de silueta identificó un pico matemático absoluto en dos clústeres, el corte en $k = 3$ clústeres demostró ser estadísticamente saludable (\texttt{silhouette\_avg} = $0.280$) y metodológicamente óptimo para los fines prácticos del proyecto.
-    \item Se concluye que el modelo aglomerativo desarrollado cumple con éxito la meta de orientar a los postulantes de posgrado en la preselección de universidades. La reinyección de la variable respuesta continua reveló una alineación perfecta en los diagramas de caja, rebanando de forma nítida la probabilidad real de admisión en tres rangos competitivos claros: Alta Competitividad ($\approx 0.90$), Perfil Intermedio ($\approx 0.75$) y Perfil Regular ($\approx 0.60$). A través de este enfoque de vecindades por proximidad, el modelo adquiere la capacidad de clasificar dinámicamente a futuros estudiantes.
-\end{enumerate}
+- **Cluster 1 (Perfil de Alta Competitividad):** Consolida a un grupo de 113 estudiantes cuyas notas académicas y méritos los posicionan de forma unívoca en la zona de éxito absoluto, registrando la probabilidad media de aceptación más alta con un valor aproximado de $0.90$.
+- **Cluster 2 (Perfil Intermedio / Promedio):** Reúne a un volumen de 156 estudiantes con credenciales académicas sólidas y competitivas en rangos estándar, representando el grupo mayoritario de la muestra y estabilizándose alrededor de una probabilidad media de aceptación de $0.75$.
+- **Cluster 3 (Perfil Regular / Zona de Oportunidad):** Agrupa a los 131 aspirantes cuyas credenciales cuantitativas se ubican en los rangos más bajos de la muestra, confinándolos en el espectro de riesgo académico con una probabilidad media de aceptación de $0.60$.
 
+Al no existir solapamiento destructivo entre los cuerpos de las tres cajas en el gráfico, se comprueba visualmente que la estructura jerárquica no supervisada guarda una relación directa y perfecta con el nivel competitivo real del proceso de admisión, validando el éxito de la segmentación.
+
+# K-means
+
+```{r librerias}
+library(tidyverse)
+library(tidymodels)
+library(tidyclust)
+library(factoextra)
+library(NbClust)
+library(scales)
+library(knitr)
+
+PAL_2 <- c("#008080", "#FF6F61")
+PAL_3 <- c("#008080", "#FF6F61", "darkblue")
+```
+
+```{r datos}
+df <- read.csv("Admission_Predict.csv")
+
+# Research como factor cualitativo de dos niveles
+df1 <- df %>%
+  mutate(Research = factor(Research, levels = c(0, 1), labels = c("No", "Sí")))
+
+# Matriz de SEIS predictores numéricos, estandarizada (comparable con la
+# sección aglomerativa). Se excluye la respuesta Chance.of.Admit.
+X_esc <- df1 %>%
+  dplyr::select(where(is.numeric)) %>%
+  dplyr::select(-Chance.of.Admit) %>%
+  scale()
+
+# Receta de SIETE predictores: incorpora Research como indicadora
+rec_7 <- recipe(~ ., data = df1) %>%
+  step_rm(Chance.of.Admit) %>%
+  step_normalize(all_numeric_predictors()) %>%
+  step_dummy(all_nominal_predictors())
+```
+
+## Metodología
+
+### Métodos de agrupamiento no jerárquico
+
+El análisis de agrupamiento no jerárquico se desarrolló sobre el mismo conjunto de datos y bajo el preprocesamiento ya documentado en la sección anterior: exclusión explícita de la variable respuesta `Chance.of.Admit` para evitar la contaminación por *data leakage*, conversión de `Research` en factor cualitativo de dos niveles y estandarización de los predictores a media $\mu = 0$ y desviación estándar $\sigma = 1$.
+
+La diferencia entre ambas familias es que los métodos aglomerativos construyen la jerarquía completa de fusiones a partir de una matriz de distancias y permiten decidir el número de grupos *a posteriori*, cortando el dendrograma a la altura que se juzgue pertinente.  
+
+Los métodos de partición, en cambio, exigen fijar el número de grupos $K$ antes de ejecutar el algoritmo y no ofrecen ninguna representación equivalente que permita revisar esa decisión sobre la marcha. El peso metodológico se desplaza, por tanto, hacia la etapa previa de determinación de $K$, que constituye el núcleo de esta sección.
+
+### Particularidades del preprocesamiento
+
+Respecto de la configuración empleada en el análisis aglomerativo, se introdujo una variante deliberada.  
+Mientras que aquel operó exclusivamente sobre los seis predictores numéricos continuos, aquí se trabajó con dos matrices de entrada en paralelo:  
+
+- Una de seis variables, comparable directamente con la sección anterior.  
+- Otra de siete que incorpora `Research` como variable indicadora mediante `step_dummy()` dentro de una receta de **tidymodels**.  
+
+La duplicidad no es redundante sino instrumental: permite verificar si la experiencia en investigación altera la partición cuando participa del cálculo, y reservarla como etiqueta de validación externa cuando no lo hace.
+
+### Criterio de homogeneidad y algoritmo
+
+El criterio optimizado es la suma de cuadrados dentro de los grupos,
+
+$$
+W = \sum_{k=1}^{K} \sum_{i \in k}
+\left( \mathbf{x}_{i} - \bar{\mathbf{x}}_{k} \right)'
+\left( \mathbf{x}_{i} - \bar{\mathbf{x}}_{k} \right),
+$$
+donde $\bar{\mathbf{x}}_{k}$ denota el centroide del grupo $k$. Minimizar $W$ equivale a minimizar la traza de la matriz de suma de cuadrados intragrupal, formulación conocida como criterio de la traza y propuesta por Ward (1963); ambos criterios coinciden por ser un escalar igual a su traza.
+
+Puesto que evaluar todas las particiones posibles resulta computacionalmente inviable salvo para muestras muy pequeñas, el algoritmo procede de forma iterativa: parte de una asignación inicial, reasigna observaciones mientras ello reduzca $W$, recalcula los centroides afectados y se detiene cuando ninguna reasignación produce mejora.  
+
+El procedimiento converge a un óptimo local que depende de la partición inicial, limitación que no comparte el enfoque aglomerativo. Para mitigarla se fijó `nstart = 25`, es decir, veinticinco inicializaciones aleatorias independientes de las que se retiene la de menor varianza interna, junto con `set.seed(123)` en todas las corridas para garantizar la reproducibilidad de los resultados.
+
+### Estrategia de determinación del número de grupos
+
+1. **Remuestreo por Bootstrap.**  
+   Se recorrió una rejilla de $K = 1$ a $10$ mediante `tune_cluster()` sobre diez muestras *bootstrap*, registrando `sse_within_total`, `sse_total` y su cociente `sse_ratio`. El remuestreo permite acompañar cada estimación de un error estándar y no solo de un valor puntual.
+
+2. **Coeficiente de silueta con validación cruzada.**  
+   Sobre la matriz de seis predictores se evaluó $K = 2$ a $10$ bajo un esquema de diez pliegues, midiendo `silhouette_avg`. A diferencia del anterior, la silueta pondera simultáneamente cohesión interna y separación entre grupos, por lo que no decrece de forma mecánica con $K$.
+
+3. **Validación multimétodo.**  
+   Se computaron de manera complementaria el codo por suma de cuadrados, la silueta, la varianza explicada, el estadístico *GAP*, el criterio de Calinski-Harabasz mediante `cascadeKM()` y el criterio de información de Akaike.
+
+4. **Metavotación por consenso.**  
+   Finalmente se ejecutó `NbClust()` con distancia euclidiana sobre $K = 2$ a $10$, procedimiento que evalúa treinta índices de validación interna y resuelve por regla de mayoría.
+   
+### Ajuste final, caracterización y validación
+
+Seleccionado el número de grupos, se ajustó el modelo definitivo y se extrajeron los centroides, los tamaños muestrales y las métricas de varianza (`sse_within`, `sse_ratio` y la razón $SS_{entre}/SS_{total}$). La caracterización de los grupos se apoyó en diagramas de caja facetados por variable estandarizada.
+
+## Interpretación y análisis de resultados
+
+### Remuestreo bootstrap y coeficiente de silueta
+
+```{r tuningbootstrap}
+# --- Rejilla K = 1..10 sobre diez muestras bootstrap 
+kmeans_tune_wf <- workflow() %>%
+  add_recipe(rec_7) %>%
+  add_model(k_means(num_clusters = tune()) %>%
+              set_engine("stats", nstart = 25))
+
+set.seed(123)
+boots <- bootstraps(df1, times = 10)
+
+set.seed(123)
+res <- tune_cluster(
+  kmeans_tune_wf,
+  resamples = boots,
+  grid      = tibble(num_clusters = 1:10),
+  metrics   = cluster_metric_set(sse_within_total, sse_total, sse_ratio)
+)
+
+res_metrics <- collect_metrics(res)
+```
+
+```{r}
+# Silueta bajo validación cruzada de diez pliegues, seis predictores
+df_num_sil <- as.data.frame(X_esc)
+
+set.seed(123)
+folds <- vfold_cv(df_num_sil, v = 10)
+
+set.seed(123)
+tune_sil <- tune_cluster(
+  k_means(num_clusters = tune()) %>% set_engine("stats", nstart = 25),
+  ~ .,
+  data      = df_num_sil,
+  resamples = folds,
+  grid      = tibble(num_clusters = 2:10),
+  metrics   = cluster_metric_set(silhouette_avg)
+)
+
+metrics_sil <- collect_metrics(tune_sil)
+```
+
+```{r}
+# Extraer métricas de sse_ratio y redondear a 3 decimales
+tab_ratio <- res_metrics %>%
+  filter(.metric == "sse_ratio") %>%
+  transmute(
+    num_clusters,
+    sse_ratio = round(mean, 3)
+  )
+
+# Extraer métricas de silueta y redondear a 3 decimales
+tab_sil <- metrics_sil %>%
+  filter(.metric == "silhouette_avg") %>%
+  transmute(
+    num_clusters,
+    silhouette_avg = round(mean, 3)
+  )
+
+# Unir ambas tablas
+tabla_final <- left_join(tab_ratio, tab_sil, by = "num_clusters")
+```
+
+La tabla \ref{tab:cuadro1} reúne los dos indicadores calculados con remuestreo sobre la rejilla completa.
+
+\vspace{0.3cm}
+
+```{r cuadro1, include=TRUE}
+# Mostrar con kable
+kable(tabla_final,
+      caption = "SSE Ratio y coeficiente de silueta promedio por número de grupos.",
+      booktabs = TRUE,
+      linesep = "",
+      escape = FALSE,
+      col.names = c("\\textbf{\\texttt{num\\_clusters}}", "\\textbf{\\texttt{sse\\_ratio}}", "\\textbf{\\texttt{silhouette\\_avg}}")) %>% 
+  kable_styling(latex_options = "hold_position")
+```
+
+\vspace{0.3cm}
+
+La lectura de ambas columnas arroja conclusiones distintas: al aplicar `select_best()` sobre `sse_ratio` el procedimiento devuelve $K = 10$, resultado que conviene descartar de entrada, pues esta métrica decrece de forma casi monótona a medida que aumenta el número de grupos.
+
+Donde esta columna sí resulta informativa es en la magnitud de ganancias sucesivas:  
+
+- El salto de $K = 1$ a $K = 2$ reduce en 0.468 puntos.
+- El de $K = 2$ a $K = 3$ en otros 0.135.
+- A partir de ahí las reducciones caen abruptamente a 0.039, 0.031 y 0.021.
+
+El codo se ubica, por tanto, entre dos y tres grupos.
+
+El coeficiente de silueta, en cambio, no tiene ese problema y permite resolver la ambigüedad: alcanza su máximo global en $K = 2$ y desciende de forma sostenida a partir de ahí.
+
+```{r fig1, include=TRUE, fig.cap="Gráfica de codo del cociente W/T estimado por remuestreo bootstrap sobre diez réplicas."}
+res_metrics %>%
+  filter(.metric == "sse_ratio") %>%
+  ggplot(aes(x = num_clusters, y = mean)) +
+  geom_point(col = "darkblue", size = 2) +
+  geom_line(col = "darkred") +
+  scale_x_continuous(breaks = 1:10) +
+  labs(
+    title    = "Graduates Admission: Gráfica de Codo K-MEANS",
+    subtitle = "Análisis de Inflexión de la Métrica de Varianza (WSS/TSS Ratio)",
+    x        = "Número de Clusters (k)",
+    y        = "Mean WSS/TSS Ratio"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title    = element_text(size = 13, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 11, face = "bold", hjust = 0.5)
+  )
+```
+
+```{r fig2, include=TRUE, fig.cap="Evolución del coeficiente de silueta promedio bajo validación cruzada de diez pliegues."}
+ggplot(metrics_sil, aes(x = num_clusters, y = mean)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  geom_point(color = "darkred", size = 3) +
+  scale_x_continuous(breaks = 2:10) +
+  labs(
+    title    = "Proceso tuning de cluster K-Means: Silhouette Method",
+    subtitle = "Evaluación de k = 2 a 10 con 10 folds en Perfiles de Admisión",
+    x        = "Número de Clusters (k)",
+    y        = "Promedio Silhouette Score"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title    = element_text(size = 13, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 11, face = "bold", hjust = 0.5)
+  )
+```
+
+### Consenso multimétodo
+
+El cálculo independiente de la silueta sobre la muestra completa mediante \texttt{fviz\_nbclust} reproduce el patrón anterior con notable fidelidad, lo que descarta que el resultado dependa del esquema de remuestreo empleado.
+
+```{r fig3, include=TRUE, fig.cap="Coeficiente de silueta calculado sobre la muestra completa (factoextra)."}
+set.seed(123)
+fviz_nbclust(X_esc, kmeans, method = "silhouette") +
+  labs(
+    x     = "Número de clusters",
+    y     = "Promedio de silueta",
+    title = "Número óptimo de clusters (Silueta - factoextra)"
+  ) +
+  theme_minimal()
+```
+
+```{r nbclust, results='hide', fig.show='hide'}
+set.seed(123)
+nb <- NbClust(X_esc, distance = "euclidean",
+              min.nc = 2, max.nc = 10, method = "kmeans", index = "all")
+```
+
+```{r}
+votos <- as.data.frame(table(nb$Best.nc[1, ])) %>%
+  setNames(c("K", "n_indices")) %>%
+  mutate(K = as.integer(as.character(K))) %>%
+  filter(K >= 2) %>%
+  arrange(desc(n_indices), K)
+
+# Etiquetado cualitativo de los índices más representativos por cada K
+principales <- tibble::tribble(
+  ~K, ~principales,
+  2L, "Calinski-Harabasz, Silhouette, Davies-Bouldin, Duda, McClain",
+  3L, "Hartigan, CCC, Scott, TraceW, Friedman, Ball, Dunn",
+  4L, "TrCovW",
+  5L, "Cindex",
+  6L, "Marriot",
+  9L, "KL",
+  10L, "SDbw"
+)
+```
+
+La metavotación de `NbClust` sobre treinta índices de validación interna precisa la magnitud del consenso. La tabla \ref{tab:cuadro2} resume la distribución de los votos.
+
+```{r cuadro2, include=TRUE}
+votos %>%
+  left_join(principales, by = "K") %>%
+  kable(
+    escape = FALSE,
+    booktabs = TRUE,
+    col.names = c("$K$ propuesto", "Índices a favor", "Principales índices"),
+    caption   = "Distribución de votos de los índices de validación interna evaluados por NbClust."
+  ) %>% 
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down", "hold_position"))
+```
+
+Diez índices eligen dos grupos y ocho por tres, mientras que los cinco votos restantes se dispersan sin mostrar un patrón claro. Por mayoría, se resuelve en $K = 2$, y los valores puntuales refuerzan esa lectura: el índice de Calinski-Harabasz llega a 412.77, el de silueta 0.3942 y el de Davies-Bouldin 0.981, los tres en su mejor punto con dos grupos. Vale la pena notar, sin embargo, que la votación no es unánime sino que se divide claramente entre dos y tres grupos, y que ningún índice relevante propone más grupos que esos. Este comportamiento es el esperado cuando los datos se ordenan a lo largo de una dimensión dominante y admiten cortes válidos en más de un punto, antes que cuando existen grupos naturalmente delimitados.
+
+### Partición en dos grupos
+
+```{r ajustek2}
+# Configuración de SIETE predictores (Research incluida en el cálculo)
+fit_k2_7 <- workflow() %>%
+  add_recipe(rec_7) %>%
+  add_model(k_means(num_clusters = 2) %>% set_engine("stats", nstart = 25)) %>%
+  fit(data = df1)
+
+# Configuración de SEIS predictores (Research reservada como validación)
+set.seed(123)
+k2 <- kmeans(X_esc, centers = 2, nstart = 25)
+```
+
+```{r}
+n_k2 <- fit_k2_7 %>%
+  extract_cluster_assignment() %>%
+  count(.cluster) %>%
+  pull(n)
+```
+
+Ajustado el modelo con $K = 2$, la partición distribuye la muestra en 187 y 213 estudiantes bajo la configuración de siete predictores y en 181 y 219 bajo la de seis; ambas soluciones coinciden en 394 de las 400 observaciones, de modo que incorporar `Research` al cálculo reubica apenas seis alumnos. Los centroides se presentan en el Cuadro \ref{tab:cuadro3}.
+
+\vspace{0.3cm}
+
+```{r}
+fit_k2_7 %>%
+  extract_centroids() %>%
+  mutate(.cluster = paste0(seq_len(n()), " (n = ", n_k2, ")"))
+```
+
+```{r cuadro3, include=TRUE}
+fit_k2_7 %>%
+  extract_centroids() %>%
+  mutate(.cluster = paste0(seq_len(n()), " ($n = ", n_k2, "$)")) %>%
+  kable(
+    booktabs = TRUE,
+    escape = FALSE,
+    digits  = 3,
+    caption = "Centroides del modelo con dos grupos en unidades estandarizadas.",
+    col.names = paste0("\\texttt{", c("Cluster", "GRE Score", "TOEFL Score", "University Rating", "SOP", "LOR", "CGPA", "Research\\_Sí"), "}")
+  ) %>% 
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down", "hold_position"))
+```
+
+\vspace{0.3cm}
+
+Las seis variables presentan centroides positivos en el primer clúster y
+negativos en el segundo, con magnitudes homogéneas: entre 0.714 y 0.802 en valor absoluto para el primero y entre 0.626 y 0.704 para el segundo. **Ninguna variable discrimina en dirección contraria a las demás.** Por ejemplo si los aspirantes con calificaciones altas pero cartas débiles frente al patrón inverso cabría esperar que alguna invirtiera su signo. No ocurre: la partición secciona transversalmente un único eje de competitividad académica.
+
+Las métricas son consistentes con esa lectura. La suma de cuadrados intragrupal totaliza 1 248 unidades frente a un total de 2 493, lo que sitúa la razón $SS_{entre}/SS_{total}$ en 50.0 % y el coeficiente de silueta del modelo ajustado en 0.387. La proyección sobre el plano de componentes principales (Figura \ref{fig:fig4}) muestra dos envolventes contiguas que se tocan sobre el eje horizontal sin dejar espacio vacío entre ellas, y los diagramas de caja por variable (Figura \ref{fig:fig5}) confirman el desplazamiento uniforme de las seis distribuciones.
+
+```{r fig4, include=TRUE, fig.cap="Proyección de la partición con K = 2 sobre el plano de los dos primeros componentes principales."}
+fviz_cluster(k2, data = X_esc,
+             palette      = PAL_2,
+             ellipse.type = "convex",
+             geom         = "point",
+             ggtheme      = theme_minimal(),
+             main         = "Partición de Perfiles Estudiantiles mediante K-Means (k = 2)")
+```
+
+```{r fig5, include=TRUE, fig.dim=c(6, 3.8), fig.cap="Distribución estandarizada de cada variable académica según el clúster asignado con K = 2."}
+bind_cols(as.data.frame(X_esc), cluster = k2$cluster) %>%
+  pivot_longer(-cluster) %>%
+  ggplot(aes(x = factor(cluster), y = value, fill = factor(cluster))) +
+  geom_boxplot(show.legend = FALSE, alpha = 0.8) +
+  scale_fill_manual(values = PAL_2) +
+  facet_wrap(vars(name), scales = "free") +
+  theme_bw() +
+  labs(
+    title = "Distribución del Perfil Académico por Clúster (k = 2)",
+    x     = "Clúster Asignado",
+    y     = "Valor Estandarizado"
+  )
+```
+
+Aunque esta configuración logra buenos resultados en los indicadores internos, su utilidad práctica es limitada: divide la muestra solo en dos grupos, aspirantes competitivos y no competitivos, lo que aporta poco al propósito del estudio. Por eso se eligió finalmente la partición en **tres grupos**, una opción respaldada por la mayoría de los índices evaluados y que ofrece una descripción más rica de los perfiles de los aspirantes.
+
+### Modelo final con tres grupos
+
+```{r ajustek3}
+set.seed(123)
+k3 <- kmeans(X_esc, centers = 3, nstart = 25)
+
+# El etiquetado de kmeans() es arbitrario: se reordena por nivel académico
+# para que los perfiles conserven un nombre estable entre corridas.
+orden <- df1 %>%
+  mutate(cl = k3$cluster) %>%
+  group_by(cl) %>%
+  summarise(m = mean(CGPA)) %>%
+  arrange(m) %>%
+  pull(cl)
+
+etiquetas <- c("Perfil bajo", "Perfil intermedio", "Perfil alto")
+
+df_res <- df1 %>%
+  mutate(
+    Cluster = factor(k3$cluster, levels = orden, labels = etiquetas)
+  )
+```
+
+El ajuste con $K = 3$ sobre las seis variables académicas distribuye la muestra en 106, 168 y 126 estudiantes. La proyección sobre el plano de componentes principales, recogida en la Figura \ref{fig:fig6}, resulta especialmente elocuente.
+
+```{r fig6, include=TRUE, fig.dim=c(6, 4.2), fig.cap="Proyección de la partición definitiva con K = 3 sobre el plano de los dos primeros componentes principales."}
+fviz_cluster(k3, data = X_esc,
+             palette      = PAL_3,
+             ellipse.type = "convex",
+             geom         = "point",
+             ggtheme      = theme_minimal(),
+             main         = "Partición de Perfiles Estudiantiles mediante K-Means (k = 3)")
+```
+
+Las tres agrupaciones aparecen como franjas verticales consecutivas que dividen el primer componente, responsable de **75.2%** de la variabilidad. El segundo componente, con apenas **10.3%**, no aporta separación: los tres grupos ocupan prácticamente el mismo rango vertical.  
+
+En la práctica, la partición se apoya en una sola dirección del espacio, y las fronteras entre bandas funcionan como cortes claros pero algo arbitrarios sobre un recorrido continuo, más que como rupturas reales en los datos.
+
+El Cuadro \ref{tab:cuadro4} caracteriza los grupos resultantes con la variable respuesta reincorporada tras el entrenamiento.
+
+\vspace{0.3cm}
+
+```{r cuadro4, include=TRUE}
+df_res %>%
+  group_by(Perfil = Cluster) %>%
+  summarise(
+    n            = n(),
+    GRE          = mean(GRE.Score),
+    TOEFL        = mean(TOEFL.Score),
+    CGPA         = mean(CGPA),
+    `% Investigación` = mean(as.numeric(Research) - 1) * 100,
+    Chance       = mean(Chance.of.Admit),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(Chance)) %>%
+  kable(
+    booktabs = TRUE,
+    digits  = c(0, 0, 1, 1, 2, 1, 3),
+    caption = "Caracterización de los tres perfiles con la variable respuesta reincorporada."
+  ) %>% 
+  row_spec(0, bold = TRUE) %>%
+  kable_styling(latex_options = c("scale_down", "hold_position"))
+```
+
+\vspace{0.3cm}
+
+La segmentación se entiende fácilmente en términos del proceso de admisión. 
+
+- El primer perfil reúne a 106 aspirantes con una puntuación GRE media de **329.7**, un promedio de pregrado de **9.31** y experiencia investigadora en el **90.6%** de los casos, con una probabilidad media de admisión de **0.891**.
+- El segundo agrupa a 168 estudiantes con perfiles intermedias y una probabilidad media de **0.721**, constituyendo el bloque mayoritario de la muestra.
+- El tercero concentra a 126 aspirantes con los perfiles más bajos y una probabilidad media de **0.589**.
+
+Ahora bien, el Cuadro \ref{tab:cuadro4} no introduce matices respecto al diagnóstico de dos grupos, sino que lo refuerza. Las seis variables académicas ordenan los tres perfiles en la misma secuencia, sin excepción, y lo mismo ocurre con la variable respuesta, que no participó en el cálculo.  
+
+Un conjunto con perfiles genuinamente distintos difícilmente mostraría un ordenamiento tan alineado en todas sus dimensiones de manera simultánea; lo que se observa es, nuevamente, un único gradiente, ahora dividido en tres tramos.
+
+La Figura \ref{fig:fig7} refleja la misma jerarquía a nivel de cada variable académica: en las seis observadas las medianas aumentan de forma ordenada desde el perfil bajo al alto, sin inversiones. La única excepción aparente es `University.Rating`: sus cajas comprimidas y la abundancia de puntos marcados como atípicos no indican mayor variabilidad real, sino el efecto de ser una variable discreta de solo cinco niveles; aun así, la tendencia ordinal se mantiene igualmente clara.
+
+La Figura \ref{fig:fig8} desglosa la variable de respuesta por perfil y ofrece una validación externa del modelo. Las medianas se ordenan con claridad en torno a **0.61**, **0.73** y **0.90**, y los cuerpos de las tres cajas no se traslapan, lo que confirma que una partición calculada sin acceso a *Chance.of.Admit* reproduce su ordenamiento. 
+
+```{r fig7, include=TRUE, fig.dim=c(6, 3.6), fig.cap="Distribución estandarizada de cada variable académica según el clúster asignado con K = 3."}
+bind_cols(as.data.frame(X_esc), cluster = k3$cluster) %>%
+  pivot_longer(-cluster) %>%
+  ggplot(aes(x = factor(cluster), y = value, fill = factor(cluster))) +
+  geom_boxplot(show.legend = FALSE, alpha = 0.8) +
+  scale_fill_manual(values = PAL_3) +
+  facet_wrap(vars(name), scales = "free") +
+  theme_bw() +
+  labs(
+    title = "Distribución del Perfil Académico por Clúster (k = 3)",
+    x     = "Clúster Asignado",
+    y     = "Valor Estandarizado"
+  )
+```
+
+```{r fig8, include=TRUE, fig.dim=c(6, 3.2), fig.cap="Distribución de la probabilidad de admisión según el perfil asignado."}
+ggplot(df_res, aes(x = Cluster, y = Chance.of.Admit, fill = Cluster)) +
+  geom_boxplot(alpha = 0.8, outlier.colour = "red") +
+  scale_fill_manual(values = PAL_3) +
+  labs(
+    title = "Probabilidad de admisión por perfil",
+    x     = "Perfil asignado",
+    y     = "Chance of Admit"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "none",
+    plot.title      = element_text(face = "bold", hjust = 0.5)
+  )
+```
+
+La segunda vía de validación externa cruza los perfiles con *Research*, variable que no intervino en el cálculo.  
+
+La Figura \ref{fig:fig9} muestra una progresión ordenada: la experiencia investigadora está presente en el **21.4%** de los aspirantes con perfil bajo, en el **57.1%** del perfil intermedio y en el **90.6%** del grupo de perfil alto. En la partición de dos grupos, esta concordancia se traduce en una tasa de acuerdo del **74.5%**, con una discordancia de **0.255**.
+
+El resultado admite una lectura matizada. Que la proporción crezca de forma continua confirma que la partición refleja información sustantiva del expediente.
+
+```{r fig9, include=TRUE, fig.cap="Proporción de estudiantes con experiencia en investigación dentro de cada perfil."}
+df_res %>%
+  count(Cluster, Research) %>%
+  group_by(Cluster) %>%
+  mutate(prop = n / sum(n)) %>%
+  ggplot(aes(x = Cluster, y = prop, fill = Research)) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = percent(prop, accuracy = 0.1)),
+            position  = position_stack(vjust = 0.5),
+            color     = "white",
+            fontface  = "bold",
+            size      = 4) +
+  scale_y_continuous(labels = percent) +
+  scale_fill_manual(values = PAL_2) +
+  labs(
+    title = "Proporción de estudiantes con experiencia en investigación",
+    x     = "Perfil asignado",
+    y     = "Porcentaje",
+    fill  = "Research"
+  ) +
+  theme_minimal()
+```
+
+```{r discordanciak2}
+# Validación externa de la partición en dos grupos contra Research.
+# La correspondencia de etiquetas de kmeans() es arbitraria, de modo que se
+# toma el mejor alineamiento entre la diagonal y la antidiagonal.
+TC <- table(df1$Research, k2$cluster)
+acuerdo <- max(sum(diag(TC)), sum(TC[cbind(1:2, 2:1)])) / sum(TC)
+```
+
+# Conclusiones
+
+El proceso de admisión a posgrado enfrenta a los aspirantes a una decisión compleja y en buena medida subjetiva: a qué universidades aplicar, sin contar con las herramientas que resuman el comportamiento histórico de los criterios de selección. Con ese propósito se aplicaron dos técnicas de agrupamiento no supervisado —Clustering Jerárquico Aglomerativo y K-means— sobre el conjunto **Admission Predict**, buscando construir una segmentación que funcione como una pauta o brújula para orientar a futuros candidatos en la preselección de sus opciones universitarias.
+
+## Clustering Jerárquico Aglomerativo
+
+El método `Ward.D2` resultó ser el más adecuado, al lograr el mejor balance entre fidelidad geométrica y claridad visual: alcanzó una correlación cofenética de $r = 0.6130$, cercana al máximo obtenido con el enlace promedio ($r = 0.6506$) pero sin el problema de encadenamiento que este último mostró al graficarse. Al cortar el árbol en su altura crítica se obtuvieron tres grupos compactos y de tamaño equilibrado (113, 156 y 131 alumnos).
+
+El Estadístico de Hopkins, calculado por dos vías independientes ($H = 0.997$ y $H = 0.995$), descartó con claridad que esta estructura fuera producto del azar: los aspirantes sí tienden a organizarse en torno a perfiles compartidos. El Coeficiente de Silueta identificó su valor más alto en dos grupos, pero el corte en tres se mantuvo en un nivel saludable ($\texttt{silhouette\_avg} = 0.280$) y se prefirió porque describe mejor la variedad de perfiles presentes. Al reincorporar `Chance of Admit` solo como referencia externa, los tres grupos correspondieron con claridad a distintos rangos de probabilidad de admisión: Alta Competitividad ($\approx 0.90$), Perfil Intermedio ($\approx 0.75$) y Perfil Regular ($\approx 0.60$).
+
+## K-means
+
+El algoritmo particional confirmó, por su cuenta, la existencia de tres grupos diferenciados, esta vez con 106, 168 y 126 estudiantes. También aquí el mejor valor de silueta se dio con dos grupos (0.384 frente a 0.297 con tres), y también aquí se optó por trabajar con tres, porque ofrecen una lectura académica más rica y grupos mejor balanceados. 
+
+Los boxplot mostraron una jerarquía muy ordenada: el Cluster 1 concentró las medianas más altas en las seis variables académicas, con un 90.6% de sus integrantes con experiencia en investigación; el Cluster 2 mostró justo lo contrario, con solo 21.4%; y el Cluster 3 quedó de forma consistente en medio de ambos, con 57.1%. Esa misma jerarquía se repitió en la probabilidad real de admisión, con medianas cercanas a 90%, 61% y 73% respectivamente. Vale la pena señalar que, a diferencia de la separación limpia que se ve en las variables académicas, la probabilidad de admisión sí se traslapa de forma notoria entre grupos vecinos —el Cluster 2 baja hasta 34% y el Cluster 3 tiene algunos casos entre 45% y 52%—, lo que muestra que la frontera entre perfiles es útil pero no tajante.
+
+## Reflexión final y comparativa metodológica
+
+Trabajar con un método jerárquico y uno particional permitió, en el fondo, poner a prueba el mismo hallazgo con dos lógicas distintas: `Ward.D2` arma la partición fusionando observaciones por cercanía, sin necesidad de decidir de antemano cuántos grupos habrá; K-means la construye minimizando la varianza dentro de cada grupo, a partir de un número de grupos que sí hay que fijar de entrada. Que ambos hayan llegado a una solución de tres perfiles con una jerarquía académica y de probabilidad prácticamente igual es la mejor señal de que esta segmentación no depende del algoritmo que se use, sino que refleja algo real en los datos.
+
+En conclusión, el agrupamiento no supervisado resultó útil para traducir el perfil continuo de los aspirantes en tres categorías claras y manejables: Alta Competitividad, Perfil Intermedio y Perfil Regular. Al estar respaldadas por dos algoritmos distintos y por la probabilidad real de admisión, estas categorías ofrecen una base sólida para orientar a los postulantes de posgrado en la preselección de universidades, sin perder de vista que se trata de un corte útil sobre un continuo de mérito académico, y no de tipos cerrados de estudiante.

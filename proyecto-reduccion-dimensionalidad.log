@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 21:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 23:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1346,7 +1346,7 @@ LaTeX Warning: Text page 16 contains only floats.
 [16 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf> <.
 /proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf>] [17] [
 18]
-runsystem(latexminted cleantemp  --timestamp 20260720211906 BFCA8610422CC91C867
+runsystem(latexminted cleantemp  --timestamp 20260720230340 BFCA8610422CC91C867
 0167F0415B4C7)...disabled (restricted).
 
 (proyecto-reduccion-dimensionalidad.aux
@@ -1360,8 +1360,8 @@ L3 programming layer <2026-05-26>
  ) 
 Here is how much of TeX's memory you used:
  26312 strings out of 467509
- 496328 string characters out of 5408780
- 1109594 words of memory out of 5000000
+ 496315 string characters out of 5408780
+ 1109581 words of memory out of 5000000
  54900 multiletter control sequences out of 15000+600000
  682466 words of font info for 147 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1377,7 +1377,7 @@ C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmri10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><
 C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
-Output written on proyecto-reduccion-dimensionalidad.pdf (18 pages, 2346540 byt
+Output written on proyecto-reduccion-dimensionalidad.pdf (18 pages, 2346349 byt
 es).
 PDF statistics:
  497 PDF objects out of 1000 (max. 8388607)

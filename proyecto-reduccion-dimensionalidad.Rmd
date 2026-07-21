@@ -3,7 +3,6 @@ header-includes:
   - \usepackage[utf8]{inputenc} 
   - \usepackage[spanish, es-tabla, es-nodecimaldot]{babel}
   - \usepackage{actuarialsymbol}
-#  - \usepackage[table,xcdraw]{xcolor}
   - \usepackage{multicol} 
   - \usepackage{multirow}  
   - \usepackage{setspace}
@@ -35,7 +34,6 @@ header-includes:
   - \newcommand\diagram[2]{\schema{\schemabox{#1}}{\schemabox{#2}}}
   - \usepackage{hyperref} 
   - \usepackage{color}  
-#  - \usepackage{xcolor}
   - \definecolor{gris}{RGB}{70,70,70}	
   - \definecolor{negro}{RGB}{40,40,40}	
   - \definecolor{brinkpink}{rgb}{0.98, 0.38, 0.5}
@@ -192,7 +190,7 @@ theme_set(theme_bw(16))
 
 ```{r}
 # Cargar los datos
-df <- read.csv("../Admission_Predict.csv")
+df <- read.csv("Admission_Predict.csv")
 
 df
 ```
@@ -404,7 +402,7 @@ Así mismo, se realizó un prueba de hipótesis de Bartlett, cuya hipótesis nul
 
 # Aplicación de las Técnicas de Reducción de Dimensión
 
-## Análisis de PCA
+## PCA
 
 ### Metodología
 
@@ -1473,8 +1471,7 @@ La visualización y el análisis del gradiente creado con `Chance of Admit` conf
 
 El uso combinado de enfoques lineales (PCA) y no lineales (t-SNE y UMAP) aportó una visión complementaria e integral de los datos:
 
-* **PCA** ofreció la ventaja de la interpretabilidad directa a través de las cargas factoriales, permitiendo descomponer el perfil del aspirante en dimensiones ortogonales claras (rendimiento académico vs. investigación).
-* **t-SNE y UMAP** permitieron verificar la topología subyacente sin forzar restricciones de linealidad, evidenciando que la estructura de los datos se comporta como un manifold continuo y suave.
+- **PCA** ofreció la ventaja de la interpretabilidad directa a través de las cargas factoriales, permitiendo descomponer el perfil del aspirante en dimensiones ortogonales claras (rendimiento académico vs. investigación).
+- **t-SNE y UMAP** permitieron verificar la topología subyacente sin forzar restricciones de linealidad, evidenciando que la estructura de los datos se comporta como un manifold continuo y suave.
 
 En conclusión, los métodos de aprendizaje no supervisado aplicados demostraron ser herramientas de diagnóstico sumamente potentes. Sin la necesidad de incorporar la variable respuesta durante el entrenamiento, las técnicas lograron comprimir exitosamente el espacio de siete dimensiones a dos, revelando que el éxito en la admisión a posgrado no obedece a perfiles segmentados o clústeres aislados, sino a un gradiente continuo y estructurado de excelencia académica.
-
