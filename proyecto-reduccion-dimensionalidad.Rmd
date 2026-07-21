@@ -144,7 +144,7 @@ Técnicas de reducción de dimensión: PC, t-SNE y UMAP.
 
 Si bien durante los procesos de admisión a posgrado diversos factores académicos y personales, como el desempeño en exámenes, el promedio general de la licenciatura, la calidad de la institución de procedencia, las cartas de recomendación, la declaración de propósitos y la experiencia en investigación, impactan en la probabilidad de que un aspirante sea admitido, dichos factores pueden presentar distintos niveles de correlación y redundancia, de modo que resulta pertinente analizar su estructura mediante técnicas de reducción de dimensión para identificar las variables que aportan mayor información, simplificar el espacio de características y facilitar la interpretación de los datos sin perder una cantidad significativa de información.
 
-En este sentido, analizamos el conjunto de datos de \textbf{Admission Predict},  integrado por 400 observaciones correspondientes a solicitudes de admisión y 8 variables, de las cuales 7 corresponden a variables predictoras y una a la variable respuesta. A continuación, se presenta una breve descripción de las mismas:
+En este sentido, analizamos el conjunto de datos de **Admission Predict**, integrado por 400 observaciones correspondientes a solicitudes de admisión y 8 variables, de las cuales 7 corresponden a variables predictoras y una a la variable respuesta. A continuación, se presenta una breve descripción de las mismas:
 
 - **`GRE Score`**: puntuación obtenida en el examen GRE (0–340).
 - **`TOEFL Score`**: puntuación obtenida en el examen TOEFL (0–120).
@@ -408,7 +408,7 @@ Así mismo, se realizó un prueba de hipótesis de Bartlett, cuya hipótesis nul
 
 ### Metodología
 
-El análisis de componentes principales se aplicó sobre el conjunto de variables predictoras estandarizadas mediante el procedimiento de normalización, integrando tanto las variables cuantitativas: \texttt{GRE Score}, \texttt{TOEFL Score}, \texttt{University Rating}, \texttt{SOP}, \texttt{LOR} y \texttt{CGPA}, como la variable categórica \texttt{Research}, la cual fue convertida a tipo factor con dos niveles (No y Sí). No obstante, \texttt{Chance of Admit} se excluyó del cálculo, asignándole el rol de \textit{outcome} y se conservó únicamente para facilitar la interpretación posterior de los resultados.
+El análisis de componentes principales se aplicó sobre el conjunto de variables predictoras estandarizadas mediante el procedimiento de normalización, integrando tanto las variables cuantitativas: `GRE Score`, `TOEFL Score`, `University Rating`, `SOP`, `LOR` y `CGPA`, como la variable categórica `Research`, la cual fue convertida a tipo factor con dos niveles (No y Sí). No obstante, `Chance of Admit` se excluyó del cálculo, asignándole el rol de *outcome* y se conservó únicamente para facilitar la interpretación posterior de los resultados.
 
 Así pues, una vez extraídos los componentes principales, se obtuvo su matriz de cargas factoriales, que se muestra en la tabla \@ref(tab:varianzapca), las cuales indican la contribución de cada variable original a la construcción de cada componente, así como su matriz de varianza explicada asociada a cada uno y la acumulada en términos porcentuales, la cual se muestra en la tabla \@ref(tab:porcentajevar).
 
@@ -423,7 +423,7 @@ df1 <- df %>%
     labels = c("No", "Sí")
   ))
 
-#Recipe/receta
+# Recipe/receta
 wdbc_recipe <-
   recipe( ~ ., data = df1) %>%
   update_role(Chance.of.Admit, new_role = "outcome") %>%
@@ -431,7 +431,7 @@ wdbc_recipe <-
   step_normalize(all_predictors()) %>%
   step_pca(all_predictors(), id = "pca")
 
-#Ejecuta la receta
+# Ejecuta la receta
 wdbc_pca <- prep(wdbc_recipe)
 
 pca_loading <- tidy(wdbc_pca, id = "pca")
@@ -483,6 +483,7 @@ pca_loading %>%
 pca_variances <- tidy(wdbc_pca, id = "pca", type = "variance")
 pca_var_percent <- tidy(wdbc_pca, id = "pca", type = "variance") %>%
   filter(str_detect(terms, "percent variance"))
+
 pca_var_percent
 ```
 
@@ -511,13 +512,13 @@ pca_var_percent %>%
 
 ### Interpretación y Análisis de Resultados.
 
-Notemos que el primer componente principal \textbf{(PC1) concentra 69.61\%} de la variabilidad total del conjunto de datos, lo que indica que una gran parte de la información contenida en las siete variables predictoras puede resumirse en una única dimensión latente. Por otra parte, al incorporar el segundo componente principal \textbf{(PC2), la varianza acumulada asciende a 79.97\%}, lo que representa aproximadamente el 80\% de la variabilidad total. Asimismo, con la inclusión del tercer componente principal \textbf{(PC3) se alcanza una varianza acumulada de 87.78\%}, mientras que los componentes restantes aportan incrementos relativamente pequeños, inferiores al 5\% de manera individual.
+Notemos que el primer componente principal **(PC1) concentra 69.61%** de la variabilidad total del conjunto de datos, lo que indica que una gran parte de la información contenida en las siete variables predictoras puede resumirse en una única dimensión latente. Por otra parte, al incorporar el segundo componente principal **(PC2), la varianza acumulada asciende a 79.97%**, lo que representa aproximadamente el 80% de la variabilidad total. Asimismo, con la inclusión del tercer componente principal **(PC3) se alcanza una varianza acumulada de 87.78%**, mientras que los componentes restantes aportan incrementos relativamente pequeños, inferiores al 5% de manera individual.
 
-De modo que los resultados muestran que la mayor parte de la información del conjunto de datos se encuentra concentrada en los primeros componentes principales, lo que confirma la existencia de correlación entre las variables originales. Ahora bien, considerando el criterio de conservar alrededor del 80\% de la varianza explicada, se concluye que \textbf{dos componentes principales son suficientes para representar adecuadamente la estructura de los datos}, permitiendo reducir el número de dimensiones de siete a dos con una pérdida mínima de información.
+De modo que los resultados muestran que la mayor parte de la información del conjunto de datos se encuentra concentrada en los primeros componentes principales, lo que confirma la existencia de correlación entre las variables originales. Ahora bien, considerando el criterio de conservar alrededor del 80% de la varianza explicada, se concluye que **dos componentes principales son suficientes para representar adecuadamente la estructura de los datos**, permitiendo reducir el número de dimensiones de siete a dos con una pérdida mínima de información.
 
-En cuanto a las cargas factoriales, observamos que el PC1 presenta cargas, en valores absolutos, de magnitud similar para todas las variables predictoras, siendo ligeramente mayor para \texttt{CGPA} (0.417), seguida de \texttt{TOEFL Score} (0.399), \texttt{GRE Score} (0.398) y \texttt{University Rating} (0.388), lo que sugiere que el primer componente resume un factor asociado al desempeño académico general de los postulantes, mientras que en el PC2 domina la variable \texttt{Research} con una carga absoluta de 0.724, superando ampliamente a la del resto de las variables, indicando que el segundo componente captura principalmente la variabilidad asociada a la experiencia en investigación, mientras que variables como \texttt{LOR} (0.449), \texttt{GRE Score} (0.287) y \texttt{University Rating} (0.230) presentan una contribución moderada. 
+En cuanto a las cargas factoriales, observamos que el PC1 presenta cargas, en valores absolutos, de magnitud similar para todas las variables predictoras, siendo ligeramente mayor para `CGPA` (0.417), seguida de `TOEFL Score` (0.399), `GRE Score` (0.398) y `University Rating` (0.388), lo que sugiere que el primer componente resume un factor asociado al desempeño académico general de los postulantes, mientras que en el PC2 domina la variable `Research` con una carga absoluta de 0.724, superando ampliamente a la del resto de las variables, indicando que el segundo componente captura principalmente la variabilidad asociada a la experiencia en investigación, mientras que variables como `LOR` (0.449), `GRE Score` (0.287) y `University Rating` (0.230) presentan una contribución moderada. 
 
-Ahora bien, al proyectar a los postulantes sobre el plano definido por PC1 y PC2 (figura \@ref(fig:pcagrafica)), coloreando cada punto según su \texttt{Chance of Admit}, se observa un gradiente claro a lo largo del eje PC1: los estudiantes con mayor probabilidad de admisión se concentran en la región de valores negativos de PC1, mientras que aquellos con menor probabilidad se agrupan principalmente en la región de valores positivos. 
+Ahora bien, al proyectar a los postulantes sobre el plano definido por PC1 y PC2 (figura \@ref(fig:pcagrafica)), coloreando cada punto según su `Chance of Admit`, se observa un gradiente claro a lo largo del eje PC1: los estudiantes con mayor probabilidad de admisión se concentran en la región de valores negativos de PC1, mientras que aquellos con menor probabilidad se agrupan principalmente en la región de valores positivos. 
 
 ```{r eval=FALSE}
 # Gráfica de codo (Porcentaje de Varianza Individual por Componente)
@@ -594,9 +595,9 @@ datos_pca %>%
   theme_minimal()
 ```
 
-Este patrón resulta consistente con la interpretación anterior de PC1 como un factor asociado al desempeño académico general, y resulta particularmente relevante dado que \texttt{Chance of Admit} no participó en el cálculo de los componentes, lo cual sugiere que la estructura de correlación capturada de forma no supervisada por el PCA coincide, en buena medida, con el resultado que en la práctica resulta más relevante para el proceso de admisión. 
+Este patrón resulta consistente con la interpretación anterior de PC1 como un factor asociado al desempeño académico general, y resulta particularmente relevante dado que `Chance of Admit` no participó en el cálculo de los componentes, lo cual sugiere que la estructura de correlación capturada de forma no supervisada por el PCA coincide, en buena medida, con el resultado que en la práctica resulta más relevante para el proceso de admisión. 
 
-De manera complementaria, al segmentar a los postulantes según su experiencia en investigación (figura \@ref(fig:researchpca)) se observa una separación clara a lo largo del eje PC2: los estudiantes con experiencia en investigación (\texttt{Sí}) se concentran principalmente en la región de valores positivos de PC2, mientras que aquellos sin experiencia (\texttt{No}) se ubican mayoritariamente en la región de valores negativos, sin que se aprecie una separación equivalente a lo largo de PC1. 
+De manera complementaria, al segmentar a los postulantes según su experiencia en investigación (figura \@ref(fig:researchpca)) se observa una separación clara a lo largo del eje PC2: los estudiantes con experiencia en investigación (`Sí`) se concentran principalmente en la región de valores positivos de PC2, mientras que aquellos sin experiencia (`No`) se ubican mayoritariamente en la región de valores negativos, sin que se aprecie una separación equivalente a lo largo de PC1. 
 
 ```{r researchpca, include=TRUE, fig.cap="Proyección de los postulantes sobre PC1 y PC2, segmentada según experiencia en investigación"}
 # Gráfico Alternativo: Con etiqueta de color categórica (Research)
@@ -624,7 +625,7 @@ datos_pca %>%
 
 ### Conclusiones
 
-Así pues, es posible concluir que la variabilidad original contenida en las siete variables predictoras puede resumirse de manera adecuada en dos dimensiones interpretables: \textbf{una asociada al desempeño académico} y \textbf{otra a la experiencia en investigación}, las cuales en conjunto \textbf{retienen el 79.97\% de la información total}.
+Así pues, es posible concluir que la variabilidad original contenida en las siete variables predictoras puede resumirse de manera adecuada en dos dimensiones interpretables: **una asociada al desempeño académico** y **otra a la experiencia en investigación**, las cuales en conjunto **retienen el 79.97% de la información total**.
 
 ```{r eval=FALSE}
 ### ANÁLISIS DE CARGAS FACTORIALES (PESOS EN CADA COMPONENTE) ----
@@ -656,7 +657,7 @@ wdbc_pca %>%
 
 ## t-SNE
 
-A diferencia de PCA, que construye combinaciones lineales de las variables originales, t-SNE modela la similitud entre pares de observaciones mediante una distribución gaussiana en el espacio de alta dimensión y una distribución t-Student, minimizando la divergencia de Kullback-Leibler entre ambas por descenso de gradiente. La matriz sometida a t‑SNE se construyó seleccionando las variables cuantitativas, excluyendo \texttt{Chance of Admit} por su condición de variable respuesta. Se empleó el mismo conjunto de predictores estandarizados utilizado en el análisis de componentes principales.
+A diferencia de PCA, que construye combinaciones lineales de las variables originales, t-SNE modela la similitud entre pares de observaciones mediante una distribución gaussiana en el espacio de alta dimensión y una distribución t-Student, minimizando la divergencia de Kullback-Leibler entre ambas por descenso de gradiente. La matriz sometida a t‑SNE se construyó seleccionando las variables cuantitativas, excluyendo `Chance of Admit` por su condición de variable respuesta. Se empleó el mismo conjunto de predictores estandarizados utilizado en el análisis de componentes principales.
 
 ### Comparación de las dos implementaciones
 
@@ -708,9 +709,9 @@ datos <- data.frame(tSNE1 = df_tsne[,1], tSNE2 = df_tsne[,2], Chance.of.Admit = 
 datos
 ```
 
-Se emplearon dos implementaciones disponibles: \texttt{tsne()} (algoritmo exacto) y \texttt{Rtsne()} (aproximación de Barnes‑Hut con \texttt{theta = 0.5}), que reduce la complejidad y acelera el cálculo —aproximadamente veinte veces—. Aunque ambas producen configuraciones cualitativamente equivalentes, la mayor rapidez de \texttt{Rtsne()} fue determinante para la exploración sistemática de hiperparámetros; \texttt{tsne()} se reservó únicamente para la verificación inicial del comportamiento del algoritmo.
+Se emplearon dos implementaciones disponibles: `tsne()` (algoritmo exacto) y `Rtsne()` (aproximación de Barnes‑Hut con `theta = 0.5`), que reduce la complejidad y acelera el cálculo —aproximadamente veinte veces—. Aunque ambas producen configuraciones cualitativamente equivalentes, la mayor rapidez de `Rtsne()` fue determinante para la exploración sistemática de hiperparámetros; \texttt{tsne()} se reservó únicamente para la verificación inicial del comportamiento del algoritmo.
 
-En la figura \ref{fig:tsneexacta} el conjunto de las observaciones queda comprimido en dos bandas horizontales estrechas en torno al origen, mientras que cuatro puntos aislados se sitúan muy alejados en el eje vertical. El \textit{embedding} queda dominado por esas pocas observaciones que la optimización expulsó a distancias extremas, y la estructura del resto se vuelve ilegible por compresión de escala.
+En la figura \ref{fig:tsneexacta} el conjunto de las observaciones queda comprimido en dos bandas horizontales estrechas en torno al origen, mientras que cuatro puntos aislados se sitúan muy alejados en el eje vertical. El *embedding* queda dominado por esas pocas observaciones que la optimización expulsó a distancias extremas, y la estructura del resto se vuelve ilegible por compresión de escala.
 
 ```{r tsneexacta, include=TRUE, fig.dim=c(6, 5), fig.cap="Salida de \\texttt{tsne()} con parámetros por defecto, coloreada según \\texttt{Chance of Admit}"}
 # Gráfico con gradiente continuo (Chance of Admit) aplicando tus dos colores bonitos
@@ -721,7 +722,7 @@ ggplot(datos, aes(x = tSNE1, y = tSNE2, color = Chance.of.Admit)) +
   theme_minimal()
 ```
 
-Usando la misma configuración procesada con \texttt{Rtsne()}, se produce un mapa utilizable, con coordenadas acotadas y observaciones organizadas en una nube continua y alargada (figura \@ref(fig:rtsnedefault)). Al incluir \texttt{Chance of Admit} dentro del gráfico, se observa un gradiente a lo largo del eje mayor, las probabilidades altas se concentran en el extremo izquierdo, las intermedias ocupan la zona central y las bajas quedan en el extremo derecho, sin saltos ni fronteras nítidas. Esto es consistente con lo obtenido en el análisis de componentes principales, donde PC1 concentró el 69.61% de la variabilidad y mostró un gradiente equivalente de la probabilidad de admisión. 
+Usando la misma configuración procesada con `Rtsne()`, se produce un mapa utilizable, con coordenadas acotadas y observaciones organizadas en una nube continua y alargada (figura \@ref(fig:rtsnedefault)). Al incluir `Chance of Admit` dentro del gráfico, se observa un gradiente a lo largo del eje mayor, las probabilidades altas se concentran en el extremo izquierdo, las intermedias ocupan la zona central y las bajas quedan en el extremo derecho, sin saltos ni fronteras nítidas. Esto es consistente con lo obtenido en el análisis de componentes principales, donde PC1 concentró el 69.61% de la variabilidad y mostró un gradiente equivalente de la probabilidad de admisión. 
 
 ```{r}
 ###Los argumentos de esta funcion son:
@@ -789,9 +790,9 @@ ggplot(datos1, aes(x = Rtsne1, y = Rtsne2, color = Chance.of.Admit)) +
 
 ### Exploración de la perplejidad
 
-La perplejidad fija determina el ancho de banda $\sigma_i$ del núcleo gaussiano asignado a cada observación y, con ello, el número efectivo de vecinos que esta considera. El código recorre la rejilla \texttt{perplexity} $\in \{10, 15, 20, 25, 30, 50\}$ con ambas implementaciones y una iteración máximo de 500. Los diagnósticos que una y otra imprimen permiten verificar ese mecanismo de manera directa, y se reúnen en la tabla \ref{tab:tsne-perplexity}.
+La perplejidad fija determina el ancho de banda $\sigma_i$ del núcleo gaussiano asignado a cada observación y, con ello, el número efectivo de vecinos que esta considera. El código recorre la rejilla `perplexity` $\in \{10, 15, 20, 25, 30, 50\}$ con ambas implementaciones y una iteración máximo de 500. Los diagnósticos que una y otra imprimen permiten verificar ese mecanismo de manera directa, y se reúnen en la tabla \ref{tab:tsne-perplexity}.
 
-Las salidas gráficas correspondientes al algoritmo exacto (figura \@ref(fig:tsnegridperp)) reproducen el problema ya observado en la figura \@ref(fig:tsneexacta): los seis paneles muestran un núcleo denso rodeado de puntos aislados, y solo con \texttt{perplexity = 50} el mapa alcanza a desplegarse.
+Las salidas gráficas correspondientes al algoritmo exacto (figura \@ref(fig:tsnegridperp)) reproducen el problema ya observado en la figura \@ref(fig:tsneexacta): los seis paneles muestran un núcleo denso rodeado de puntos aislados, y solo con `perplexity = 50` el mapa alcanza a desplegarse.
 
 \vspace{0.3cm}
 
@@ -810,7 +811,6 @@ Las salidas gráficas correspondientes al algoritmo exacto (figura \@ref(fig:tsn
     50 & 0.235 & 1.851 & 0.460 & 0.4642 \\
     \bottomrule
   \end{tabular}
-
   \label{tab:tsne-perplexity}
 \end{table}
 
@@ -953,7 +953,7 @@ ggplot(d1) +
 
 ### Exploración conjunta de perplejidad y tasa de aprendizaje
 
-La segunda etapa cruza \texttt{perplexity} $\in \{10,15,20,25,30\}$ con la tasa de aprendizaje \texttt{eta} $\in \{10,50,100,150\}$, que gobierna la magnitud del paso en el descenso por gradiente. Se fijó \texttt{pca = FALSE}, para operar sobre las seis variables estandarizadas, y \texttt{verbose = TRUE}, lo que permite recuperar la divergencia de las veinte configuraciones y sustituir así la inspección visual por un criterio numérico.
+La segunda etapa cruza `perplexity` $\in \{10,15,20,25,30\}$ con la tasa de aprendizaje `eta` $\in \{10,50,100,150\}$, que gobierna la magnitud del paso en el descenso por gradiente. Se fijó `pca = FALSE`, para operar sobre las seis variables estandarizadas, y `verbose = TRUE`, lo que permite recuperar la divergencia de las veinte configuraciones y sustituir así la inspección visual por un criterio numérico.
 
 \begin{table}[ht]
   \centering
@@ -974,9 +974,9 @@ La segunda etapa cruza \texttt{perplexity} $\in \{10,15,20,25,30\}$ con la tasa 
   \label{tab:tsnegrid}
 \end{table}
 
-La tabla \@ref(tab:tsnegrid) muestra que el efecto de \texttt{eta} depende de la perplejidad. Con perplejidades bajas (10 a 20) la divergencia decrece de forma monótona y el mínimo se alcanza en \texttt{eta = 150}, pues un paso pequeño no basta para desplegar el mapa dentro de las 500 iteraciones disponibles. Con perplejidades altas (25 y 30) la relación se invierte y el mínimo pasa a \texttt{eta = 50}, lo que sugiere un ligero sobrepaso de la optimización cuando el vecindario considerado ya es amplio. El valor más bajo de toda la rejilla corresponde a \texttt{perplexity = 30} con \texttt{eta = 50}, con una divergencia de 0.6080.
+La tabla \@ref(tab:tsnegrid) muestra que el efecto de `eta` depende de la perplejidad. Con perplejidades bajas (10 a 20) la divergencia decrece de forma monótona y el mínimo se alcanza en `eta = 150`, pues un paso pequeño no basta para desplegar el mapa dentro de las 500 iteraciones disponibles. Con perplejidades altas (25 y 30) la relación se invierte y el mínimo pasa a `eta = 50`, lo que sugiere un ligero sobrepaso de la optimización cuando el vecindario considerado ya es amplio. El valor más bajo de toda la rejilla corresponde a `perplexity = 30` con `eta = 50`, con una divergencia de 0.6080.
 
-Las salidas gráficas de ambas rejillas (figuras \@ref(fig:tsnegrideta) y \@ref(fig:tsnegridampliada)) aportan el elemento decisivo: la nube continua con gradiente de \texttt{Chance of Admit} está presente en las cuarenta configuraciones evaluadas, sin que ninguna combinación de hiperparámetros produzca agrupamientos discretos. Las diferencias entre paneles se limitan a la extensión y la orientación del mapa, ambas irrelevantes para la interpretación. El hallazgo descrito a partir de la figura \@ref(fig:tsneexacta) no depende, por tanto, de la configuración elegida. Cabe señalar que la rejilla ampliada corrió con \texttt{verbose = FALSE}, por lo que \texttt{eta = 200} carece de divergencia registrada y quedó fuera de la tabla \@ref(tab:tsnegrid).
+Las salidas gráficas de ambas rejillas (figuras \@ref(fig:tsnegrideta) y \@ref(fig:tsnegridampliada)) aportan el elemento decisivo: la nube continua con gradiente de `Chance of Admit` está presente en las cuarenta configuraciones evaluadas, sin que ninguna combinación de hiperparámetros produzca agrupamientos discretos. Las diferencias entre paneles se limitan a la extensión y la orientación del mapa, ambas irrelevantes para la interpretación. El hallazgo descrito a partir de la figura \@ref(fig:tsneexacta) no depende, por tanto, de la configuración elegida. Cabe señalar que la rejilla ampliada corrió con `verbose = FALSE`, por lo que `eta = 200` carece de divergencia registrada y quedó fuera de la tabla \@ref(tab:tsnegrid).
 
 ```{r}
 ### EXPLORACIÓN BIDIMENSIONAL: PERPLEJIDAD (perplexity) Y TASA DE APRENDIZAJE (eta) en Rtsne() ----
@@ -1138,15 +1138,15 @@ p4
   \label{tab:tsnehiper}
 \end{table}
 
-Se seleccionó \texttt{perplexity = 30} junto con \texttt{eta = 150}, combinación que registra la divergencia más baja de la rejilla (tabla \@ref(tab:tsnegrid)). Conviene precisar que la elección descansa en una diferencia modesta ---0.6080 frente a 0.6538--- y que las salidas gráficas correspondientes son visualmente indistinguibles; por tanto, la configuración final no altera las conclusiones sustantivas. El modelo reproduce la estructura observada durante la exploración: una nube continua y elongada, sin conglomerados discernibles, sobre la cual la probabilidad de admisión se ordena de forma monótona a lo largo de la dimensión dominante.
+Se seleccionó `perplexity = 30` junto con `eta = 150`, combinación que registra la divergencia más baja de la rejilla (tabla \@ref(tab:tsnegrid)). Conviene precisar que la elección descansa en una diferencia modesta ---0.6080 frente a 0.6538--- y que las salidas gráficas correspondientes son visualmente indistinguibles; por tanto, la configuración final no altera las conclusiones sustantivas. El modelo reproduce la estructura observada durante la exploración: una nube continua y elongada, sin conglomerados discernibles, sobre la cual la probabilidad de admisión se ordena de forma monótona a lo largo de la dimensión dominante.
 
 ## UMAP
 
-El análisis mediante UMAP (\textit{Uniform Manifold Approximation and Projection}) se aplicó sobre el mismo conjunto de variables predictoras estandarizadas utilizado en el análisis de componentes principales, integrando tanto las variables cuantitativas \texttt{GRE Score}, \texttt{TOEFL Score}, \texttt{University Rating}, \texttt{SOP}, \texttt{LOR} y \texttt{CGPA}, como la variable categórica \texttt{Research}, convertida a tipo factor con dos niveles (No y Sí). Al igual que en PCA, \texttt{Chance of Admit} se excluyó del cálculo y se conservó únicamente para la interpretación posterior de los resultados.
+El análisis mediante UMAP (*Uniform Manifold Approximation and Projection*) se aplicó sobre el mismo conjunto de variables predictoras estandarizadas utilizado en el análisis de componentes principales, integrando tanto las variables cuantitativas `GRE Score`, `TOEFL Score`, `University Rating`, `SOP`, `LOR` y `CGPA`, como la variable categórica `Research`, convertida a tipo factor con dos niveles (No y Sí). Al igual que en PCA, `Chance of Admit` se excluyó del cálculo y se conservó únicamente para la interpretación posterior de los resultados.
 
 UMAP es una técnica de reducción de dimensión no lineal que no maximiza varianza explicada sobre ejes ortogonales, sino que construye un grafo de vecinos más cercanos en el espacio original y optimiza una proyección de baja dimensión que preserve, en la mayor medida posible, esa estructura de vecindad local. Por esta razón, el algoritmo no produce una tabla de varianza explicada.
 
-Se ejecutó, en primer lugar, una configuración por defecto (\texttt{n\_neighbors = 15}, \texttt{min\_dist = 0.1}, métrica euclidiana), la cual fue replicada posteriormente mediante una receta del ecosistema \texttt{tidymodels} (\texttt{step\_normalize} + \texttt{step\_umap}) con el fin de verificar la consistencia del resultado frente a distintas implementaciones del algoritmo. Dado que UMAP no cuenta con un criterio automático de selección de hiperparámetros —análogo al porcentaje de varianza explicada en PCA—, se realizó una búsqueda exploratoria sobre una rejilla de dieciséis combinaciones, cruzando \texttt{n\_neighbors} $\in \{10, 30, 50, 100\}$ y \texttt{min\_dist} $\in \{0.01, 0.10, 0.25, 0.50\}$, evaluando en cada caso la calidad visual de la proyección resultante. A partir de esta exploración se seleccionó como configuración final \texttt{n\_neighbors = 10} y \texttt{min\_dist = 0.5}, resumida en la Tabla \ref{tab:umap_hiperparametros}.
+Se ejecutó, en primer lugar, una configuración por defecto (`n_neighbors = 15`, `min_dist = 0.1`, métrica euclidiana), la cual fue replicada posteriormente mediante una receta del ecosistema `tidymodels` (`step_normalize` + `step_umap`) con el fin de verificar la consistencia del resultado frente a distintas implementaciones del algoritmo. Dado que UMAP no cuenta con un criterio automático de selección de hiperparámetros —análogo al porcentaje de varianza explicada en PCA—, se realizó una búsqueda exploratoria sobre una rejilla de dieciséis combinaciones, cruzando `n_neighbors` $\in \{10, 30, 50, 100\}$ y `min_dist` $\in \{0.01, 0.10, 0.25, 0.50\}$, evaluando en cada caso la calidad visual de la proyección resultante. A partir de esta exploración se seleccionó como configuración final `n_neighbors = 10` y `min_dist = 0.5`, resumida en la tabla \ref{tab:umap_hiperparametros}.
 
 \vspace{0.3cm}
 
@@ -1182,7 +1182,6 @@ df1 <- df %>%
 df1
 ```
 
-
 ```{r}
 ### UMAP: CONFIGURACIÓN POR DEFECTO (Hiperparámetros por default) ----
 
@@ -1204,7 +1203,6 @@ str(df_umap)
 names(df_umap)
 head(df_umap)
 ```
-
 
 ```{r}
 # CONSTRUCCIÓN DE LA BASE DE DATOS Y VISUALIZACIONES
@@ -1232,7 +1230,7 @@ ggplot(datos, aes(x = UMAP1, y = UMAP2)) +
   theme_minimal()
 ```
 
-Al colorear esta misma proyección según \texttt{Chance of Admit} (figura \ref{fig:umapchance}), se observa un gradiente perfectamente suave a lo largo de toda la trayectoria: un extremo concentra las probabilidades de admisión más bajas (en torno a 0.4) y el extremo opuesto las más altas (superiores a 0.9). Esto confirma que la primera dimensión de UMAP captura, de forma no lineal, prácticamente la misma información que PC1 en el análisis de componentes principales: un índice continuo de competitividad del aspirante.
+Al colorear esta misma proyección según `Chance of Admit` (figura \ref{fig:umapchance}), se observa un gradiente perfectamente suave a lo largo de toda la trayectoria: un extremo concentra las probabilidades de admisión más bajas (en torno a 0.4) y el extremo opuesto las más altas (superiores a 0.9). Esto confirma que la primera dimensión de UMAP captura, de forma no lineal, prácticamente la misma información que PC1 en el análisis de componentes principales: un índice continuo de competitividad del aspirante.
 
 ```{r umapchance, include=TRUE, fig.dim=c(6, 2.8), fig.cap="UMAP coloreado por la probabilidad de admisión, \\texttt{Chance of Admit}"}
 # 3. Gráfico UMAP con gradiente continuo
@@ -1248,7 +1246,7 @@ ggplot(datos, aes(x = UMAP1, y = UMAP2, color = Chance.of.Admit)) +
   theme_minimal()
 ```
 
-Cuando la proyección se colorea en cambio por la variable binaria \texttt{Research} (figura \ref{fig:umapresearch}), se aprecia que los aspirantes sin experiencia en investigación predominan en el extremo de menor probabilidad de admisión, mientras que quienes sí cuentan con experiencia se concentran hacia el extremo opuesto; sin embargo, ambos grupos se traslapan considerablemente en la zona intermedia de la trayectoria. Esto indica que \texttt{Research} está correlacionada con el resto del perfil académico, pero no constituye un factor independiente capaz de segmentar geométricamente el embedding: no genera clusters propios, solo modula la densidad de puntos sobre la misma trayectoria continua ya descrita. 
+Cuando la proyección se colorea en cambio por la variable binaria `Research` (figura \ref{fig:umapresearch}), se aprecia que los aspirantes sin experiencia en investigación predominan en el extremo de menor probabilidad de admisión, mientras que quienes sí cuentan con experiencia se concentran hacia el extremo opuesto; sin embargo, ambos grupos se traslapan considerablemente en la zona intermedia de la trayectoria. Esto indica que `Research` está correlacionada con el resto del perfil académico, pero no constituye un factor independiente capaz de segmentar geométricamente el *embedding*: no genera clusters propios, solo modula la densidad de puntos sobre la misma trayectoria continua ya descrita. 
 
 ```{r umapresearch, include=TRUE, fig.dim=c(6, 2.8), fig.cap="UMAP coloreado por experiencia en investigación, \\texttt{Research}"}
 # 2. Gráfico UMAP segmentado por la variable binaria (Research)
@@ -1264,7 +1262,7 @@ ggplot(datos, aes(x = UMAP1, y = UMAP2, color = Research)) +
   theme_minimal()
 ```
 
-El gráfico multivariable que combina color (\texttt{Chance of Admit}) y forma (\texttt{Research}), mostrado en la figura \ref{fig:umapmulti}, permite verificar simultáneamente ambos hallazgos en una sola visualización.
+El gráfico multivariable que combina color (`Chance of Admit`) y forma (`Research`), mostrado en la figura \ref{fig:umapmulti}, permite verificar simultáneamente ambos hallazgos en una sola visualización.
 
 ```{r umapmulti, include=TRUE, fig.cap="UMAP multivariable: color = \\texttt{Chance of Admit}, forma = \\texttt{Research}"}
 ggplot(datos, aes(x = UMAP1, y = UMAP2, color = Chance.of.Admit, shape = Research)) +
@@ -1292,7 +1290,7 @@ ggplot(datos, aes(x = UMAP1, y = UMAP2, color = Chance.of.Admit, shape = Researc
   )
 ```
 
-Con el fin de descartar que la trayectoria observada fuera un artefacto de una corrida particular, se replicó el cálculo mediante una receta del ecosistema \texttt{tidymodels} (\texttt{step\_normalize} + \texttt{step\_umap}), obteniéndose la proyección de la figura \ref{fig:umaprecipe}. La estructura —trayectoria continua con gradiente suave de \texttt{Chance of Admit}— se reproduce de forma prácticamente idéntica, lo que confirma que el patrón encontrado es robusto al flujo de cómputo utilizado y no depende de una implementación específica del algoritmo.
+Con el fin de descartar que la trayectoria observada fuera un artefacto de una corrida particular, se replicó el cálculo mediante una receta del ecosistema `tidymodels` (`step_normalize` + `step_umap`), obteniéndose la proyección de la figura \ref{fig:umaprecipe}. La estructura —trayectoria continua con gradiente suave de `Chance of Admit`— se reproduce de forma prácticamente idéntica, lo que confirma que el patrón encontrado es robusto al flujo de cómputo utilizado y no depende de una implementación específica del algoritmo.
 
 ```{r}
 ### Otra forma: CONFIGURACIÓN DE LA RECETA PARA UMAP ----
@@ -1327,7 +1325,7 @@ juice(umap_res) %>%
   theme_minimal()
 ```
 
-La robustez de esta estructura se puso a prueba de manera más sistemática mediante la rejilla de dieciséis combinaciones de \texttt{n\_neighbors} y \texttt{min\_dist} (figura \ref{fig:umapgrid}). En todos los paneles, la trayectoria continua y su gradiente asociado a \texttt{Chance of Admit} se mantienen presentes, lo que descarta que se trate de un artefacto de una configuración de hiperparámetros en particular. No obstante, sí se observan diferencias cualitativas relevantes: con valores bajos de \texttt{min\_dist} (0.01--0.10) combinados con \texttt{n\_neighbors} bajo (10--30), la trayectoria se muestra más fibrosa y con micro-agrupaciones visibles, favoreciendo la fidelidad a la estructura local; en cambio, con \texttt{min\_dist} alto (0.50) y \texttt{n\_neighbors} alto (50--100), la forma resultante es más ancha y suave, con los puntos mejor separados visualmente pero con menor detalle de estructura local.
+La robustez de esta estructura se puso a prueba de manera más sistemática mediante la rejilla de dieciséis combinaciones de `n_neighbors` y `min_dist` (figura \ref{fig:umapgrid}). En todos los paneles, la trayectoria continua y su gradiente asociado a `Chance of Admit` se mantienen presentes, lo que descarta que se trate de un artefacto de una configuración de hiperparámetros en particular. No obstante, sí se observan diferencias cualitativas relevantes: con valores bajos de `min_dist` (0.01--0.10) combinados con `n_neighbors` bajo (10--30), la trayectoria se muestra más fibrosa y con micro-agrupaciones visibles, favoreciendo la fidelidad a la estructura local; en cambio, con `min_dist` alto (0.50) y `n_neighbors` alto (50--100), la forma resultante es más ancha y suave, con los puntos mejor separados visualmente pero con menor detalle de estructura local.
 
 ```{r}
 ### Argumentos de esta funcion ----
@@ -1413,7 +1411,7 @@ p <- ggplot(d) +
 p
 ```
 
-Con base en esta exploración, se seleccionó como configuración final \texttt{n\_neighbors = 10} y \texttt{min\_dist = 0.5} (figura \ref{fig:umapfinal}), por representar un punto intermedio que conserva la trayectoria continua sin sobreamontonar los puntos, favoreciendo así su lectura e interpretación. En conjunto, los resultados de UMAP muestran que no existe evidencia de subgrupos discretos de aspirantes, sino un continuo de competitividad académica que UMAP visualiza como una curva no lineal en dos dimensiones. La variable \texttt{Research} se encuentra correlacionada con dicho continuo, pero no actúa como un factor de segmentación independiente.
+Con base en esta exploración, se seleccionó como configuración final `n_neighbors = 10` y `min_dist = 0.5` (figura \ref{fig:umapfinal}), por representar un punto intermedio que conserva la trayectoria continua sin sobreamontonar los puntos, favoreciendo así su lectura e interpretación. En conjunto, los resultados de UMAP muestran que no existe evidencia de subgrupos discretos de aspirantes, sino un continuo de competitividad académica que UMAP visualiza como una curva no lineal en dos dimensiones. La variable `Research` se encuentra correlacionada con dicho continuo, pero no actúa como un factor de segmentación independiente.
 
 ```{r umapfinal, include=TRUE, fig.cap="Modelo final de UMAP (\\texttt{n\\_neighbors = 10}, \\texttt{min\\_dist = 0.5})"}
 ###Aqui decidimos cual es nuestra mejor seleccion y ajustamos el modelo final
@@ -1479,3 +1477,4 @@ El uso combinado de enfoques lineales (PCA) y no lineales (t-SNE y UMAP) aportó
 * **t-SNE y UMAP** permitieron verificar la topología subyacente sin forzar restricciones de linealidad, evidenciando que la estructura de los datos se comporta como un manifold continuo y suave.
 
 En conclusión, los métodos de aprendizaje no supervisado aplicados demostraron ser herramientas de diagnóstico sumamente potentes. Sin la necesidad de incorporar la variable respuesta durante el entrenamiento, las técnicas lograron comprimir exitosamente el espacio de siete dimensiones a dos, revelando que el éxito en la admisión a posgrado no obedece a perfiles segmentados o clústeres aislados, sino a un gradiente continuo y estructurado de excelencia académica.
+
