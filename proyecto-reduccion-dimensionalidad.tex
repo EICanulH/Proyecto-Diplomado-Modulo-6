@@ -621,4 +621,40 @@ Con base en esta exploración, se seleccionó como configuración final \texttt{
 
 \section{Conclusiones}\label{conclusiones-1}
 
+A lo largo de este proyecto se aplicaron y evaluaron tres técnicas fundamentales de reducción de dimensión ---Análisis de Componentes Principales (PCA), t-SNE y UMAP--- sobre el conjunto de datos de predicción de admisiones a posgrado (\textbf{Admission Predict}). El propósito central consistió en examinar la estructura latente de las variables predictoras y determinar si dicha estructura refleja de manera no supervisada la competitividad y probabilidad de admisión de los aspirantes (\texttt{Chance\ of\ Admit}).
+
+\subsection{PCA}\label{pca}
+
+Mediante el uso de la matriz de correlación (con un estadístico KMO de 0.903 y prueba de Bartlett altamente significativa), se demostró la fuerte multicolinealidad entre los predictores.
+
+Se encontró que con los dos primeros componentes principales se captura el \textbf{79.97\% de la varianza total} (69.61\% en el PC1). El primer componente actúa como un índice sintético del desempeño académico general (agrupando puntajes GRE, TOEFL y CGPA), mientras que el segundo componente aísla de manera clara el factor de experiencia en investigación (\texttt{Research}).
+
+Al proyectar las observaciones en el plano factorial y colorearlas mediante la variable exógena \texttt{Chance\ of\ Admit}, emergió un gradiente lineal sumamente nítido a lo largo del eje PC1, validando que la varianza máxima retenida de forma no supervisada coincide de manera directa con el éxito en el proceso de admisión.
+
+\subsection{t-SNE}\label{t-sne-1}
+
+A través del contraste entre implementaciones exactas y aproximadas (algoritmo de Barnes-Hut con \texttt{Rtsne()}), así como la ejecución de una rejilla sistemática de perplejidad y tasa de aprendizaje (eta), se comprobó la sensibilidad del algoritmo ante configuraciones extremas. La selección óptima (\texttt{perplexity\ =\ 30}, \texttt{eta\ =\ 150}) permitió minimizar la divergencia de Kullback-Leibler.
+
+A diferencia de PCA, t-SNE no organiza los datos en ejes ortogonales de varianza máxima, sino en una nube continua y elongada. Sin embargo, al incorporar el gradiente de probabilidad de admisión, se confirmó la consistencia global con los hallazgos de PCA: los aspirantes con mayor competitividad se agrupan ordenadamente en un extremo de la proyección, ratificando la ausencia de clústeres discretos o subgrupos desconectados en la población de aspirantes.
+
+\subsection{UMAP}\label{umap-1}
+
+Mediante la exploración sistemática de hiperparámetros (selección óptima \texttt{n\_neighbors\ =\ 10} y \texttt{min\_dist\ =\ 0.5}), UMAP proyectó los datos sobre una trayectoria curva continua en lugar de conglomerados discretos o aislados. Esta configuración demostró una alta estabilidad frente a distintas especificaciones del algoritmo, evitando artefactos visuales extremos y preservando de manera fiel tanto la estructura vecinal local como la topología global del espacio de características.
+
+La visualización y el análisis del gradiente creado con \texttt{Chance\ of\ Admit} confirmaron que esta curva no lineal describe un continuo de competitividad académica. La variable de experiencia en investigación (\texttt{Research}), a pesar de mantener una correlación positiva con el perfil general del postulante modula la densidad a lo largo de la trayectoria sin llegar a fragmentarla en clústeres separados, lo que refuerza la hipótesis de que el proceso de admisión responde a un gradiente continuo de mérito y no a tipologías categóricas cerradas.
+
+\subsection{Reflexión final y comparativa metodológica}\label{reflexiuxf3n-final-y-comparativa-metodoluxf3gica}
+
+El uso combinado de enfoques lineales (PCA) y no lineales (t-SNE y UMAP) aportó una visión complementaria e integral de los datos:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{PCA} ofreció la ventaja de la interpretabilidad directa a través de las cargas factoriales, permitiendo descomponer el perfil del aspirante en dimensiones ortogonales claras (rendimiento académico vs.~investigación).
+\item
+  \textbf{t-SNE y UMAP} permitieron verificar la topología subyacente sin forzar restricciones de linealidad, evidenciando que la estructura de los datos se comporta como un manifold continuo y suave.
+\end{itemize}
+
+En conclusión, los métodos de aprendizaje no supervisado aplicados demostraron ser herramientas de diagnóstico sumamente potentes. Sin la necesidad de incorporar la variable respuesta durante el entrenamiento, las técnicas lograron comprimir exitosamente el espacio de siete dimensiones a dos, revelando que el éxito en la admisión a posgrado no obedece a perfiles segmentados o clústeres aislados, sino a un gradiente continuo y estructurado de excelencia académica.
+
 \end{document}
