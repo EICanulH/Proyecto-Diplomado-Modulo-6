@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 23:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 23:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1346,7 +1346,7 @@ LaTeX Warning: Text page 16 contains only floats.
 [16 <./proyecto-reduccion-dimensionalidad_files/figure-latex/umapgrid-1.pdf> <.
 /proyecto-reduccion-dimensionalidad_files/figure-latex/umapfinal-1.pdf>] [17] [
 18]
-runsystem(latexminted cleantemp  --timestamp 20260720230340 BFCA8610422CC91C867
+runsystem(latexminted cleantemp  --timestamp 20260720234347 BFCA8610422CC91C867
 0167F0415B4C7)...disabled (restricted).
 
 (proyecto-reduccion-dimensionalidad.aux

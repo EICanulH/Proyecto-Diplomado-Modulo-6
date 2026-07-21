@@ -226,7 +226,7 @@ La disimilitud entre los perfiles académicos de los estudiantes $x_i$ y $x_j$ s
 \end{equation}
 Donde $x_{ik}$ es el valor escalado del predictor $k$ para el individuo $x_i$. Con base en la matriz de distancias resultante, se ajustaron comparativamente cinco modelos jerárquicos explorando diferentes metodologías de enlace (*Linkage*): Promedio (`average`), Simple (`single`), Completo (`complete`), y los métodos de minimización de varianza de Ward (`Ward.D` y `Ward.D2`). 
 
-Para evaluar la fidelidad geométrica de cada árbol, se calculó la **distancia cofenética** (`cophenetic`) de cada modelo, la cual mide las distancias de fusión intra-árbol. Posteriormente, se estructuró una matriz de correlación de Pearson (\texttt{matriz\_cofenetic}) para contrastar de forma directa las distancias cofenéticas contra las distancias Euclidianas reales, sirviendo como el primer filtro de selección metodológica.
+Para evaluar la fidelidad geométrica de cada árbol, se calculó la **distancia cofenética** (`cophenetic`) de cada modelo, la cual mide las distancias de fusión intra-árbol. Posteriormente, se estructuró una matriz de correlación de Pearson (`matriz_cofenetic`) para contrastar de forma directa las distancias cofenéticas contra las distancias Euclidianas reales, sirviendo como el primer filtro de selección metodológica.
 
 ```{r}
 # Calculando distancias (distancia euclideana)
@@ -256,10 +256,9 @@ matriz_cofenetic <- cbind(
 )
 ```
 
-
 ### Evaluación de la Tendencia al Agrupamiento (Cluster Tendency)
 
-Previo a la partición definitiva, se verificó si el conjunto de datos poseía una predisposición genuina a formar grupos o si correspondía a una distribución aleatoria espacial uniforme. Para asegurar la convergencia y robustez matemática, se calculó el \textbf{Estadístico de Hopkins} mediante dos enfoques independientes: el método probabilístico de la función \texttt{get\_clust\_tendency} de la librería \texttt{factoextra} y la formulación robusta de la librería especializada \texttt{hopkins}.
+Previo a la partición definitiva, se verificó si el conjunto de datos poseía una predisposición genuina a formar grupos o si correspondía a una distribución aleatoria espacial uniforme. Para asegurar la convergencia y robustez matemática, se calculó el **Estadístico de Hopkins** mediante dos enfoques independientes: el método probabilístico de la función `get_clust_tendency` de la librería `factoextra` y la formulación robusta de la librería especializada `hopkins`.
 
 ```{r}
 # Primera forma de validación usando la librería 'factoextra'
@@ -283,7 +282,7 @@ hop_val <- hopkins(df_scaled_hc)
 
 ### Optimización del Número de Clusters (Tuning de Silueta)
 
-Para determinar científicamente el número ideal de ramas ($k$) para rebanar el dendrograma, se configuró un proceso de optimización explorando una rejilla regular de $k = 2$ hasta $k = 10$ clústeres. El procedimiento se integró mediante el ecosistema moderno de \texttt{tidymodels} y \texttt{tidyclust}, utilizando un motor de estimación estadística (\texttt{stats}) y el método de enlace ganador. Para mitigar el sobreajuste, la evaluación se ejecutó bajo un esquema de \textbf{Validación Cruzada de 10 pliegues} (\textit{10-Fold Cross-Validation}), auditando el desempeño de cada partición a través de la métrica del Coeficiente de Silueta Promedio (\texttt{silhouette\_avg}).
+Para determinar científicamente el número ideal de ramas ($k$) para rebanar el dendrograma, se configuró un proceso de optimización explorando una rejilla regular de $k = 2$ hasta $k = 10$ clústeres. El procedimiento se integró mediante el ecosistema moderno de `tidymodels` y `tidyclust`, utilizando un motor de estimación estadística (`stats`) y el método de enlace ganador. Para mitigar el sobreajuste, la evaluación se ejecutó bajo un esquema de **Validación Cruzada de 10 pliegues** (*10-Fold Cross-Validation*), auditando el desempeño de cada partición a través de la métrica del Coeficiente de Silueta Promedio (`silhouette_avg`).
 
 ```{r}
 # Definir la especificación del modelo jerárquico tuneando el número de clusters
@@ -993,7 +992,7 @@ Un conjunto con perfiles genuinamente distintos difícilmente mostraría un orde
 
 La Figura \ref{fig:fig7} refleja la misma jerarquía a nivel de cada variable académica: en las seis observadas las medianas aumentan de forma ordenada desde el perfil bajo al alto, sin inversiones. La única excepción aparente es `University.Rating`: sus cajas comprimidas y la abundancia de puntos marcados como atípicos no indican mayor variabilidad real, sino el efecto de ser una variable discreta de solo cinco niveles; aun así, la tendencia ordinal se mantiene igualmente clara.
 
-La Figura \ref{fig:fig8} desglosa la variable de respuesta por perfil y ofrece una validación externa del modelo. Las medianas se ordenan con claridad en torno a **0.61**, **0.73** y **0.90**, y los cuerpos de las tres cajas no se traslapan, lo que confirma que una partición calculada sin acceso a *Chance.of.Admit* reproduce su ordenamiento. 
+La Figura \ref{fig:fig8} desglosa la variable de respuesta por perfil y ofrece una validación externa del modelo. Las medianas se ordenan con claridad en torno a **0.61**, **0.73** y **0.90**, y los cuerpos de las tres cajas no se traslapan, lo que confirma que una partición calculada sin acceso a `Chance.of.Admit` reproduce su ordenamiento. 
 
 ```{r fig7, include=TRUE, fig.dim=c(6, 3.6), fig.cap="Distribución estandarizada de cada variable académica según el clúster asignado con K = 3."}
 bind_cols(as.data.frame(X_esc), cluster = k3$cluster) %>%
@@ -1077,7 +1076,7 @@ El Estadístico de Hopkins, calculado por dos vías independientes ($H = 0.997$ 
 
 El algoritmo particional confirmó, por su cuenta, la existencia de tres grupos diferenciados, esta vez con 106, 168 y 126 estudiantes. También aquí el mejor valor de silueta se dio con dos grupos (0.384 frente a 0.297 con tres), y también aquí se optó por trabajar con tres, porque ofrecen una lectura académica más rica y grupos mejor balanceados. 
 
-Los boxplot mostraron una jerarquía muy ordenada: el Cluster 1 concentró las medianas más altas en las seis variables académicas, con un 90.6% de sus integrantes con experiencia en investigación; el Cluster 2 mostró justo lo contrario, con solo 21.4%; y el Cluster 3 quedó de forma consistente en medio de ambos, con 57.1%. Esa misma jerarquía se repitió en la probabilidad real de admisión, con medianas cercanas a 90%, 61% y 73% respectivamente. Vale la pena señalar que, a diferencia de la separación limpia que se ve en las variables académicas, la probabilidad de admisión sí se traslapa de forma notoria entre grupos vecinos —el Cluster 2 baja hasta 34% y el Cluster 3 tiene algunos casos entre 45% y 52%—, lo que muestra que la frontera entre perfiles es útil pero no tajante.
+Los boxplot mostraron una jerarquía muy ordenada: el Cluster 3 concentró las medianas más altas en las seis variables académicas, con un 90.6% de sus integrantes con experiencia en investigación; el Cluster 1 mostró justo lo contrario, con solo 21.4%; y el Cluster 2 quedó de forma consistente en medio de ambos, con 57.1%. Esa misma jerarquía se repitió en la probabilidad real de admisión, con medianas cercanas a 90%, 61% y 73% respectivamente. Vale la pena señalar que, a diferencia de la separación limpia que se ve en las variables académicas, la probabilidad de admisión sí se traslapa de forma notoria entre grupos vecinos —el Cluster 1 baja hasta 34% y el Cluster 2 tiene algunos casos entre 45% y 52% (figura \ref{fig:fig8})—, lo que muestra que la frontera entre perfiles es útil pero no tajante.
 
 ## Reflexión final y comparativa metodológica
 

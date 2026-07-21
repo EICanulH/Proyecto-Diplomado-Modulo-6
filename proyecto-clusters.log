@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 23:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.26)  20 JUL 2026 23:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1200,7 +1200,7 @@ Package pdftex.def Info: proyecto-clusters_files/figure-latex/fig9-1.pdf  used
 on input line 688.
 (pdftex.def)             Requested size: 433.61894pt x 216.80946pt.
 [16 <./proyecto-clusters_files/figure-latex/fig9-1.pdf>] [17]
-runsystem(latexminted cleantemp  --timestamp 20260720231319 8A77365EC1F2F2A3F54
+runsystem(latexminted cleantemp  --timestamp 20260720234337 8A77365EC1F2F2A3F54
 00C725F7EA8BB)...disabled (restricted).
 
 (proyecto-clusters.aux
@@ -1234,9 +1234,9 @@ C:/Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr9.pfb><C:
 /Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy7.pfb><C:/
 Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><C:/
 Users/Erick/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
-Output written on proyecto-clusters.pdf (17 pages, 643956 bytes).
+Output written on proyecto-clusters.pdf (17 pages, 643520 bytes).
 PDF statistics:
- 492 PDF objects out of 1000 (max. 8388607)
+ 493 PDF objects out of 1000 (max. 8388607)
  75 named destinations out of 1000 (max. 500000)
  35126 words of extra memory for PDF output out of 35830 (max. 10000000)
 

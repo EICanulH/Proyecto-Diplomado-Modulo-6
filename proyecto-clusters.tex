@@ -225,7 +225,7 @@ Previo a la partición definitiva, se verificó si el conjunto de datos poseía 
 
 \subsubsection{Optimización del Número de Clusters (Tuning de Silueta)}\label{optimizaciuxf3n-del-nuxfamero-de-clusters-tuning-de-silueta}
 
-Para determinar científicamente el número ideal de ramas (\(k\)) para rebanar el dendrograma, se configuró un proceso de optimización explorando una rejilla regular de \(k = 2\) hasta \(k = 10\) clústeres. El procedimiento se integró mediante el ecosistema moderno de \texttt{tidymodels} y \texttt{tidyclust}, utilizando un motor de estimación estadística (\texttt{stats}) y el método de enlace ganador. Para mitigar el sobreajuste, la evaluación se ejecutó bajo un esquema de \textbf{Validación Cruzada de 10 pliegues} (\textit{10-Fold Cross-Validation}), auditando el desempeño de cada partición a través de la métrica del Coeficiente de Silueta Promedio (\texttt{silhouette\_avg}).
+Para determinar científicamente el número ideal de ramas (\(k\)) para rebanar el dendrograma, se configuró un proceso de optimización explorando una rejilla regular de \(k = 2\) hasta \(k = 10\) clústeres. El procedimiento se integró mediante el ecosistema moderno de \texttt{tidymodels} y \texttt{tidyclust}, utilizando un motor de estimación estadística (\texttt{stats}) y el método de enlace ganador. Para mitigar el sobreajuste, la evaluación se ejecutó bajo un esquema de \textbf{Validación Cruzada de 10 pliegues} (\emph{10-Fold Cross-Validation}), auditando el desempeño de cada partición a través de la métrica del Coeficiente de Silueta Promedio (\texttt{silhouette\_avg}).
 
 \subsubsection{Validación Estructural y Visualización Avanzada}\label{validaciuxf3n-estructural-y-visualizaciuxf3n-avanzada}
 
@@ -657,7 +657,7 @@ Un conjunto con perfiles genuinamente distintos difícilmente mostraría un orde
 
 La Figura \ref{fig:fig7} refleja la misma jerarquía a nivel de cada variable académica: en las seis observadas las medianas aumentan de forma ordenada desde el perfil bajo al alto, sin inversiones. La única excepción aparente es \texttt{University.Rating}: sus cajas comprimidas y la abundancia de puntos marcados como atípicos no indican mayor variabilidad real, sino el efecto de ser una variable discreta de solo cinco niveles; aun así, la tendencia ordinal se mantiene igualmente clara.
 
-La Figura \ref{fig:fig8} desglosa la variable de respuesta por perfil y ofrece una validación externa del modelo. Las medianas se ordenan con claridad en torno a \textbf{0.61}, \textbf{0.73} y \textbf{0.90}, y los cuerpos de las tres cajas no se traslapan, lo que confirma que una partición calculada sin acceso a \emph{Chance.of.Admit} reproduce su ordenamiento.
+La Figura \ref{fig:fig8} desglosa la variable de respuesta por perfil y ofrece una validación externa del modelo. Las medianas se ordenan con claridad en torno a \textbf{0.61}, \textbf{0.73} y \textbf{0.90}, y los cuerpos de las tres cajas no se traslapan, lo que confirma que una partición calculada sin acceso a \texttt{Chance.of.Admit} reproduce su ordenamiento.
 
 \begin{figure}[!ht]
 
@@ -706,7 +706,7 @@ El Estadístico de Hopkins, calculado por dos vías independientes (\(H = 0.997\
 
 El algoritmo particional confirmó, por su cuenta, la existencia de tres grupos diferenciados, esta vez con 106, 168 y 126 estudiantes. También aquí el mejor valor de silueta se dio con dos grupos (0.384 frente a 0.297 con tres), y también aquí se optó por trabajar con tres, porque ofrecen una lectura académica más rica y grupos mejor balanceados.
 
-Los boxplot mostraron una jerarquía muy ordenada: el Cluster 1 concentró las medianas más altas en las seis variables académicas, con un 90.6\% de sus integrantes con experiencia en investigación; el Cluster 2 mostró justo lo contrario, con solo 21.4\%; y el Cluster 3 quedó de forma consistente en medio de ambos, con 57.1\%. Esa misma jerarquía se repitió en la probabilidad real de admisión, con medianas cercanas a 90\%, 61\% y 73\% respectivamente. Vale la pena señalar que, a diferencia de la separación limpia que se ve en las variables académicas, la probabilidad de admisión sí se traslapa de forma notoria entre grupos vecinos ---el Cluster 2 baja hasta 34\% y el Cluster 3 tiene algunos casos entre 45\% y 52\%---, lo que muestra que la frontera entre perfiles es útil pero no tajante.
+Los boxplot mostraron una jerarquía muy ordenada: el Cluster 3 concentró las medianas más altas en las seis variables académicas, con un 90.6\% de sus integrantes con experiencia en investigación; el Cluster 1 mostró justo lo contrario, con solo 21.4\%; y el Cluster 2 quedó de forma consistente en medio de ambos, con 57.1\%. Esa misma jerarquía se repitió en la probabilidad real de admisión, con medianas cercanas a 90\%, 61\% y 73\% respectivamente. Vale la pena señalar que, a diferencia de la separación limpia que se ve en las variables académicas, la probabilidad de admisión sí se traslapa de forma notoria entre grupos vecinos ---el Cluster 1 baja hasta 34\% y el Cluster 2 tiene algunos casos entre 45\% y 52\% (figura \ref{fig:fig8})---, lo que muestra que la frontera entre perfiles es útil pero no tajante.
 
 \subsection{Reflexión final y comparativa metodológica}\label{reflexiuxf3n-final-y-comparativa-metodoluxf3gica}
 
